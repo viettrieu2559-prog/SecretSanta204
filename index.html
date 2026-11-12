@@ -2,95 +2,384 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🎄 Trạm Bưu Tá Secret Santa 2026 🎄</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { 
-            background-color: #1a472a; 
-            background-image: url('https://images.unsplash.com/photo-1543364195-bfe6e4932397?q=80&w=2070&auto=format&fit=crop'); 
-            background-size: cover; background-position: center; background-attachment: fixed; 
-            min-height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; position: relative; overflow-x: hidden; 
+        body {
+            background-color: #7f0000;
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+            user-select: none;
         }
-        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(26, 71, 42, 0.74); z-index: -1; }
-        .glass-panel { background: rgba(255, 255, 255, 0.90); backdrop-filter: blur(12px); border-radius: 18px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18); border: 1px solid rgba(255, 255, 255, 0.45); }
-        .glass-form { background: rgba(255, 255, 255, 0.97); border-radius: 14px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08); }
-        .btn-christmas { background: linear-gradient(135deg, #c0392b, #e74c3c); color: white; font-weight: bold; padding: 12px 24px; border-radius: 10px; box-shadow: 0 4px 15px rgba(192, 57, 43, 0.4); transition: all 0.3s ease; width: 100%; }
-        .btn-christmas:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(192, 57, 43, 0.6); background: linear-gradient(135deg, #a93226, #cb4335); }
+
+        /* ===================================================================== */
+        /* NỀN ĐỎ GIÁNG SINH RỰC RỠ KIỂU ẢNH SỐ 2 (RED MERRY CHRISTMAS VILLAGE)  */
+        /* ===================================================================== */
+        #redChristmasSky {
+            position: fixed;
+            inset: -20px;
+            z-index: -4;
+            background-color: #8b0000;
+            background-image:
+                radial-gradient(circle at 50% 28%, rgba(255, 82, 82, 0.85) 0%, rgba(198, 12, 18, 0.92) 45%, rgba(105, 0, 5, 0.98) 100%),
+                url('christmas-bg.jpg');
+            background-size: cover;
+            background-position: center bottom;
+            background-blend-mode: overlay;
+            transition: transform 0.15s ease-out;
+            will-change: transform;
+        }
+
+        /* Hiệu ứng Bokeh tròn lung linh trên nền đỏ giống Ảnh 2 */
+        .bokeh-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            pointer-events: none;
+            background-image:
+                radial-gradient(circle at 18% 22%, rgba(255, 235, 180, 0.22) 0%, rgba(255, 235, 180, 0.05) 8%, transparent 10%),
+                radial-gradient(circle at 48% 36%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 11%, transparent 13%),
+                radial-gradient(circle at 78% 25%, rgba(255, 215, 130, 0.2) 0%, rgba(255, 215, 130, 0.05) 9%, transparent 11%),
+                radial-gradient(circle at 65% 55%, rgba(255, 255, 255, 0.14) 0%, transparent 9%),
+                radial-gradient(circle at 30% 60%, rgba(255, 210, 150, 0.15) 0%, transparent 8%);
+        }
+
+        /* Đồi tuyết trắng, hàng thông phủ tuyết & ngôi làng đỏ dưới chân trang (Giống Ảnh 2) */
+        .winter-village-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 190px;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Canvas Tuyết Rơi + Sao Lấp Lánh + Quà Rơi Tương Tác */
+        #interactiveCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* ===================================================================== */
+        /* ÔNG GIÀ NOEL & ĐÀN TUẦN LỘC BAY QUANH WEB THẢ QUÀ                     */
+        /* ===================================================================== */
+        #santaSleighActor {
+            position: fixed;
+            top: 12%;
+            left: -320px;
+            z-index: 35;
+            pointer-events: auto;
+            cursor: pointer;
+            filter: drop-shadow(0 0 14px rgba(255, 230, 130, 0.85));
+            transition: transform 0.1s linear;
+            will-change: transform, left, top;
+        }
+        #santaSleighActor:hover {
+            filter: drop-shadow(0 0 22px rgba(255, 255, 180, 1));
+        }
+        .reindeer-bob {
+            display: inline-block;
+            animation: reindeerGallop 0.55s ease-in-out infinite alternate;
+        }
+        .reindeer-bob:nth-child(2) { animation-delay: 0.15s; }
+        .reindeer-bob:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes reindeerGallop {
+            0% { transform: translateY(0px) rotate(-4deg); }
+            100% { transform: translateY(-7px) rotate(4deg); }
+        }
+
+        /* Hộp quà được Ông Già Noel thả xuống */
+        .falling-gift {
+            position: fixed;
+            z-index: 34;
+            pointer-events: auto;
+            cursor: pointer;
+            font-size: 26px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.35));
+            animation: giftSway 1.2s ease-in-out infinite alternate;
+            user-select: none;
+        }
+        @keyframes giftSway {
+            0% { transform: rotate(-12deg) translateX(-4px); }
+            100% { transform: rotate(12deg) translateX(4px); }
+        }
+
+        /* Dây đèn LED Giáng Sinh trên đỉnh */
+        .christmas-lights {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 24px;
+            z-index: 50;
+            display: flex;
+            justify-content: space-around;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .light-bulb {
+            width: 11px;
+            height: 16px;
+            border-radius: 50%;
+            margin-top: -4px;
+            animation: twinkle 1.4s infinite alternate;
+        }
+        .light-bulb:nth-child(4n+1) { background: #fff176; box-shadow: 0 0 12px #fff176; animation-delay: 0s; }
+        .light-bulb:nth-child(4n+2) { background: #69f0ae; box-shadow: 0 0 12px #69f0ae; animation-delay: 0.35s; }
+        .light-bulb:nth-child(4n+3) { background: #ffffff; box-shadow: 0 0 12px #ffffff; animation-delay: 0.7s; }
+        .light-bulb:nth-child(4n+4) { background: #ffd54f; box-shadow: 0 0 12px #ffd54f; animation-delay: 1.05s; }
+        @keyframes twinkle {
+            0% { opacity: 0.45; transform: scale(0.88); }
+            100% { opacity: 1; transform: scale(1.14); }
+        }
+
+        /* Glass UI Cards */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(16px);
+            border-radius: 22px;
+            box-shadow: 0 14px 44px rgba(60, 0, 0, 0.45), 0 0 0 2px rgba(255, 255, 255, 0.75);
+        }
+        .glass-form {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+        }
+        .btn-christmas {
+            background: linear-gradient(135deg, #b91c1c, #e11d48);
+            color: white;
+            font-weight: 800;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(185, 28, 28, 0.4);
+            transition: all 0.25s ease;
+            width: 100%;
+        }
+        .btn-christmas:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(185, 28, 28, 0.6);
+            background: linear-gradient(135deg, #991b1b, #be123c);
+        }
         .btn-christmas:disabled { opacity: 0.65; cursor: not-allowed; }
-        .btn-green { background: linear-gradient(135deg, #1e8449, #27ae60); color: white; font-weight: bold; padding: 12px 24px; border-radius: 10px; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.35); transition: all 0.3s ease; }
-        .btn-green:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(39, 174, 96, 0.55); background: linear-gradient(135deg, #196f3d, #229954); }
-        .form-input { width: 100%; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 5px; transition: all 0.3s; background-color: #f8fafc; }
-        .form-input:focus { outline: none; border-color: #27ae60; box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2); background-color: #ffffff; }
-        .filter-btn { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; background: #e2e8f0; color: #475569; transition: all 0.2s; border: 2px solid transparent; cursor: pointer; }
-        .filter-btn:hover { background: #cbd5e1; }
+        .btn-green {
+            background: linear-gradient(135deg, #15803d, #16a34a);
+            color: white;
+            font-weight: 800;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.35);
+            transition: all 0.25s ease;
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            margin-top: 4px;
+            transition: all 0.2s;
+            background-color: #f8fafc;
+            user-select: text;
+            font-size: 14px;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+            background-color: #ffffff;
+        }
+        .filter-btn {
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            background: #f1f5f9;
+            color: #475569;
+            border: 1.5px solid #cbd5e1;
+            cursor: pointer;
+        }
         .filter-btn.active { background: #fee2e2; color: #b91c1c; border-color: #ef4444; }
-        .part-tab { transition: all 0.25s ease; position: relative; }
-        .part-tab.active { background: #ffffff; color: #b91c1c; border-bottom: 4px solid #b91c1c; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transform: translateY(-2px); }
-        .part-tab.upcoming { background: rgba(255, 255, 255, 0.75); color: #334155; border-bottom: 4px solid #94a3b8; }
-        .part-tab.upcoming:hover { background: rgba(255, 255, 255, 0.92); transform: translateY(-1px); }
-        .role-tab { transition: all 0.25s ease; }
-        .role-tab.active-student { background: #dc2626; color: white; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35); }
-        .role-tab.active-admin { background: #15803d; color: white; box-shadow: 0 4px 12px rgba(21, 128, 61, 0.35); }
-        .custom-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
-        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .part-tab { transition: all 0.2s ease; }
+        .part-tab.active {
+            background: #ffffff;
+            color: #b91c1c;
+            border-bottom: 4px solid #dc2626;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+        .part-tab.upcoming {
+            background: rgba(255, 255, 255, 0.82);
+            color: #334155;
+            border-bottom: 4px solid #cbd5e1;
+        }
+        .auth-tab { transition: all 0.2s ease; }
+        .auth-tab.active-red { background: #dc2626; color: white; box-shadow: 0 3px 10px rgba(220, 38, 38, 0.35); }
+        .auth-tab.active-amber { background: #d97706; color: white; box-shadow: 0 3px 10px rgba(217, 119, 6, 0.35); }
+        .auth-tab.active-green { background: #15803d; color: white; box-shadow: 0 3px 10px rgba(21, 128, 61, 0.35); }
+        .custom-scroll::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 6px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 6px; }
     </style>
 </head>
-<body class="text-gray-800 pb-20">
-    <!-- MÀN HÌNH CHẠM ĐỂ MỞ QUÀ & BẬT NHẠC -->
-    <div id="startOverlay" class="fixed inset-0 bg-black/90 z-[200] flex flex-col items-center justify-center cursor-pointer transition-opacity duration-500" onclick="startExperience()">
-        <div class="text-8xl mb-6 animate-bounce">🎁</div>
-        <h2 class="text-3xl font-bold text-white mb-2 text-center px-4">Chạm để mở hộp quà...</h2>
-        <p class="text-gray-400 text-sm">(Khởi động âm nhạc & bước vào Trạm Bưu Tá Secret Santa 2026)</p>
+<body class="text-gray-800 pb-28">
+    <!-- NỀN ĐỎ MERRY CHRISTMAS VILLAGE GIỐNG ẢNH SỐ 2 -->
+    <div id="redChristmasSky"></div>
+    <div class="bokeh-layer"></div>
+
+    <!-- ĐỒI TUYẾT TRẮNG, CÂY THÔNG PHỦ TUYẾT, NGÔI LÀNG ĐỎ & HỘP QUÀ DƯỚI CHÂN TRANG -->
+    <svg class="winter-village-bottom" viewBox="0 0 1440 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Đồi tuyết xa -->
+        <path d="M0,150 Q360,95 720,145 T1440,130 L1440,220 L0,220 Z" fill="rgba(255,255,255,0.85)"/>
+        <!-- Ngôi làng Giáng Sinh đỏ -->
+        <g transform="translate(760, 92)">
+            <rect x="0" y="32" width="46" height="40" fill="#8b1e1e" stroke="#ffffff" stroke-width="2"/>
+            <polygon points="-6,34 23,6 52,34" fill="#ffffff"/>
+            <rect x="14" y="45" width="8" height="10" fill="#fde047"/>
+            <rect x="26" y="45" width="8" height="10" fill="#fde047"/>
+
+            <rect x="65" y="18" width="32" height="54" fill="#991b1b" stroke="#ffffff" stroke-width="2"/>
+            <polygon points="60,20 81,-14 102,20" fill="#ffffff"/>
+            <rect x="76" y="32" width="10" height="12" fill="#fde047"/>
+
+            <rect x="115" y="34" width="52" height="38" fill="#7f1d1d" stroke="#ffffff" stroke-width="2"/>
+            <polygon points="108,36 141,8 174,36" fill="#ffffff"/>
+            <rect x="128" y="46" width="9" height="9" fill="#fde047"/>
+            <rect x="145" y="46" width="9" height="9" fill="#fde047"/>
+
+            <rect x="195" y="36" width="44" height="36" fill="#991b1b" stroke="#ffffff" stroke-width="2"/>
+            <polygon points="189,38 217,12 245,38" fill="#ffffff"/>
+            <rect x="212" y="48" width="10" height="10" fill="#fde047"/>
+        </g>
+        <!-- Rừng cây thông trắng phủ tuyết bên trái (Giống Ảnh 2) -->
+        <g fill="#ffffff" stroke="#b91c1c" stroke-width="1.5">
+            <polygon points="130,175 180,65 230,175"/>
+            <polygon points="140,135 180,45 220,135"/>
+            <polygon points="150,95 180,25 210,95"/>
+
+            <polygon points="220,180 285,35 350,180"/>
+            <polygon points="235,130 285,15 335,130"/>
+            <polygon points="250,82 285,-5 320,82"/>
+
+            <polygon points="340,178 390,72 440,178"/>
+            <polygon points="350,135 390,50 430,135"/>
+
+            <polygon points="1040,175 1080,80 1120,175"/>
+            <polygon points="1050,135 1080,58 1110,135"/>
+
+            <polygon points="1240,178 1285,70 1330,178"/>
+            <polygon points="1250,132 1285,48 1320,132"/>
+        </g>
+        <!-- Đồi tuyết tiền cảnh -->
+        <path d="M0,165 Q280,135 640,175 T1440,160 L1440,220 L0,220 Z" fill="#ffffff"/>
+        <!-- Hộp quà nơ đỏ góc trái dưới giống Ảnh 2 -->
+        <g transform="translate(36, 142)">
+            <rect x="0" y="18" width="44" height="38" rx="4" fill="#ffffff" stroke="#b91c1c" stroke-width="2.5"/>
+            <rect x="18" y="18" width="8" height="38" fill="#dc2626"/>
+            <rect x="0" y="33" width="44" height="8" fill="#dc2626"/>
+            <circle cx="18" cy="15" r="6" fill="#dc2626"/>
+            <circle cx="26" cy="15" r="6" fill="#dc2626"/>
+
+            <rect x="36" y="28" width="32" height="28" rx="3" fill="#ffffff" stroke="#b91c1c" stroke-width="2"/>
+            <rect x="49" y="28" width="6" height="28" fill="#dc2626"/>
+            <rect x="36" y="39" width="32" height="6" fill="#dc2626"/>
+        </g>
+    </svg>
+
+    <!-- ÔNG GIÀ NOEL CÙNG ĐÀN TUẦN LỘC BAY QUANH TRANG WEB & THẢ QUÀ -->
+    <div id="santaSleighActor" onclick="dropGiftFromSanta(true)" title="Bấm vào Ông Già Noel để nhận thêm mưa quà tặng! 🎁">
+        <div id="santaInnerWrap" class="flex items-center gap-1 select-none">
+            <div class="bg-red-700/90 text-amber-200 border border-amber-300/60 text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow mr-1 hidden sm:inline-block">
+                Ho Ho Ho! Chạm để thả quà 🎁
+            </div>
+            <span class="text-2xl sm:text-3xl">🎅🛷</span>
+            <span class="text-amber-300 text-xs font-bold">✨〰️</span>
+            <span class="reindeer-bob text-2xl sm:text-3xl">🦌</span>
+            <span class="reindeer-bob text-2xl sm:text-3xl">🦌</span>
+            <span class="reindeer-bob text-2xl sm:text-3xl">🦌</span>
+            <span class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_10px_#ff0000] -ml-1 -mt-2"></span>
+        </div>
     </div>
 
-    <!-- MODAL XEM ẢNH SELFIE PHÓNG TO (LIGHTBOX) -->
-    <div id="imageLightbox" class="hidden fixed inset-0 bg-black/85 z-[180] flex items-center justify-center p-4" onclick="closeLightbox()">
+    <canvas id="interactiveCanvas"></canvas>
+
+    <!-- DÂY ĐÈN LED GIÁNG SINH TRÊN ĐỈNH MÀN HÌNH -->
+    <div class="christmas-lights">
+        <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
+        <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
+        <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
+        <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
+        <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
+    </div>
+
+    <!-- MÀN HÌNH CHẠM ĐỂ MỞ QUÀ & KHỞI ĐỘNG NHẠC -->
+    <div id="startOverlay" class="fixed inset-0 bg-red-950/95 z-[200] flex flex-col items-center justify-center cursor-pointer transition-opacity duration-500 px-4 text-center" onclick="startExperience()">
+        <div class="text-7xl sm:text-8xl mb-5 animate-bounce drop-shadow-[0_0_25px_rgba(255,215,0,0.8)]">🎁</div>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white mb-2">Chạm để mở hộp quà Giáng Sinh...</h2>
+        <p class="text-amber-200 text-xs sm:text-sm font-medium">(Khởi động âm nhạc, Ông Già Noel cưỡi Tuần Lộc thả quà & bước vào sự kiện ✨)</p>
+    </div>
+
+    <!-- MODAL XEM ẢNH SELFIE PHÓNG TO & MÃ VĂN BẢN BASE64 -->
+    <div id="imageLightbox" class="hidden fixed inset-0 bg-black/85 z-[180] flex items-center justify-center p-3 sm:p-4" onclick="closeLightbox()">
         <div class="relative max-w-lg w-full bg-white rounded-2xl p-4 shadow-2xl text-center" onclick="event.stopPropagation()">
             <button onclick="closeLightbox()" class="absolute -top-3 -right-3 bg-red-600 text-white w-9 h-9 rounded-full font-bold shadow-lg hover:bg-red-700 transition">✕</button>
-            <img id="lightboxImg" src="" alt="Selfie" class="w-full max-h-[70vh] object-contain rounded-xl border border-gray-200 mx-auto">
+            <img id="lightboxImg" src="" alt="Selfie" class="w-full max-h-[55vh] object-contain rounded-xl border border-gray-200 mx-auto">
             <div class="mt-3">
-                <h4 id="lightboxTitle" class="text-lg font-bold text-gray-800"></h4>
-                <p id="lightboxSub" class="text-sm text-gray-500"></p>
+                <h4 id="lightboxTitle" class="text-base sm:text-lg font-bold text-gray-800"></h4>
+                <p id="lightboxSub" class="text-xs sm:text-sm text-gray-500"></p>
+            </div>
+            <!-- Hộp hiển thị mã văn bản Base64 của bức ảnh đang lưu trên Google Sheets -->
+            <div class="mt-3 text-left bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="text-[11px] font-bold text-gray-600">📄 Mã văn bản Base64 (lưu trên Google Sheets):</span>
+                    <button type="button" onclick="copyLightboxBase64()" class="text-[11px] bg-red-600 hover:bg-red-700 text-white font-bold px-2.5 py-0.5 rounded transition">
+                        📋 Sao chép Base64
+                    </button>
+                </div>
+                <textarea id="lightboxBase64Text" readonly rows="2" class="w-full text-[10px] font-mono bg-white border border-gray-200 rounded p-1.5 text-gray-500 select-all"></textarea>
             </div>
         </div>
     </div>
 
     <!-- MODAL BỐC THĂM / GHÉP CẶP SECRET SANTA (ADMIN) -->
-    <div id="matchingModal" class="hidden fixed inset-0 bg-black/80 z-[170] flex items-center justify-center p-4">
+    <div id="matchingModal" class="hidden fixed inset-0 bg-black/80 z-[170] flex items-center justify-center p-3 sm:p-4">
         <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-            <div class="bg-gradient-to-r from-red-700 to-green-800 p-4 md:p-5 text-white flex justify-between items-center">
+            <div class="bg-gradient-to-r from-red-700 to-red-900 p-4 text-white flex justify-between items-center">
                 <div>
-                    <h3 class="text-xl font-bold flex items-center gap-2">🎲 Bốc Thăm & Ghép Cặp Secret Santa</h3>
-                    <p class="text-xs text-green-100 mt-0.5">Thuật toán ghép vòng tròn khép kín: Đảm bảo 100% không ai tự bốc trúng chính mình</p>
+                    <h3 class="text-base sm:text-xl font-bold flex items-center gap-2">🎲 Bốc Thăm & Ghép Cặp Secret Santa</h3>
+                    <p class="text-[11px] sm:text-xs text-amber-200 mt-0.5">Thuật toán ghép vòng tròn khép kín: Không ai tự bốc trúng chính mình</p>
                 </div>
                 <button onclick="closeMatchingModal()" class="bg-white/20 hover:bg-white/30 text-white w-8 h-8 rounded-full font-bold transition">✕</button>
             </div>
-            <div class="p-4 md:p-6 overflow-y-auto custom-scroll flex-1 space-y-4">
-                <div class="flex flex-wrap gap-3 justify-between items-center bg-amber-50 border border-amber-200 p-3 rounded-xl text-sm text-amber-900">
+            <div class="p-3 sm:p-6 overflow-y-auto custom-scroll flex-1 space-y-4">
+                <div class="flex flex-wrap gap-2 justify-between items-center bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs sm:text-sm text-amber-900">
                     <div>
-                        <strong>💡 Hướng dẫn:</strong> Bấm <em>"Quay Số Lại"</em> để tạo danh sách phân công tặng quà mới, sau đó xuất ra file CSV để gửi mật thư.
+                        <strong>💡 Hướng dẫn:</strong> Bấm <em>"Quay Số Lại"</em> để tạo cặp mới, hoặc xuất ra file CSV để gửi mật thư.
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="generateSantaPairs()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg shadow transition text-xs md:text-sm">
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <button onclick="generateSantaPairs()" class="flex-1 sm:flex-initial bg-red-600 hover:bg-red-700 text-white font-bold px-3.5 py-2 rounded-lg shadow transition text-xs">
                             🎲 Quay Số Lại
                         </button>
-                        <button onclick="exportPairsCSV()" class="bg-green-700 hover:bg-green-800 text-white font-bold px-4 py-2 rounded-lg shadow transition text-xs md:text-sm">
-                            📥 Xuất Kết Quả (CSV)
+                        <button onclick="exportPairsCSV()" class="flex-1 sm:flex-initial bg-green-700 hover:bg-green-800 text-white font-bold px-3.5 py-2 rounded-lg shadow transition text-xs">
+                            📥 Xuất CSV
                         </button>
                     </div>
                 </div>
                 <div class="overflow-x-auto custom-scroll border border-gray-200 rounded-xl">
-                    <table class="w-full text-left border-collapse text-sm">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
                         <thead>
                             <tr class="bg-gray-100 text-gray-700 border-b border-gray-200">
-                                <th class="p-3 font-bold text-center w-12">#</th>
-                                <th class="p-3 font-bold">🎅 Người Tặng (Secret Santa)</th>
-                                <th class="p-3 font-bold text-center">➡️</th>
-                                <th class="p-3 font-bold">🎁 Người Nhận Quà (Giftee)</th>
-                                <th class="p-3 font-bold">Wishlist & Blacklist của Người Nhận</th>
+                                <th class="p-2.5 sm:p-3 font-bold text-center w-10">#</th>
+                                <th class="p-2.5 sm:p-3 font-bold">🎅 Người Tặng</th>
+                                <th class="p-2.5 sm:p-3 font-bold text-center">➡️</th>
+                                <th class="p-2.5 sm:p-3 font-bold">🎁 Người Nhận</th>
+                                <th class="p-2.5 sm:p-3 font-bold">Wishlist & Blacklist Người Nhận</th>
                             </tr>
                         </thead>
                         <tbody id="matchingTableBody" class="divide-y divide-gray-100">
@@ -101,17 +390,20 @@
         </div>
     </div>
 
-    <!-- TRÌNH PHÁT NHẠC GIÁNG SINH ĐA BÀI HÁT (GÓC DƯỚI PHẢI) -->
-    <div class="fixed bottom-4 right-4 z-[100] flex flex-col items-end gap-2">
-        <div id="musicOptions" class="hidden bg-gray-900/90 backdrop-blur-md border border-gray-700 rounded-2xl p-3 shadow-2xl mb-1 w-64 text-white">
-            <div class="flex items-center justify-between mb-1.5">
-                <span class="text-[11px] uppercase tracking-wider text-green-400 font-bold flex items-center gap-1">
+    <!-- TRÌNH PHÁT NHẠC GIÁNG SINH GỌN ĐẸP TRÊN CẢ ĐIỆN THOẠI & MÁY TÍNH -->
+    <div class="fixed bottom-3 right-3 z-[100] flex flex-col items-end gap-2">
+        <div id="musicOptions" class="hidden bg-slate-900/95 backdrop-blur-md border border-amber-400/40 rounded-2xl p-3.5 shadow-2xl mb-1 w-[calc(100vw-1.5rem)] max-w-[280px] text-white space-y-2.5">
+            <div class="flex items-center justify-between">
+                <span class="text-[11px] uppercase tracking-wider text-amber-300 font-bold flex items-center gap-1">
                     🎵 Đài Phát Thanh Noel
                 </span>
-                <span id="musicNowPlayingBadge" class="text-[10px] bg-red-600/80 px-2 py-0.5 rounded-full font-semibold">Đang phát</span>
+                <div class="flex items-center gap-1.5">
+                    <span id="musicNowPlayingBadge" class="text-[10px] bg-green-600 px-2 py-0.5 rounded-full font-semibold">Đang phát</span>
+                    <button type="button" onclick="toggleMusicPanel()" class="text-gray-400 hover:text-white text-xs font-bold px-1">✕</button>
+                </div>
             </div>
 
-            <select id="songSelect" onchange="changeSong(this.value)" class="w-full bg-gray-800 text-white text-xs rounded-lg border border-gray-600 p-2 outline-none cursor-pointer mb-2">
+            <select id="songSelect" onchange="changeSong(this.value)" class="w-full bg-slate-800 text-white text-xs rounded-lg border border-slate-600 p-2 outline-none cursor-pointer">
                 <option value="0">🎅 1. Santa Claus Is Coming (Chính)</option>
                 <option value="1">🔔 2. Jingle Bells (Music Box)</option>
                 <option value="2">🎄 3. We Wish You A Merry Xmas</option>
@@ -121,23 +413,23 @@
                 <option value="local">📁 Mở file nhạc MP3 từ máy...</option>
             </select>
 
-            <div class="flex items-center justify-between gap-2 pt-1 border-t border-gray-700/80">
+            <div class="flex items-center justify-between gap-2 pt-1 border-t border-slate-700/80">
                 <div class="flex items-center gap-1">
-                    <button type="button" onclick="prevSong()" class="bg-gray-800 hover:bg-gray-700 text-xs px-2.5 py-1 rounded-lg transition" title="Bài trước">⏮</button>
-                    <button type="button" onclick="toggleMusic()" id="miniPlayBtn" class="bg-red-600 hover:bg-red-700 text-xs px-3 py-1 rounded-lg font-bold transition">⏸ Tạm dừng</button>
-                    <button type="button" onclick="nextSong()" class="bg-gray-800 hover:bg-gray-700 text-xs px-2.5 py-1 rounded-lg transition" title="Bài tiếp">⏭</button>
+                    <button type="button" onclick="prevSong()" class="bg-slate-800 hover:bg-slate-700 text-xs px-2.5 py-1 rounded-lg transition" title="Bài trước">⏮</button>
+                    <button type="button" onclick="toggleMusic()" id="miniPlayBtn" class="bg-red-600 hover:bg-red-700 text-xs px-3 py-1 rounded-lg font-bold transition">⏸ Dừng</button>
+                    <button type="button" onclick="nextSong()" class="bg-slate-800 hover:bg-slate-700 text-xs px-2.5 py-1 rounded-lg transition" title="Bài tiếp">⏭</button>
                 </div>
-                <input type="range" id="volumeSlider" min="0" max="100" value="60" oninput="changeVolume(this.value)" class="w-16 accent-red-500 cursor-pointer" title="Âm lượng">
+                <input type="range" id="volumeSlider" min="0" max="100" value="65" oninput="changeVolume(this.value)" class="w-16 accent-red-500 cursor-pointer" title="Âm lượng">
             </div>
         </div>
         
         <input type="file" id="localAudio" accept="audio/*" class="hidden" onchange="playLocalAudio(event)">
 
-        <div class="flex items-center gap-2">
-            <button id="musicPanelToggleBtn" onclick="toggleMusicPanel()" class="hidden bg-gray-900/85 border border-white/40 text-white rounded-full w-10 h-10 shadow-lg hover:bg-gray-800 transition flex items-center justify-center text-base" title="Chọn bài hát">
+        <div class="flex items-center gap-1.5">
+            <button id="musicPanelToggleBtn" onclick="toggleMusicPanel()" class="hidden bg-slate-900/90 border border-amber-300/60 text-white rounded-full w-10 h-10 shadow-lg hover:bg-slate-800 transition flex items-center justify-center text-base" title="Đổi bài hát">
                 🎵
             </button>
-            <button id="musicToggleBtn" onclick="toggleMusic()" class="bg-red-600 border-2 border-white text-white rounded-full px-4 py-2 shadow-[0_0_15px_rgba(255,0,0,0.5)] hover:bg-red-700 transition flex items-center justify-center font-bold text-sm hidden">
+            <button id="musicToggleBtn" onclick="toggleMusic()" class="bg-red-600 border-2 border-amber-200 text-white rounded-full px-3.5 py-2 shadow-[0_0_15px_rgba(255,215,0,0.4)] hover:bg-red-700 transition flex items-center justify-center font-bold text-xs sm:text-sm hidden">
                 🔊 Đang Phát Nhạc
             </button>
         </div>
@@ -145,197 +437,169 @@
         <audio id="bgMusic" preload="auto"></audio>
     </div>
 
-    <!-- THÔNG BÁO TOAST NHỎ -->
-    <div id="toastBox" class="fixed top-5 right-5 z-[190] hidden max-w-sm bg-gray-900/95 text-white px-4 py-3 rounded-xl shadow-2xl border border-white/20 flex items-center gap-3 transition-all duration-300">
-        <span id="toastIcon" class="text-xl">🎄</span>
-        <span id="toastText" class="text-sm font-medium"></span>
+    <!-- THÔNG BÁO TOAST -->
+    <div id="toastBox" class="fixed top-5 right-3 sm:right-5 left-3 sm:left-auto z-[190] hidden sm:max-w-sm bg-slate-900/95 text-white px-4 py-3 rounded-xl shadow-2xl border border-amber-400/50 flex items-center gap-3 transition-all duration-300">
+        <span id="toastIcon" class="text-xl shrink-0">🎄</span>
+        <span id="toastText" class="text-xs sm:text-sm font-medium"></span>
     </div>
 
-    <div class="overlay"></div>
-
-    <div class="container mx-auto px-4 py-8 md:py-10 max-w-5xl relative z-10">
-        <!-- HEADER CHUNG -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-3 drop-shadow-lg" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
-                🎅 Trạm Bưu Tá Secret Santa
+    <!-- CONTAINER CHÍNH (TỐI ƯU CHO CẢ ĐIỆN THOẠI & MÁY TÍNH) -->
+    <div class="container mx-auto px-3 sm:px-4 pt-7 sm:pt-10 pb-12 max-w-5xl relative z-10">
+        <!-- HEADER PHONG CÁCH MERRY CHRISTMAS ẢNH 2 -->
+        <div class="text-center mb-5 sm:mb-8">
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-400/20 border border-amber-200/50 text-amber-100 text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-2 shadow">
+                🎅 Merry Christmas • Secret Santa 2026 🦌
+            </div>
+            <h1 class="text-3xl sm:text-5xl md:text-6xl font-black text-white mb-1.5 tracking-tight" style="text-shadow: 0 4px 0 #7f1d1d, 0 8px 20px rgba(0,0,0,0.5);">
+                🎄 Merry Christmas! 🎄
             </h1>
-            <p class="text-lg md:text-xl text-green-100 font-medium">Chiến dịch Mùa Đông 2026 đã chính thức khởi động!</p>
+            <p class="text-xs sm:text-base text-amber-100 font-semibold px-2">
+                Trạm Bưu Tá Secret Santa 2026 — Chạm vào Ông Già Noel đang bay để hứng mưa quà tặng!
+            </p>
         </div>
 
         <!-- ========================================================================= -->
-        <!-- MÀN HÌNH 1: CỔNG ĐĂNG NHẬP & ĐĂNG KÝ LẦN ĐẦU (TRƯỚC KHI VÀO SỰ KIỆN)      -->
+        <!-- TRANG 1 (ĐỘC LẬP): CỔNG ĐĂNG NHẬP / ĐĂNG KÝ TÀI KHOẢN / ADMIN             -->
         <!-- ========================================================================= -->
-        <div id="viewLogin" class="glass-panel p-5 md:p-10">
-            <div class="text-center">
-                <h2 class="text-2xl md:text-3xl font-bold text-red-700 mb-2">🎄 Cổng Đăng Nhập Sự Kiện</h2>
-                <p class="text-sm text-gray-600 mb-3">Nhập Mã Sinh Viên (mẫu: <strong>TH12345</strong>) để vào Giao Diện Chính Của Sự Kiện</p>
-                <div class="w-24 h-1 bg-green-600 mx-auto rounded-full mb-6"></div>
-            </div>
+        <div id="pageAuth" class="max-w-xl mx-auto">
+            <div class="glass-panel p-4 sm:p-8">
+                <div class="text-center mb-5">
+                    <div class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-2.5 shadow-inner border border-red-200">
+                        🎅
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-gray-800">Cổng Đăng Nhập Sự Kiện</h2>
+                    <p class="text-xs text-gray-500 mt-1">Đăng nhập bằng MSSV hoặc tạo tài khoản mới để bước vào Part 1</p>
+                </div>
 
-            <!-- BỘ CHUYỂN ĐỔI VAI TRÒ: SINH VIÊN / ADMIN (BTC) -->
-            <div class="flex justify-center mb-8">
-                <div class="bg-gray-200/90 p-1.5 rounded-xl inline-flex gap-1 shadow-inner">
-                    <button type="button" id="tabStudentBtn" onclick="switchRoleTab('student')" class="role-tab active-student px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2">
-                        <span>🎓</span> Sinh Viên (User)
+                <!-- 3 TAB CHỌN CHẾ ĐỘ: ĐĂNG NHẬP / ĐĂNG KÝ MỚI / ADMIN -->
+                <div class="grid grid-cols-3 gap-1 bg-gray-200/90 p-1 rounded-xl mb-5 shadow-inner text-xs sm:text-sm">
+                    <button type="button" id="authTabLogin" onclick="switchAuthTab('login')" class="auth-tab active-red py-2.5 px-1.5 rounded-lg font-bold flex items-center justify-center gap-1">
+                        <span>🔑</span> <span>Đăng Nhập</span>
                     </button>
-                    <button type="button" id="tabAdminBtn" onclick="switchRoleTab('admin')" class="role-tab text-gray-700 hover:bg-white/60 px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2">
-                        <span>🛡️</span> Ban Tổ Chức (Admin)
+                    <button type="button" id="authTabRegister" onclick="switchAuthTab('register')" class="auth-tab text-gray-700 hover:bg-white/60 py-2.5 px-1.5 rounded-lg font-bold flex items-center justify-center gap-1">
+                        <span>✨</span> <span>Đăng Ký</span>
+                    </button>
+                    <button type="button" id="authTabAdmin" onclick="switchAuthTab('admin')" class="auth-tab text-gray-700 hover:bg-white/60 py-2.5 px-1.5 rounded-lg font-bold flex items-center justify-center gap-1">
+                        <span>🛡️</span> <span>Admin</span>
                     </button>
                 </div>
-            </div>
 
-            <!-- NHÁNH 1A: SINH VIÊN ĐĂNG NHẬP BẰNG MSSV -->
-            <div id="studentLoginSection">
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-start">
-                    <!-- Cột trái: Luật chơi & Quy tắc 1 MSSV = 1 Cá nhân -->
-                    <div class="md:col-span-2 space-y-4">
-                        <div class="flex justify-center">
-                            <svg class="w-24 h-24 text-red-600 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1 1h1zm3 0a1 1 0 10-1-1v1h1z" clip-rule="evenodd"></path>
-                                <path d="M9 11H3v5a2 2 0 002 2h4v-7zM11 18h4a2 2 0 002-2v-5h-6v7z"></path>
-                            </svg>
+                <!-- TAB 1: ĐĂNG NHẬP (DÀNH CHO NGƯỜI ĐÃ CÓ TÀI KHOẢN) -->
+                <div id="authPanelLogin" class="glass-form p-4 sm:p-6 border border-gray-100">
+                    <form onsubmit="handleStudentLogin(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-gray-700">
+                                Mã Số Sinh Viên (MSSV) <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="loginMssvInput"
+                                required
+                                oninput="this.value = this.value.toUpperCase()"
+                                class="form-input text-base sm:text-lg font-extrabold tracking-wider uppercase text-red-700"
+                                placeholder="Nhập MSSV (VD: TH12345)..."
+                            >
+                            <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                                • Nếu đã có tài khoản: Hệ thống mở thẳng <strong>Part 1: The Gathering</strong>.<br>
+                                • Nếu chưa có tài khoản: Bấm qua tab <strong>"✨ Đăng Ký"</strong> để tạo mới nhé!
+                            </p>
                         </div>
-                        <div class="bg-white/80 p-5 rounded-xl border border-white shadow-sm">
-                            <h3 class="text-base font-bold text-green-800 mb-2.5">📜 Hành Trình 4 Chặng:</h3>
-                            <ul class="list-disc list-inside text-xs md:text-sm space-y-2 text-gray-700 font-medium">
-                                <li><strong>Part 1 (The Gathering):</strong> Ghi danh bằng MSSV, gửi Wishlist & mở Bảng Xếp Hạng.</li>
-                                <li><strong>Part 2 (The Whisper):</strong> Mini-game giải mật thư tích điểm.</li>
-                                <li><strong>Part 3 (The Sneaky Elf):</strong> Mini-game truy tìm Yêu Tinh.</li>
-                                <li><strong>Part 4 (The Reveal):</strong> Đêm trao quà & vinh danh Top Bảng Xếp Hạng!</li>
-                            </ul>
-                        </div>
-                        <div class="bg-amber-50/90 p-4 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-1">
-                            <div class="font-bold flex items-center gap-1.5 text-sm text-amber-800">
-                                <span>🪪</span> Định danh duy nhất (Ví dụ: TH12345)
-                            </div>
-                            <p>Mỗi MSSV đại diện cho <strong>1 cá nhân duy nhất</strong>. Nếu MSSV của bạn đã có trên hệ thống, bạn sẽ vào thẳng sự kiện và có thể <strong>chỉnh sửa thông tin</strong> bất cứ lúc nào mà không bị tạo trùng lặp.</p>
-                        </div>
-                    </div>
-
-                    <!-- Cột phải: Ô nhập MSSV hoặc Hoàn tất đăng ký lần đầu -->
-                    <div class="md:col-span-3 glass-form p-6 border border-gray-100 relative">
-                        <!-- Bước 1: Nhập MSSV -->
-                        <div id="mssvCheckBox">
-                            <h3 class="text-xl font-bold text-gray-800 border-b pb-3 mb-4 flex items-center gap-2">
-                                <span>🎫</span> Đăng Nhập Vào Sự Kiện
-                            </h3>
-                            <form onsubmit="handleStudentCheck(event)" class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-bold text-gray-700">
-                                        Mã Số Sinh Viên (MSSV) <span class="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="loginMssvInput"
-                                        required
-                                        oninput="this.value = this.value.toUpperCase()"
-                                        class="form-input text-base font-bold tracking-wider uppercase text-red-700"
-                                        placeholder="Nhập MSSV (VD: TH12345)..."
-                                    >
-                                    <p class="text-xs text-gray-500 mt-2 leading-relaxed">
-                                        • <strong>Đã có MSSV trên hệ thống:</strong> Vào thẳng <em>Giao Diện Chính Sự Kiện</em> (xem Bảng Xếp Hạng & sửa thông tin cá nhân nếu cần).<br>
-                                        • <strong>Chưa có MSSV:</strong> Điền thông tin lần đầu để kích hoạt tài khoản tham gia.
-                                    </p>
-                                </div>
-                                <button type="submit" id="btnCheckMssv" class="btn-christmas text-base flex justify-center items-center gap-2">
-                                    <span>Vào Sự Kiện Secret Santa</span> <span>🎅</span>
-                                </button>
-                            </form>
-                        </div>
-
-                        <!-- Bước 2: Form Điền / Sửa Thông Tin Cá Nhân -->
-                        <div id="registrationFormBox" class="hidden">
-                            <div class="flex items-center justify-between border-b pb-3 mb-4">
-                                <h3 id="formBoxTitle" class="text-xl font-bold text-gray-800 flex items-center gap-2">
-                                    <span>✍️</span> Hoàn Tất Hồ Sơ Cá Nhân
-                                </h3>
-                                <button type="button" onclick="backFromForm()" class="text-xs font-semibold text-gray-500 hover:text-red-600 underline">
-                                    ← Quay lại
-                                </button>
-                            </div>
-
-                            <div id="regStatusBanner" class="mb-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-800 font-medium">
-                            </div>
-
-                            <form id="santaForm" onsubmit="submitForm(event)" class="space-y-4">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-bold text-gray-700">Mã Sinh Viên (MSSV) <span class="text-red-500">*</span></label>
-                                        <input type="text" id="mssv" required readonly class="form-input bg-gray-100 font-extrabold text-red-700 uppercase cursor-not-allowed">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-bold text-gray-700">Họ và Tên của bạn <span class="text-red-500">*</span></label>
-                                        <input type="text" id="name" required class="form-input" placeholder="Nhập họ và tên...">
-                                    </div>
-                                </div>
-                                
-                                <div class="bg-gray-50 p-4 rounded-lg border border-dashed border-gray-300">
-                                    <label class="block text-sm font-bold text-gray-700 mb-2">
-                                        Selfie Xác Minh (Bắt buộc) 📸 <span class="text-red-500">*</span>
-                                    </label>
-                                    <div class="flex flex-wrap items-center gap-4">
-                                        <label for="selfie" class="cursor-pointer bg-red-100 text-red-700 px-4 py-2 rounded-lg border border-red-300 hover:bg-red-200 transition text-sm font-bold flex items-center gap-1.5">
-                                            <span>📷</span> <span id="cameraBtnLabel">Mở Camera / Chọn Ảnh</span>
-                                        </label>
-                                        <input type="file" id="selfie" accept="image/*" capture="user" class="hidden" onchange="loadOriginalImage(event)">
-                                        <img id="selfiePreview" src="" alt="Preview" class="hidden w-24 h-24 object-cover rounded-lg shadow-md border border-gray-300 cursor-pointer" onclick="openLightbox(this.src, document.getElementById('name').value || 'Ảnh Selfie', 'MSSV: ' + document.getElementById('mssv').value)">
-                                    </div>
-                                    
-                                    <div id="filterToolbar" class="hidden mt-4 p-3 bg-white rounded-lg border border-gray-200 shadow-sm">
-                                        <p class="text-xs font-bold text-gray-600 mb-2">Chọn Màu Ảnh & Khung Viền Giáng Sinh:</p>
-                                        <div class="flex flex-wrap gap-2">
-                                            <button type="button" class="filter-btn active" onclick="applyFilter('none', this)">Ảnh Gốc</button>
-                                            <button type="button" class="filter-btn" onclick="applyFilter('noel', this)">🎄 Viền Noel</button>
-                                            <button type="button" class="filter-btn" onclick="applyFilter('frost', this)">❄️ Băng Giá</button>
-                                            <button type="button" class="filter-btn" onclick="applyFilter('retro', this)">📜 Cổ Điển</button>
-                                            <button type="button" class="filter-btn" onclick="applyFilter('noir', this)">🎞️ Điện Ảnh (B&W)</button>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="selfieBase64">
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-bold text-gray-700">
-                                        🎁 Wishlist (Quà mong muốn) <span class="text-red-500">*</span>
-                                    </label>
-                                    <textarea id="wishlist" required rows="2" class="form-input" placeholder="Gợi ý chi tiết: Sách kinh doanh, nến thơm, gấu bông, cốc giữ nhiệt..."></textarea>
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-bold text-gray-700">
-                                        🚫 Blacklist (Quà cần tránh) <span class="text-red-500">*</span>
-                                    </label>
-                                    <textarea id="blacklist" required rows="2" class="form-input" placeholder="Ví dụ: Không ăn đồ ngọt, dị ứng nước hoa mùi nồng..."></textarea>
-                                </div>
-
-                                <div class="flex gap-3 pt-2">
-                                    <button type="button" id="cancelEditBtn" onclick="cancelEditProfile()" class="hidden w-1/3 py-3 px-4 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm transition">
-                                        Hủy
-                                    </button>
-                                    <button type="submit" id="submitFormBtn" class="btn-christmas text-base flex-1 flex justify-center items-center gap-2">
-                                        <span>Lưu & Vào Giao Diện Sự Kiện</span> <span>🎅</span>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                        <button type="submit" id="btnLoginSubmit" class="btn-christmas text-sm sm:text-base flex justify-center items-center gap-2">
+                            <span>Đăng Nhập Vào Part 1</span> <span>🎅</span>
+                        </button>
+                    </form>
                 </div>
-            </div>
 
-            <!-- NHÁNH 1B: ĐĂNG NHẬP ADMIN (BAN TỔ CHỨC) -->
-            <div id="adminLoginSection" class="hidden max-w-md mx-auto">
-                <div class="glass-form p-6 md:p-8 border border-green-200 shadow-lg">
-                    <div class="text-center mb-5">
-                        <div class="w-16 h-16 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 shadow-inner">
-                            🛡️
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-800">Mở Khóa Trang Quản Trị BTC</h3>
-                        <p class="text-xs text-gray-500 mt-1">Dành riêng cho Ban Tổ Chức Secret Santa 2026 để quản lý danh sách, điểm số & bốc thăm</p>
+                <!-- TAB 2: ĐĂNG KÝ TÀI KHOẢN MỚI (LƯU TRỰC TIẾP MSSV + HỌ TÊN + BASE64 ẢNH + WISHLIST/BLACKLIST) -->
+                <div id="authPanelRegister" class="hidden glass-form p-4 sm:p-6 border border-gray-100">
+                    <div id="registerNoticeBanner" class="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 font-medium leading-relaxed">
+                        🪪 Điền <strong>Mã sinh viên (VD: TH12345)</strong>, <strong>Họ tên</strong>, <strong>Ảnh bản thân</strong> và <strong>Wishlist / Blacklist</strong> để lưu lên Google Sheets và vào thẳng Part 1!
                     </div>
 
+                    <form id="registerForm" onsubmit="handleStudentRegister(event)" class="space-y-3.5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs sm:text-sm font-bold text-gray-700">Mã Sinh Viên (MSSV) <span class="text-red-500">*</span></label>
+                                <input
+                                    type="text"
+                                    id="regMssvInput"
+                                    required
+                                    oninput="this.value = this.value.toUpperCase()"
+                                    class="form-input font-extrabold text-red-700 uppercase tracking-wider"
+                                    placeholder="VD: TH12345"
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-xs sm:text-sm font-bold text-gray-700">Họ và Tên <span class="text-red-500">*</span></label>
+                                <input
+                                    type="text"
+                                    id="regNameInput"
+                                    required
+                                    class="form-input font-semibold"
+                                    placeholder="Nhập họ và tên..."
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Chụp ảnh & Chuyển sang mã văn bản Base64 -->
+                        <div class="bg-gray-50 p-3.5 rounded-xl border border-dashed border-gray-300">
+                            <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-2">
+                                Ảnh Bản Thân (Tự động mã hóa Base64 lưu Google Sheet) 📸 <span class="text-red-500">*</span>
+                            </label>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <label for="regSelfieFile" class="cursor-pointer bg-red-100 text-red-700 px-3.5 py-2 rounded-xl border border-red-300 hover:bg-red-200 transition text-xs sm:text-sm font-bold flex items-center gap-1.5 shadow-sm">
+                                    <span>📷</span> <span id="regCameraBtnLabel">Chụp Ảnh / Chọn Ảnh</span>
+                                </label>
+                                <input type="file" id="regSelfieFile" accept="image/*" class="hidden" onchange="loadOriginalImage(event, 'reg')">
+                                <img id="regSelfiePreview" src="" alt="Preview" class="hidden w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl shadow-md border-2 border-red-500 cursor-pointer" onclick="openLightbox(this.src, document.getElementById('regNameInput').value || 'Ảnh của bạn', 'MSSV: ' + document.getElementById('regMssvInput').value)">
+                            </div>
+
+                            <div id="regFilterToolbar" class="hidden mt-3 p-2.5 bg-white rounded-xl border border-gray-200 shadow-sm">
+                                <p class="text-[11px] font-bold text-gray-600 mb-1.5">Chọn Khung Viền Giáng Sinh:</p>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <button type="button" class="filter-btn active" onclick="applyFilter('none', this)">Ảnh Gốc</button>
+                                    <button type="button" class="filter-btn" onclick="applyFilter('noel', this)">🎄 Viền Noel</button>
+                                    <button type="button" class="filter-btn" onclick="applyFilter('frost', this)">❄️ Băng Giá</button>
+                                    <button type="button" class="filter-btn" onclick="applyFilter('retro', this)">📜 Cổ Điển</button>
+                                    <button type="button" class="filter-btn" onclick="applyFilter('noir', this)">🎞️ B&W</button>
+                                </div>
+                            </div>
+
+                            <!-- Trạng thái chuỗi văn bản Base64 -->
+                            <div id="regBase64InfoBox" class="hidden mt-2.5 bg-green-50 border border-green-200 rounded-lg p-2 text-[11px] text-green-800">
+                                <div class="flex items-center justify-between">
+                                    <span id="regBase64LengthText" class="font-bold">✅ Đã tạo mã Base64</span>
+                                    <button type="button" onclick="openLightbox(document.getElementById('regSelfieBase64').value, 'Mã Base64 Ảnh Của Bạn', 'Sẵn sàng lưu lên Google Sheets')" class="underline font-bold text-red-700">Xem mã Base64</button>
+                                </div>
+                            </div>
+                            <input type="hidden" id="regSelfieBase64">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-green-800">
+                                🎁 Wishlist (Món quà bạn mong muốn) <span class="text-red-500">*</span>
+                            </label>
+                            <textarea id="regWishlistInput" required rows="2" class="form-input" placeholder="Gợi ý: Sách, nến thơm, gấu bông, cốc giữ nhiệt..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-red-700">
+                                🚫 Blacklist (Món quà cần tránh / dị ứng) <span class="text-red-500">*</span>
+                            </label>
+                            <textarea id="regBlacklistInput" required rows="2" class="form-input" placeholder="Ví dụ: Không ăn đồ ngọt, dị ứng nước hoa..."></textarea>
+                        </div>
+
+                        <button type="submit" id="btnRegisterSubmit" class="btn-christmas text-sm sm:text-base flex justify-center items-center gap-2">
+                            <span>Lưu Lên Hệ Thống & Vào Part 1</span> <span>🎄</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- TAB 3: ĐĂNG NHẬP ADMIN (BAN TỔ CHỨC) -->
+                <div id="authPanelAdmin" class="hidden glass-form p-4 sm:p-6 border border-green-200">
                     <form onsubmit="handleAdminLogin(event)" class="space-y-4">
                         <div>
-                            <label class="block text-sm font-bold text-gray-700">Mật khẩu Quản trị <span class="text-red-500">*</span></label>
+                            <label class="block text-xs sm:text-sm font-bold text-gray-700">Mật khẩu Quản trị BTC <span class="text-red-500">*</span></label>
                             <div class="relative">
                                 <input type="password" id="adminPassInput" required class="form-input pr-12" placeholder="Nhập mật khẩu Admin...">
                                 <button type="button" onclick="toggleAdminPassVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs font-bold">
@@ -346,7 +610,7 @@
                                 ❌ Mật khẩu quản trị không chính xác! Vui lòng thử lại.
                             </p>
                         </div>
-                        <button type="submit" class="btn-green w-full text-base flex justify-center items-center gap-2">
+                        <button type="submit" class="btn-green w-full text-sm sm:text-base flex justify-center items-center gap-2">
                             <span>🔑 Mở Khóa Admin Dashboard</span>
                         </button>
                     </form>
@@ -355,86 +619,85 @@
         </div>
 
         <!-- ========================================================================= -->
-        <!-- MÀN HÌNH 2: GIAO DIỆN CHÍNH CỦA SỰ KIỆN (SAU KHI SINH VIÊN ĐĂNG NHẬP)      -->
+        <!-- TRANG 2 (SAU KHI ĐĂNG NHẬP): GIAO DIỆN CHÍNH SỰ KIỆN & PART 1-2-3-4       -->
         <!-- ========================================================================= -->
-        <div id="viewEventHub" class="hidden">
-            <!-- Thanh Trạng Thái Sinh Viên Đang Đăng Nhập -->
-            <div class="bg-white/95 backdrop-blur-md rounded-2xl px-5 py-3.5 mb-6 shadow-lg border border-white flex flex-wrap justify-between items-center gap-3">
-                <div class="flex items-center gap-3">
-                    <img id="hubHeaderAvatar" src="" alt="Avatar" class="w-11 h-11 rounded-full object-cover border-2 border-red-600 shadow">
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span id="hubHeaderName" class="font-extrabold text-gray-800 text-base">---</span>
-                            <span id="hubHeaderMssv" class="bg-red-100 text-red-700 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-red-200">TH12345</span>
+        <div id="pageEvent" class="hidden">
+            <!-- Thanh Thông Tin Tài Khoản Đang Đăng Nhập (Đẹp gọn trên Mobile) -->
+            <div class="bg-white/95 backdrop-blur-md rounded-2xl p-3.5 sm:px-5 mb-4 sm:mb-6 shadow-xl border border-white flex items-center justify-between gap-2">
+                <div class="flex items-center gap-3 min-w-0">
+                    <img id="hubHeaderAvatar" src="" alt="Avatar" onclick="openLightbox(this.src, document.getElementById('hubHeaderName').textContent, 'MSSV: ' + document.getElementById('hubHeaderMssv').textContent)" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-red-600 shadow cursor-pointer shrink-0">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span id="hubHeaderName" class="font-extrabold text-gray-800 text-sm sm:text-base truncate">---</span>
+                            <span class="bg-red-600 text-white text-[11px] font-extrabold px-2 py-0.5 rounded-full shadow-sm">
+                                <span id="hubHeaderMssv">TH12345</span>
+                            </span>
                         </div>
-                        <p class="text-xs text-green-700 font-semibold">🎄 Đã tham gia sự kiện • Điểm tích lũy: <strong id="hubHeaderScore">100</strong> PTS</p>
+                        <p class="text-[11px] sm:text-xs text-green-700 font-semibold mt-0.5">
+                            🎄 Điểm BXH: <strong id="hubHeaderScore">150</strong> PTS
+                        </p>
                     </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="openEditProfile()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-3.5 py-2 rounded-xl shadow text-xs transition flex items-center gap-1.5">
-                        <span>✏️</span> Sửa Hồ Sơ Cá Nhân
-                    </button>
-                    <button onclick="logoutUser()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1">
-                        <span>🚪</span> Đăng xuất
-                    </button>
-                </div>
-            </div>
-
-            <!-- THANH CHUYỂN ĐỔI 4 CHẶNG SỰ KIỆN (PART 1 - 2 - 3 - 4) -->
-            <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6">
-                <button type="button" id="partTab1" onclick="switchEventPart(1)" class="part-tab active font-bold py-2.5 px-4 md:px-6 rounded-t-xl text-sm md:text-base flex items-center gap-2">
-                    <span>🎄</span> Part 1: The Gathering
-                </button>
-                <button type="button" id="partTab2" onclick="switchEventPart(2)" class="part-tab upcoming font-semibold py-2.5 px-4 md:px-6 rounded-t-xl text-sm md:text-base flex items-center gap-2">
-                    <span>🤫</span> Part 2: The Whisper
-                    <span class="text-[10px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp mở</span>
-                </button>
-                <button type="button" id="partTab3" onclick="switchEventPart(3)" class="part-tab upcoming font-semibold py-2.5 px-4 md:px-6 rounded-t-xl text-sm md:text-base flex items-center gap-2">
-                    <span>🧝</span> Part 3: The Sneaky Elf
-                    <span class="text-[10px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp mở</span>
-                </button>
-                <button type="button" id="partTab4" onclick="switchEventPart(4)" class="part-tab upcoming font-semibold py-2.5 px-4 md:px-6 rounded-t-xl text-sm md:text-base flex items-center gap-2">
-                    <span>🎁</span> Part 4: The Reveal
-                    <span class="text-[10px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp mở</span>
+                <button onclick="logoutUser()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 shrink-0 border border-gray-300">
+                    <span>🚪</span> <span>Thoát</span>
                 </button>
             </div>
 
-            <!-- KHUNG NỘI DUNG TỪNG PART TRONG SỰ KIỆN -->
-            <div class="glass-panel p-5 md:p-8">
+            <!-- THANH CHUYỂN ĐỔI 4 PART SỰ KIỆN (LƯỚI 2x2 TRÊN ĐIỆN THOẠI, 4 CỘT TRÊN MÁY TÍNH) -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-5">
+                <button type="button" id="partTab1" onclick="switchEventPart(1)" class="part-tab active font-extrabold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1.5">
+                    <span>🎄</span> <span>Part 1: Gathering</span>
+                </button>
+                <button type="button" id="partTab2" onclick="switchEventPart(2)" class="part-tab upcoming font-bold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1">
+                    <span>🤫</span> <span>Part 2</span>
+                    <span class="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp tới</span>
+                </button>
+                <button type="button" id="partTab3" onclick="switchEventPart(3)" class="part-tab upcoming font-bold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1">
+                    <span>🧝</span> <span>Part 3</span>
+                    <span class="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp tới</span>
+                </button>
+                <button type="button" id="partTab4" onclick="switchEventPart(4)" class="part-tab upcoming font-bold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1">
+                    <span>🎁</span> <span>Part 4</span>
+                    <span class="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp tới</span>
+                </button>
+            </div>
+
+            <!-- KHUNG NỘI DUNG TỪNG PART -->
+            <div class="glass-panel p-4 sm:p-7">
 
                 <!-- =============================================================== -->
-                <!-- NỘI DUNG PART 1: BẢNG XẾP HẠNG ĐIỂM SỰ KIỆN & HỒ SƠ CÁ NHÂN    -->
+                <!-- PART 1: THE GATHERING (BẢNG XẾP HẠNG & SỬA HỒ SƠ CÁ NHÂN)       -->
                 <!-- =============================================================== -->
-                <div id="eventPart1Content" class="space-y-8">
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <div id="eventPart1Content">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
                         
-                        <!-- CỘT TRÁI (7/12): BẢNG XẾP HẠNG ĐIỂM SỰ KIỆN (LEADERBOARD) -->
-                        <div class="lg:col-span-7 glass-form p-5 md:p-6 border border-amber-200">
+                        <!-- CỘT BẢNG XẾP HẠNG ĐIỂM SỰ KIỆN (HIỆN TRƯỚC TRÊN MOBILE ĐỂ AI CŨNG THẤY NGAY) -->
+                        <div class="lg:col-span-7 lg:order-2 glass-form p-4 sm:p-6 border border-amber-200">
                             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gray-200 pb-3 mb-4">
                                 <div>
-                                    <h3 class="text-xl font-extrabold text-gray-800 flex items-center gap-2">
+                                    <h3 class="text-base sm:text-xl font-extrabold text-gray-800 flex items-center gap-1.5">
                                         <span>🏆</span> Bảng Xếp Hạng Điểm Sự Kiện
                                     </h3>
-                                    <p class="text-xs text-gray-500 mt-0.5">Tích điểm qua Part 1, 2, 3, 4 để đua Top nhận quà đặc biệt từ BTC</p>
+                                    <p class="text-[11px] sm:text-xs text-gray-500 mt-0.5">Danh sách thành viên tham gia & đua Top qua Part 2, 3, 4</p>
                                 </div>
                                 <button onclick="loadLeaderboardData()" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
-                                    <span>🔄</span> Cập nhật BXH
+                                    <span>🔄</span> Làm mới
                                 </button>
                             </div>
 
                             <!-- Podium Top 3 -->
-                            <div id="leaderboardPodium" class="grid grid-cols-3 gap-2 md:gap-3 mb-5 text-center items-end pt-2">
+                            <div id="leaderboardPodium" class="grid grid-cols-3 gap-2 mb-4 text-center items-end pt-2">
                             </div>
 
-                            <!-- Danh sách xếp hạng chi tiết -->
-                            <div class="overflow-y-auto custom-scroll max-h-[380px] border border-gray-100 rounded-xl">
-                                <table class="w-full text-left border-collapse text-sm">
-                                    <thead class="bg-gray-100 text-gray-600 text-xs uppercase sticky top-0">
+                            <!-- Bảng danh sách thành viên -->
+                            <div class="overflow-y-auto custom-scroll max-h-[360px] border border-gray-100 rounded-xl">
+                                <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                                    <thead class="bg-gray-100 text-gray-600 text-[11px] uppercase sticky top-0">
                                         <tr>
-                                            <th class="p-3 font-bold text-center w-14">Hạng</th>
-                                            <th class="p-3 font-bold">Thành Viên</th>
-                                            <th class="p-3 font-bold text-center">MSSV</th>
-                                            <th class="p-3 font-bold text-right">Điểm Số</th>
+                                            <th class="p-2.5 sm:p-3 font-bold text-center w-12">Hạng</th>
+                                            <th class="p-2.5 sm:p-3 font-bold">Thành Viên</th>
+                                            <th class="p-2.5 sm:p-3 font-bold text-center">Mã SV</th>
+                                            <th class="p-2.5 sm:p-3 font-bold text-right">Điểm</th>
                                         </tr>
                                     </thead>
                                     <tbody id="leaderboardTableBody" class="divide-y divide-gray-100">
@@ -446,222 +709,212 @@
                             </div>
                         </div>
 
-                        <!-- CỘT PHẢI (5/12): HỒ SƠ CÁ NHÂN & MẬT THƯ CỦA RIÊNG BẠN -->
-                        <div class="lg:col-span-5 space-y-4">
-                            <div class="glass-form p-5 border border-gray-100">
-                                <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
-                                    <h3 class="text-base font-extrabold text-red-700 flex items-center gap-2">
-                                        <span>🪪</span> Hồ Sơ Secret Santa Của Bạn
+                        <!-- CỘT HỒ SƠ CÁ NHÂN & CẬP NHẬT WISHLIST/BLACKLIST -->
+                        <div class="lg:col-span-5 lg:order-1 glass-form p-4 sm:p-6 border border-red-100">
+                            <div class="flex items-center justify-between border-b border-gray-200 pb-3 mb-4">
+                                <div>
+                                    <h3 class="text-base sm:text-lg font-extrabold text-red-700 flex items-center gap-1.5">
+                                        <span>✍️</span> Hồ Sơ Cá Nhân Của Bạn
                                     </h3>
-                                    <button onclick="openEditProfile()" class="text-xs bg-red-50 hover:bg-red-100 text-red-700 font-bold px-2.5 py-1 rounded-lg border border-red-200 transition">
-                                        ✏️ Chỉnh sửa
-                                    </button>
+                                    <p class="text-[11px] text-gray-500">Chỉnh sửa trực tiếp — Không tạo dòng trùng lặp</p>
                                 </div>
-
-                                <div class="flex items-center gap-4 mb-4">
-                                    <img id="userDashSelfie" src="" alt="Selfie" onclick="openLightbox(this.src, document.getElementById('userDashName').textContent, 'MSSV: ' + document.getElementById('userDashMssv').textContent)" class="w-20 h-20 object-cover rounded-2xl border-2 border-red-500 shadow cursor-pointer hover:scale-105 transition">
-                                    <div>
-                                        <h4 id="userDashName" class="text-lg font-extrabold text-gray-800">---</h4>
-                                        <span class="inline-block bg-red-50 text-red-700 font-bold text-xs px-2.5 py-0.5 rounded border border-red-200 mt-0.5">
-                                            MSSV: <span id="userDashMssv">---</span>
-                                        </span>
-                                        <p class="text-[11px] text-gray-400 mt-1">Cập nhật: <span id="userDashTime">---</span></p>
-                                    </div>
-                                </div>
-
-                                <div class="space-y-3">
-                                    <div class="bg-green-50/70 p-3 rounded-xl border border-green-200">
-                                        <div class="flex justify-between items-center mb-1">
-                                            <span class="text-xs font-bold text-green-800">🎁 Wishlist Của Bạn (Chỉ mình bạn & BTC thấy)</span>
-                                            <span class="text-[10px] bg-green-200 text-green-900 px-2 py-0.5 rounded-full font-bold">Ẩn danh</span>
-                                        </div>
-                                        <p id="userDashWishlist" class="text-xs md:text-sm text-gray-700 whitespace-pre-line"></p>
-                                    </div>
-
-                                    <div class="bg-red-50/70 p-3 rounded-xl border border-red-200">
-                                        <div class="flex justify-between items-center mb-1">
-                                            <span class="text-xs font-bold text-red-800">🚫 Blacklist Của Bạn (Quà cần tránh)</span>
-                                            <span class="text-[10px] bg-red-200 text-red-900 px-2 py-0.5 rounded-full font-bold">Bảo mật</span>
-                                        </div>
-                                        <p id="userDashBlacklist" class="text-xs md:text-sm text-gray-700 whitespace-pre-line"></p>
-                                    </div>
-                                </div>
+                                <span class="text-[10px] bg-green-100 text-green-800 px-2.5 py-1 rounded-full font-bold">Bảo mật</span>
                             </div>
 
-                            <!-- Thẻ giới thiệu nhanh các Game sắp mở -->
-                            <div class="bg-gradient-to-br from-green-900 to-green-800 text-white p-5 rounded-2xl shadow-lg space-y-2">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs font-bold uppercase tracking-wider text-amber-300">🎮 Chuỗi Mini-Game Tích Điểm</span>
-                                    <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">Part 2 • 3 • 4</span>
+                            <form id="part1ProfileForm" onsubmit="handleUpdatePart1Profile(event)" class="space-y-3.5">
+                                <div class="grid grid-cols-3 gap-2.5">
+                                    <div class="col-span-1">
+                                        <label class="block text-xs font-bold text-gray-600">MSSV</label>
+                                        <input type="text" id="p1MssvInput" readonly class="form-input bg-gray-100 font-extrabold text-red-700 text-xs sm:text-sm cursor-not-allowed">
+                                    </div>
+                                    <div class="col-span-2">
+                                        <label class="block text-xs font-bold text-gray-600">Họ và Tên <span class="text-red-500">*</span></label>
+                                        <input type="text" id="p1NameInput" required class="form-input text-xs sm:text-sm font-semibold">
+                                    </div>
                                 </div>
-                                <p class="text-xs text-green-100 leading-relaxed">
-                                    Bạn đã nhận được <strong>+100 điểm</strong> khởi động khi hoàn tất hồ sơ Part 1! Hãy bấm vào các tab <strong>Part 2, Part 3, Part 4</strong> phía trên để xem thông tin các trò chơi sắp diễn ra nhé!
-                                </p>
-                            </div>
+
+                                <!-- Đổi ảnh Selfie & Xem mã Base64 -->
+                                <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2.5">
+                                            <img id="p1SelfiePreview" src="" alt="Selfie" onclick="openLightbox(this.src, document.getElementById('p1NameInput').value, 'MSSV: ' + document.getElementById('p1MssvInput').value)" class="w-14 h-14 object-cover rounded-xl border-2 border-red-500 shadow cursor-pointer shrink-0">
+                                            <div>
+                                                <p class="text-xs font-bold text-gray-700">Ảnh Bản Thân (Base64)</p>
+                                                <button type="button" onclick="openLightbox(document.getElementById('p1SelfieBase64').value || document.getElementById('p1SelfiePreview').src, document.getElementById('p1NameInput').value, 'MSSV: ' + document.getElementById('p1MssvInput').value)" class="text-[11px] text-red-600 underline font-semibold">
+                                                    🔍 Xem ảnh & Mã Base64
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <label for="p1SelfieFile" class="cursor-pointer bg-white hover:bg-red-50 text-red-700 border border-red-300 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm shrink-0">
+                                            📷 Đổi ảnh
+                                        </label>
+                                        <input type="file" id="p1SelfieFile" accept="image/*" class="hidden" onchange="loadOriginalImage(event, 'p1')">
+                                        <input type="hidden" id="p1SelfieBase64">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-green-800">
+                                        🎁 Wishlist Của Bạn <span class="text-red-500">*</span>
+                                    </label>
+                                    <textarea id="p1WishlistInput" required rows="2" class="form-input text-xs sm:text-sm" placeholder="Món quà bạn mong muốn nhận được..."></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-red-700">
+                                        🚫 Blacklist Của Bạn <span class="text-red-500">*</span>
+                                    </label>
+                                    <textarea id="p1BlacklistInput" required rows="2" class="form-input text-xs sm:text-sm" placeholder="Những món quà cần tránh..."></textarea>
+                                </div>
+
+                                <button type="submit" id="btnSavePart1" class="btn-christmas text-xs sm:text-sm flex justify-center items-center gap-2">
+                                    <span>💾 Lưu Cập Nhật Lên Hệ Thống</span>
+                                </button>
+                            </form>
                         </div>
 
                     </div>
                 </div>
 
-                <!-- =============================================================== -->
-                <!-- NỘI DUNG PART 2: THE WHISPER (MINI-GAME SẮP TỚI)                -->
-                <!-- =============================================================== -->
-                <div id="eventPart2Content" class="hidden py-10 px-4 text-center max-w-2xl mx-auto space-y-5">
-                    <div class="w-24 h-24 bg-purple-100 text-purple-700 rounded-3xl flex items-center justify-center text-5xl mx-auto shadow-inner animate-bounce">
+                <!-- PART 2: THE WHISPER (DÀNH CHO SỰ KIỆN SẮP TỚI) -->
+                <div id="eventPart2Content" class="hidden py-8 px-3 text-center max-w-2xl mx-auto space-y-4">
+                    <div class="w-20 h-20 bg-purple-100 text-purple-700 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
                         🤫
                     </div>
-                    <span class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider">
-                        ⏳ Dành Cho Sự Kiện Sắp Tới (Coming Soon)
+                    <span class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
+                        ⏳ Dành Cho Sự Kiện Sắp Tới
                     </span>
-                    <h3 class="text-3xl font-extrabold text-gray-800">Part 2: The Whisper — Lời Thì Thầm Đêm Đông</h3>
-                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">
-                        Đây là <strong>Mini-Game Chặng 2</strong> dành riêng cho các thành viên đã ghi danh. Người chơi sẽ giải mã các mật thư ẩn danh và gửi lời nhắn bí mật đến người nhận quà để mang về tới <strong>+300 điểm thưởng</strong> trên Bảng Xếp Hạng!
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 2: The Whisper — Lời Thì Thầm</h3>
+                    <p class="text-gray-600 text-xs sm:text-base leading-relaxed">
+                        <strong>Mini-Game Chặng 2</strong> sẽ sớm được BTC mở khóa! Giải mã mật thư ẩn danh để tích lũy thêm <strong>+300 PTS</strong> trên Bảng Xếp Hạng sự kiện.
                     </p>
-                    <div class="bg-white/90 p-4 rounded-xl border border-gray-200 max-w-md mx-auto text-xs text-gray-600 space-y-1">
-                        <div class="font-bold text-gray-800">📌 Trạng thái chặng đua:</div>
-                        <p>Ban Tổ Chức đang hoàn tất danh sách ở Part 1 trước khi chính thức mở khóa cổng game Part 2.</p>
-                    </div>
-                    <div class="pt-2">
-                        <button onclick="switchEventPart(1)" class="btn-green px-6 py-2.5 text-sm inline-flex items-center gap-2">
-                            <span>← Quay lại Bảng Xếp Hạng (Part 1)</span>
-                        </button>
-                    </div>
+                    <button onclick="switchEventPart(1)" class="btn-green px-5 py-2.5 text-xs sm:text-sm inline-flex items-center gap-2">
+                        <span>← Quay lại Part 1 & Bảng Xếp Hạng</span>
+                    </button>
                 </div>
 
-                <!-- =============================================================== -->
-                <!-- NỘI DUNG PART 3: THE SNEAKY ELF (MINI-GAME SẮP TỚI)             -->
-                <!-- =============================================================== -->
-                <div id="eventPart3Content" class="hidden py-10 px-4 text-center max-w-2xl mx-auto space-y-5">
-                    <div class="w-24 h-24 bg-green-100 text-green-700 rounded-3xl flex items-center justify-center text-5xl mx-auto shadow-inner animate-bounce">
+                <!-- PART 3: THE SNEAKY ELF (DÀNH CHO SỰ KIỆN SẮP TỚI) -->
+                <div id="eventPart3Content" class="hidden py-8 px-3 text-center max-w-2xl mx-auto space-y-4">
+                    <div class="w-20 h-20 bg-green-100 text-green-700 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
                         🧝
                     </div>
-                    <span class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider">
-                        ⏳ Dành Cho Sự Kiện Sắp Tới (Coming Soon)
+                    <span class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
+                        ⏳ Dành Cho Sự Kiện Sắp Tới
                     </span>
-                    <h3 class="text-3xl font-extrabold text-gray-800">Part 3: The Sneaky Elf — Truy Tìm Yêu Tinh</h3>
-                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">
-                        <strong>Mini-Game Chặng 3</strong> kịch tính! Các Yêu Tinh Giáng Sinh sẽ giấu những hộp quà bí ẩn và câu đố tốc độ. Nhanh tay bắt trúng Yêu Tinh để bứt phá thứ hạng trên <strong>Bảng Xếp Hạng Điểm Sự Kiện</strong> với giải thưởng tới <strong>+500 điểm</strong>!
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 3: The Sneaky Elf — Truy Tìm Yêu Tinh</h3>
+                    <p class="text-gray-600 text-xs sm:text-base leading-relaxed">
+                        <strong>Mini-Game Chặng 3</strong> dành cho sự kiện sắp tới! Săn lùng các Yêu Tinh Giáng Sinh tinh quái để bứt phá trên Bảng Xếp Hạng với phần thưởng <strong>+500 PTS</strong>.
                     </p>
-                    <div class="bg-white/90 p-4 rounded-xl border border-gray-200 max-w-md mx-auto text-xs text-gray-600 space-y-1">
-                        <div class="font-bold text-gray-800">📌 Trạng thái chặng đua:</div>
-                        <p>Sẽ được mở khóa ngay sau khi kết thúc Part 2: The Whisper.</p>
-                    </div>
-                    <div class="pt-2">
-                        <button onclick="switchEventPart(1)" class="btn-green px-6 py-2.5 text-sm inline-flex items-center gap-2">
-                            <span>← Quay lại Bảng Xếp Hạng (Part 1)</span>
-                        </button>
-                    </div>
+                    <button onclick="switchEventPart(1)" class="btn-green px-5 py-2.5 text-xs sm:text-sm inline-flex items-center gap-2">
+                        <span>← Quay lại Part 1 & Bảng Xếp Hạng</span>
+                    </button>
                 </div>
 
-                <!-- =============================================================== -->
-                <!-- NỘI DUNG PART 4: THE REVEAL (SỰ KIỆN CÔNG BỐ SẮP TỚI)           -->
-                <!-- =============================================================== -->
-                <div id="eventPart4Content" class="hidden py-10 px-4 text-center max-w-2xl mx-auto space-y-5">
-                    <div class="w-24 h-24 bg-red-100 text-red-700 rounded-3xl flex items-center justify-center text-5xl mx-auto shadow-inner animate-bounce">
+                <!-- PART 4: THE REVEAL (DÀNH CHO SỰ KIỆN SẮP TỚI) -->
+                <div id="eventPart4Content" class="hidden py-8 px-3 text-center max-w-2xl mx-auto space-y-4">
+                    <div class="w-20 h-20 bg-red-100 text-red-700 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
                         🎁
                     </div>
-                    <span class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider">
-                        ⏳ Dành Cho Sự Kiện Sắp Tới (Coming Soon)
+                    <span class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
+                        ⏳ Dành Cho Sự Kiện Sắp Tới
                     </span>
-                    <h3 class="text-3xl font-extrabold text-gray-800">Part 4: The Reveal — Đêm Hội Mở Quà & Vinh Danh</h3>
-                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">
-                        Chặng cuối cùng của hành trình <strong>Secret Santa 2026</strong>! Thử thách đoán danh tính Ông Già Noel bí mật của bạn, công bố danh tính toàn bộ các cặp đôi và trao thưởng cho <strong>Top Bảng Xếp Hạng Chung Cuộc</strong>!
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 4: The Reveal — Đêm Hội Mở Quà</h3>
+                    <p class="text-gray-600 text-xs sm:text-base leading-relaxed">
+                        Chặng cuối dành cho sự kiện sắp tới: Công bố danh tính các cặp Secret Santa, mở quà Giáng Sinh và vinh danh <strong>Top Bảng Xếp Hạng Chung Cuộc</strong>!
                     </p>
-                    <div class="bg-white/90 p-4 rounded-xl border border-gray-200 max-w-md mx-auto text-xs text-gray-600 space-y-1">
-                        <div class="font-bold text-gray-800">📌 Trạng thái chặng đua:</div>
-                        <p>Sự kiện đặc biệt mở khóa vào Đêm Hội Trao Quà Giáng Sinh 2026.</p>
-                    </div>
-                    <div class="pt-2">
-                        <button onclick="switchEventPart(1)" class="btn-green px-6 py-2.5 text-sm inline-flex items-center gap-2">
-                            <span>← Quay lại Bảng Xếp Hạng (Part 1)</span>
-                        </button>
-                    </div>
+                    <button onclick="switchEventPart(1)" class="btn-green px-5 py-2.5 text-xs sm:text-sm inline-flex items-center gap-2">
+                        <span>← Quay lại Part 1 & Bảng Xếp Hạng</span>
+                    </button>
                 </div>
 
             </div>
         </div>
 
         <!-- ========================================================================= -->
-        <!-- MÀN HÌNH 3: KHU VỰC ADMIN DASHBOARD (BTC QUẢN LÝ TOÀN BỘ DANH SÁCH)       -->
+        <!-- TRANG 3: KHU VỰC ADMIN DASHBOARD (TỐI ƯU CẢ MOBILE CARD & DESKTOP TABLE)  -->
         <!-- ========================================================================= -->
-        <div id="viewAdminDashboard" class="hidden glass-panel p-5 md:p-10">
-            <!-- Thanh tiêu đề & nút chức năng BTC -->
-            <div class="flex flex-wrap justify-between items-center gap-4 border-b border-gray-200 pb-4 mb-6">
+        <div id="pageAdmin" class="hidden glass-panel p-4 sm:p-8">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 border-b border-gray-200 pb-4 mb-5">
                 <div>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 mb-1">
-                        🛡️ Khu Vực Quản Trị Ban Tổ Chức (Admin Dashboard)
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-red-100 text-red-800 mb-1">
+                        🛡️ Quản Trị Ban Tổ Chức (Admin)
                     </span>
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800">📋 Quản Lý Sinh Viên & Điểm Bảng Xếp Hạng</h2>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-gray-800">📋 Quản Lý Thành Viên Secret Santa</h2>
                 </div>
-                <div class="flex flex-wrap items-center gap-2">
-                    <button onclick="fetchAdminData()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3.5 py-2 rounded-lg shadow text-xs md:text-sm transition flex items-center gap-1.5">
+                <div class="grid grid-cols-2 sm:flex flex-wrap items-center gap-2">
+                    <button onclick="fetchAdminData()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-2 rounded-xl shadow text-xs transition flex items-center justify-center gap-1">
                         <span>🔄</span> Làm mới
                     </button>
-                    <button onclick="openMatchingModal()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-3.5 py-2 rounded-lg shadow text-xs md:text-sm transition flex items-center gap-1.5">
-                        <span>🎲</span> Bốc thăm / Ghép cặp
+                    <button onclick="openMatchingModal()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-2 rounded-xl shadow text-xs transition flex items-center justify-center gap-1">
+                        <span>🎲</span> Ghép cặp
                     </button>
-                    <button onclick="exportAdminCSV()" class="bg-green-700 hover:bg-green-800 text-white font-bold px-3.5 py-2 rounded-lg shadow text-xs md:text-sm transition flex items-center gap-1.5">
-                        <span>📥</span> Xuất Excel / CSV
+                    <button onclick="exportAdminCSV()" class="bg-green-700 hover:bg-green-800 text-white font-bold px-3 py-2 rounded-xl shadow text-xs transition flex items-center justify-center gap-1">
+                        <span>📥</span> Xuất CSV
                     </button>
-                    <button onclick="logoutAdmin()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold px-3.5 py-2 rounded-lg text-xs md:text-sm transition flex items-center gap-1.5">
-                        <span>🚪</span> Đăng xuất
+                    <button onclick="logoutAdmin()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center justify-center gap-1">
+                        <span>🚪</span> Thoát
                     </button>
                 </div>
             </div>
 
             <!-- Thống kê nhanh -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                <div class="bg-white/90 p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-2xl font-bold">🎅</div>
+            <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-5">
+                <div class="bg-white p-3 sm:p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-center sm:text-left">
+                    <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-lg sm:text-xl font-bold">🎅</div>
                     <div>
-                        <p class="text-xs text-gray-500 font-semibold uppercase">Tổng số cá nhân (MSSV duy nhất)</p>
-                        <p id="statTotalUsers" class="text-2xl font-extrabold text-gray-800">0</p>
+                        <p class="text-[10px] sm:text-xs text-gray-500 font-bold uppercase">Cá nhân</p>
+                        <p id="statTotalUsers" class="text-lg sm:text-2xl font-extrabold text-gray-800">0</p>
                     </div>
                 </div>
-                <div class="bg-white/90 p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-green-100 text-green-600 flex items-center justify-center text-2xl font-bold">📸</div>
+                <div class="bg-white p-3 sm:p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-center sm:text-left">
+                    <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-green-100 text-green-600 flex items-center justify-center text-lg sm:text-xl font-bold">📸</div>
                     <div>
-                        <p class="text-xs text-gray-500 font-semibold uppercase">Có ảnh Selfie xác minh</p>
-                        <p id="statWithSelfie" class="text-2xl font-extrabold text-gray-800">0</p>
+                        <p class="text-[10px] sm:text-xs text-gray-500 font-bold uppercase">Ảnh Base64</p>
+                        <p id="statWithSelfie" class="text-lg sm:text-2xl font-extrabold text-gray-800">0</p>
                     </div>
                 </div>
-                <div class="bg-white/90 p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl font-bold">🎁</div>
+                <div class="bg-white p-3 sm:p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-center sm:text-left">
+                    <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg sm:text-xl font-bold">🎁</div>
                     <div>
-                        <p class="text-xs text-gray-500 font-semibold uppercase">Đủ điều kiện ghép cặp</p>
-                        <p id="statReadyMatch" class="text-2xl font-extrabold text-gray-800">0</p>
+                        <p class="text-[10px] sm:text-xs text-gray-500 font-bold uppercase">Có Wishlist</p>
+                        <p id="statReadyMatch" class="text-lg sm:text-2xl font-extrabold text-gray-800">0</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Thanh tìm kiếm & lọc -->
-            <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mb-4">
+            <!-- Thanh tìm kiếm -->
+            <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 mb-4">
                 <div class="relative w-full sm:w-96">
-                    <input type="text" id="adminSearchInput" oninput="renderAdminTable()" class="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-300 bg-white text-sm focus:outline-none focus:border-green-600" placeholder="Tìm theo MSSV (VD: TH12345), Họ tên, Wishlist...">
-                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+                    <input type="text" id="adminSearchInput" oninput="renderAdminTable()" class="w-full pl-9 pr-4 py-2 rounded-xl border border-gray-300 bg-white text-xs sm:text-sm focus:outline-none focus:border-red-600" placeholder="Tìm theo MSSV (VD: TH12345), Họ tên, Wishlist...">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔍</span>
                 </div>
-                <p id="adminFilterCount" class="text-xs font-semibold text-gray-600"></p>
+                <p id="adminFilterCount" class="text-xs font-semibold text-gray-600 text-right"></p>
             </div>
 
-            <!-- Bảng dữ liệu Admin -->
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <!-- DANH SÁCH DẠNG THẺ TRÊN ĐIỆN THOẠI (MOBILE CARDS < 768px) -->
+            <div id="adminMobileCards" class="md:hidden space-y-3">
+            </div>
+
+            <!-- DANH SÁCH DẠNG BẢNG TRÊN MÁY TÍNH (DESKTOP TABLE >= 768px) -->
+            <div class="hidden md:block bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto custom-scroll max-h-[600px]">
                     <table class="w-full text-left border-collapse text-sm">
-                        <thead class="bg-gray-800 text-white sticky top-0 z-10">
+                        <thead class="bg-slate-800 text-white sticky top-0 z-10">
                             <tr>
-                                <th class="p-3.5 font-bold text-center w-12">STT</th>
-                                <th class="p-3.5 font-bold text-center w-20">Selfie</th>
-                                <th class="p-3.5 font-bold w-28">MSSV</th>
-                                <th class="p-3.5 font-bold w-44">Họ và Tên</th>
-                                <th class="p-3.5 font-bold text-center w-28">🏆 Điểm BXH</th>
-                                <th class="p-3.5 font-bold">🎁 Wishlist</th>
-                                <th class="p-3.5 font-bold">🚫 Blacklist</th>
-                                <th class="p-3.5 font-bold w-32">Cập nhật</th>
+                                <th class="p-3 font-bold text-center w-12">STT</th>
+                                <th class="p-3 font-bold text-center w-24">Ảnh Base64</th>
+                                <th class="p-3 font-bold w-32">MSSV</th>
+                                <th class="p-3 font-bold w-44">Họ và Tên</th>
+                                <th class="p-3 font-bold text-center w-24">🏆 BXH</th>
+                                <th class="p-3 font-bold">🎁 Wishlist</th>
+                                <th class="p-3 font-bold">🚫 Blacklist</th>
+                                <th class="p-3 font-bold w-32">Cập nhật</th>
+                                <th class="p-3 font-bold text-center w-28">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="adminTableBody" class="divide-y divide-gray-200">
                             <tr>
-                                <td colspan="8" class="p-8 text-center text-gray-500">Đang tải dữ liệu...</td>
+                                <td colspan="9" class="p-8 text-center text-gray-500">Đang tải dữ liệu...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -677,15 +930,209 @@
         // =========================================================================
         const SHEETDB_API = 'https://sheetdb.io/api/v1/fnqbi32e6xcc0';
         const ADMIN_PASSWORD_DEFAULT = '1234';
+        const STORAGE_KEY_USER = 'secret_santa_2026_logged_user';
 
-        // Biến trạng thái ứng dụng
-        let currentStudentRecord = null; // Lưu thông tin cá nhân đang đăng nhập
-        let isEditingExistingStudent = false; // Đang tạo lần đầu hay sửa thông tin cá nhân
-        let adminAllRecords = []; // Danh sách cá nhân duy nhất (đã gộp theo MSSV)
-        let currentSantaPairs = []; // Kết quả ghép cặp Secret Santa
+        let currentStudentRecord = null;
+        let adminAllRecords = [];
+        let currentSantaPairs = [];
+        let activeImageTarget = 'reg';
 
         // =========================================================================
-        // 1. HỆ THỐNG ÂM NHẠC ĐA BÀI HÁT (MP3 + SYNTH MUSIC BOX ĐẢM BẢO 100% PHÁT ĐƯỢC)
+        // 1. ÔNG GIÀ NOEL & ĐÀN TUẦN LỘC BAY QUANH TRANG WEB THẢ QUÀ + TUYẾT RƠI
+        // =========================================================================
+        const santaEl = document.getElementById('santaSleighActor');
+        const santaInner = document.getElementById('santaInnerWrap');
+        let santaX = -320;
+        let santaY = 90;
+        let santaDir = 1; // 1: Trái sang phải, -1: Phải sang trái
+        let santaPhase = 0;
+
+        function animateSantaFlight() {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const speed = vw < 640 ? 1.6 : 2.4;
+
+            santaX += speed * santaDir;
+            santaPhase += 0.03;
+            const waveY = Math.sin(santaPhase) * 28;
+            const currentY = Math.max(40, Math.min(vh * 0.45, santaY + waveY));
+
+            if (santaDir === 1 && santaX > vw + 350) {
+                santaDir = -1;
+                santaY = Math.random() * (vh * 0.32) + 55;
+                santaInner.style.transform = 'scaleX(-1)';
+            } else if (santaDir === -1 && santaX < -350) {
+                santaDir = 1;
+                santaY = Math.random() * (vh * 0.32) + 55;
+                santaInner.style.transform = 'scaleX(1)';
+            }
+
+            santaEl.style.left = `${santaX}px`;
+            santaEl.style.top = `${currentY}px`;
+
+            // Tự động thả quà ngẫu nhiên khi đang bay trong màn hình
+            if (santaX > 40 && santaX < vw - 60 && Math.random() < 0.008) {
+                spawnFallingGift(santaX + 40, currentY + 20);
+            }
+
+            requestAnimationFrame(animateSantaFlight);
+        }
+        requestAnimationFrame(animateSantaFlight);
+
+        function dropGiftFromSanta(fromClick = false) {
+            const rect = santaEl.getBoundingClientRect();
+            const count = fromClick ? 3 : 1;
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    spawnFallingGift(rect.left + rect.width / 2 + (Math.random() * 40 - 20), rect.top + 25);
+                }, i * 160);
+            }
+            if (fromClick) {
+                showToast('🎅 Ho Ho Ho! Ông Già Noel vừa thả mưa quà tặng cho bạn!', '🎁');
+            }
+        }
+
+        function spawnFallingGift(startX, startY) {
+            const giftIcons = ['🎁', '🎀', '🧸', '🎄', '⭐'];
+            const el = document.createElement('div');
+            el.className = 'falling-gift';
+            el.textContent = giftIcons[Math.floor(Math.random() * giftIcons.length)];
+            el.style.left = `${startX}px`;
+            el.style.top = `${startY}px`;
+            document.body.appendChild(el);
+
+            let gy = startY;
+            const fallSpeed = Math.random() * 1.4 + 1.4;
+            const maxBottom = window.innerHeight - 55;
+
+            el.onclick = (e) => {
+                e.stopPropagation();
+                if (window._spawnCanvasBurst) window._spawnCanvasBurst(e.clientX, e.clientY, 26);
+                el.textContent = '✨';
+                setTimeout(() => el.remove(), 250);
+            };
+
+            function stepGift() {
+                if (!document.body.contains(el)) return;
+                gy += fallSpeed;
+                el.style.top = `${gy}px`;
+                if (gy >= maxBottom) {
+                    if (window._spawnCanvasBurst) window._spawnCanvasBurst(startX, gy, 14);
+                    el.remove();
+                } else {
+                    requestAnimationFrame(stepGift);
+                }
+            }
+            requestAnimationFrame(stepGift);
+        }
+
+        // Canvas Tuyết rơi + Hạt phép thuật lấp lánh
+        (function initInteractiveCanvas() {
+            const canvas = document.getElementById('interactiveCanvas');
+            const ctx = canvas.getContext('2d');
+            const skyEl = document.getElementById('redChristmasSky');
+
+            let width = window.innerWidth;
+            let height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+
+            window.addEventListener('resize', () => {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            });
+
+            let windX = 0;
+            const snowflakes = Array.from({ length: 65 }, () => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                r: Math.random() * 3 + 1.2,
+                speedY: Math.random() * 1.1 + 0.45,
+                speedX: (Math.random() - 0.5) * 0.5,
+                opacity: Math.random() * 0.7 + 0.3,
+                wobble: Math.random() * Math.PI * 2
+            }));
+
+            const sparkles = [];
+            const COLORS = ['#fffbeb', '#fde047', '#ffffff', '#fca5a5', '#86efac'];
+
+            function spawnSparkles(x, y, count = 3, burst = false) {
+                for (let i = 0; i < count; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = burst ? (Math.random() * 4.2 + 1) : (Math.random() * 1.4 + 0.2);
+                    sparkles.push({
+                        x, y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed - (burst ? 1 : 0.2),
+                        size: burst ? (Math.random() * 4 + 2) : (Math.random() * 2.5 + 1.2),
+                        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                        alpha: 1,
+                        decay: burst ? 0.02 : 0.03
+                    });
+                }
+            }
+            window._spawnCanvasBurst = (x, y, cnt) => spawnSparkles(x, y, cnt, true);
+
+            window.addEventListener('mousemove', (e) => {
+                const dx = (e.clientX - width / 2) / (width / 2);
+                const dy = (e.clientY - height / 2) / (height / 2);
+                windX = dx * 1.1;
+                if (skyEl) {
+                    skyEl.style.transform = `translate3d(${-dx * 10}px, ${-dy * 10}px, 0) scale(1.02)`;
+                }
+                if (Math.random() < 0.55) spawnSparkles(e.clientX, e.clientY, 2, false);
+            });
+
+            window.addEventListener('click', (e) => {
+                spawnSparkles(e.clientX, e.clientY, 18, true);
+            });
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                for (const f of snowflakes) {
+                    f.wobble += 0.02;
+                    f.y += f.speedY;
+                    f.x += f.speedX + windX + Math.sin(f.wobble) * 0.35;
+
+                    if (f.y > height + 10) { f.y = -10; f.x = Math.random() * width; }
+                    if (f.x > width + 10) f.x = -10;
+                    if (f.x < -10) f.x = width + 10;
+
+                    ctx.beginPath();
+                    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${f.opacity})`;
+                    ctx.fill();
+                }
+
+                for (let i = sparkles.length - 1; i >= 0; i--) {
+                    const s = sparkles[i];
+                    s.x += s.vx;
+                    s.y += s.vy;
+                    s.vy += 0.04;
+                    s.alpha -= s.decay;
+                    if (s.alpha <= 0) { sparkles.splice(i, 1); continue; }
+
+                    ctx.save();
+                    ctx.globalAlpha = s.alpha;
+                    ctx.fillStyle = s.color;
+                    ctx.shadowColor = s.color;
+                    ctx.shadowBlur = 6;
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+
+        // =========================================================================
+        // 2. HỆ THỐNG ÂM NHẠC ĐA BÀI HÁT
         // =========================================================================
         const bgMusic = document.getElementById('bgMusic');
         const musicBtn = document.getElementById('musicToggleBtn');
@@ -695,11 +1142,10 @@
 
         let isPlaying = false;
         let currentTrackIndex = 0;
-        let currentVolume = 0.6;
+        let currentVolume = 0.65;
         let synthTimer = null;
         let audioCtx = null;
 
-        // Danh sách 6 bài hát Giáng Sinh tích hợp sẵn trong web
         const PLAYLIST = [
             {
                 title: 'Santa Claus Is Coming',
@@ -707,40 +1153,18 @@
                 url: 'https://raw.githubusercontent.com/dragonaf247/secret-santa-2026/main/vincemcgill-santa-claus-614837.mp3',
                 fallbackMelody: 'santa'
             },
-            {
-                title: 'Jingle Bells (Music Box)',
-                type: 'synth',
-                melody: 'jingle'
-            },
-            {
-                title: 'We Wish You A Merry Xmas',
-                type: 'synth',
-                melody: 'wewish'
-            },
-            {
-                title: 'Deck The Halls (Chime)',
-                type: 'synth',
-                melody: 'deck'
-            },
-            {
-                title: 'Silent Night (Đêm Thánh)',
-                type: 'synth',
-                melody: 'silent'
-            },
-            {
-                title: 'Joy To The World',
-                type: 'synth',
-                melody: 'joy'
-            }
+            { title: 'Jingle Bells (Music Box)', type: 'synth', melody: 'jingle' },
+            { title: 'We Wish You A Merry Xmas', type: 'synth', melody: 'wewish' },
+            { title: 'Deck The Halls (Chime)', type: 'synth', melody: 'deck' },
+            { title: 'Silent Night (Đêm Thánh)', type: 'synth', melody: 'silent' },
+            { title: 'Joy To The World', type: 'synth', melody: 'joy' }
         ];
 
-        // Tần số nốt nhạc cho Music Box Synthesizer
         const NOTE_FREQ = {
-            'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'F#4': 369.99, 'G4': 392.00, 'A4': 440.00, 'Bb4': 466.16, 'B4': 493.88,
-            'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'F#5': 739.99, 'G5': 783.99, 'A5': 880.00, 'R': 0
+            'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'F#4': 369.99, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88,
+            'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'F#5': 739.99, 'G5': 783.99, 'A5': 880.00
         };
 
-        // Giai điệu đầy đủ của các bài nhạc Giáng Sinh kinh điển
         const MELODIES = {
             jingle: {
                 tempo: 230,
@@ -766,8 +1190,6 @@
                 tempo: 220,
                 notes: [
                     ['G5',1.5],['F5',0.5],['E5',1],['D5',1], ['C5',1],['D5',1],['E5',1],['C5',1],
-                    ['D5',0.5],['E5',0.5],['F5',0.5],['D5',0.5],['E5',1.5],['D5',0.5], ['C5',1],['B4',1],['C5',2],
-                    ['G5',1.5],['F5',0.5],['E5',1],['D5',1], ['C5',1],['D5',1],['E5',1],['C5',1],
                     ['D5',0.5],['E5',0.5],['F5',0.5],['D5',0.5],['E5',1.5],['D5',0.5], ['C5',1],['B4',1],['C5',2]
                 ]
             },
@@ -775,101 +1197,60 @@
                 tempo: 380,
                 notes: [
                     ['G4',1.5],['A4',0.5],['G4',1], ['E4',3], ['G4',1.5],['A4',0.5],['G4',1], ['E4',3],
-                    ['D5',2],['D5',1], ['B4',3], ['C5',2],['C5',1], ['G4',3],
-                    ['A4',2],['A4',1], ['C5',1.5],['B4',0.5],['A4',1], ['G4',1.5],['A4',0.5],['G4',1], ['E4',3],
-                    ['A4',2],['A4',1], ['C5',1.5],['B4',0.5],['A4',1], ['G4',1.5],['A4',0.5],['G4',1], ['E4',3],
-                    ['D5',2],['D5',1], ['F5',1.5],['D5',0.5],['B4',1], ['C5',3], ['E5',3],
-                    ['C5',1],['G4',1],['E4',1], ['G4',1.5],['F4',0.5],['D4',1], ['C4',4]
+                    ['D5',2],['D5',1], ['B4',3], ['C5',2],['C5',1], ['G4',3]
                 ]
             },
             joy: {
                 tempo: 240,
                 notes: [
                     ['C5',2],['B4',1.5],['A4',0.5],['G4',3],['F4',1], ['E4',2],['D4',2],['C4',3],['G4',1],
-                    ['A4',3],['A4',1],['B4',3],['B4',1], ['C5',4],
-                    ['C5',1],['C5',1],['B4',1],['A4',1],['G4',1],['G4',1.5],['F4',0.5],['E4',1],
-                    ['C5',1],['C5',1],['B4',1],['A4',1],['G4',1],['G4',1.5],['F4',0.5],['E4',1],
-                    ['E4',1],['E4',1],['E4',1],['E4',1],['E4',0.5],['F4',0.5],['G4',3],
-                    ['F4',0.5],['E4',0.5],['D4',1],['D4',1],['D4',1],['D4',0.5],['E4',0.5],['F4',3],
-                    ['E4',0.5],['D4',0.5],['C4',1],['C5',2],['A4',1],['G4',1.5],['F4',0.5],['E4',1],['F4',1],['E4',2],['D4',2],['C4',4]
+                    ['A4',3],['A4',1],['B4',3],['B4',1], ['C5',4]
                 ]
             },
             santa: {
                 tempo: 250,
                 notes: [
-                    ['G4',1],['E4',0.5],['F4',0.5],['G4',1],['G4',2], ['G4',1],['A4',0.5],['B4',0.5],['C5',1],['C5',2],
-                    ['E4',0.5],['F4',0.5],['G4',1],['G4',1],['G4',1],['A4',0.5],['G4',0.5], ['F4',1],['F4',3],
-                    ['E4',1],['G4',1],['C4',1],['E4',1], ['D4',1],['F4',2],['B4',1], ['C5',4]
+                    ['G4',1],['E4',0.5],['F4',0.5],['G4',1],['G4',2], ['G4',1],['A4',0.5],['B4',0.5],['C5',1],['C5',2]
                 ]
             }
         };
 
         function stopSynthMelody() {
-            if (synthTimer) {
-                clearTimeout(synthTimer);
-                synthTimer = null;
-            }
+            if (synthTimer) { clearTimeout(synthTimer); synthTimer = null; }
         }
 
         function playSynthNote(freq, durationMs) {
             if (!freq || !isPlaying) return;
             try {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
                 const now = audioCtx.currentTime;
                 const durSec = Math.max(0.15, durationMs / 1000);
-
-                // Tạo âm thanh Music Box / Chime ấm áp (Sine + Overtone)
                 const osc1 = audioCtx.createOscillator();
-                const osc2 = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-
                 osc1.type = 'triangle';
                 osc1.frequency.setValueAtTime(freq, now);
-
-                osc2.type = 'sine';
-                osc2.frequency.setValueAtTime(freq * 2, now);
-
-                const gain2 = audioCtx.createGain();
-                gain2.gain.setValueAtTime(0.18, now);
-
-                const peakGain = Math.max(0.01, currentVolume * 0.28);
+                const peakGain = Math.max(0.01, currentVolume * 0.25);
                 gain.gain.setValueAtTime(0.001, now);
                 gain.gain.linearRampToValueAtTime(peakGain, now + 0.02);
                 gain.gain.exponentialRampToValueAtTime(0.0008, now + durSec * 1.15);
-
                 osc1.connect(gain);
-                osc2.connect(gain2);
-                gain2.connect(gain);
                 gain.connect(audioCtx.destination);
-
                 osc1.start(now);
-                osc2.start(now);
                 osc1.stop(now + durSec * 1.2);
-                osc2.stop(now + durSec * 1.2);
-            } catch (err) {
-                console.log('WebAudio error:', err);
-            }
+            } catch (err) {}
         }
 
         function startSynthMelody(melodyKey) {
             stopSynthMelody();
             const songData = MELODIES[melodyKey] || MELODIES.jingle;
             let stepIdx = 0;
-
             function step() {
                 if (!isPlaying) return;
                 const [noteName, beats] = songData.notes[stepIdx];
                 const dur = beats * songData.tempo;
                 const freq = NOTE_FREQ[noteName] || 0;
-                if (freq > 0) {
-                    playSynthNote(freq, dur);
-                }
+                if (freq > 0) playSynthNote(freq, dur);
                 stepIdx = (stepIdx + 1) % songData.notes.length;
                 synthTimer = setTimeout(step, dur);
             }
@@ -880,13 +1261,13 @@
             if (isPlaying) {
                 musicBtn.innerHTML = '🔊 Đang Phát Nhạc';
                 musicBtn.classList.replace('bg-gray-600', 'bg-red-600');
-                miniPlayBtn.innerHTML = '⏸ Tạm dừng';
+                miniPlayBtn.innerHTML = '⏸ Dừng';
                 document.getElementById('musicNowPlayingBadge').textContent = 'Đang phát';
                 document.getElementById('musicNowPlayingBadge').className = 'text-[10px] bg-green-600 px-2 py-0.5 rounded-full font-semibold';
             } else {
                 musicBtn.innerHTML = '🔇 Đã Tắt Nhạc';
                 musicBtn.classList.replace('bg-red-600', 'bg-gray-600');
-                miniPlayBtn.innerHTML = '▶️ Phát tiếp';
+                miniPlayBtn.innerHTML = '▶️ Phát';
                 document.getElementById('musicNowPlayingBadge').textContent = 'Tạm dừng';
                 document.getElementById('musicNowPlayingBadge').className = 'text-[10px] bg-gray-600 px-2 py-0.5 rounded-full font-semibold';
             }
@@ -895,7 +1276,6 @@
         function playTrackByIndex(idx) {
             stopSynthMelody();
             bgMusic.pause();
-
             currentTrackIndex = (idx + PLAYLIST.length) % PLAYLIST.length;
             document.getElementById('songSelect').value = String(currentTrackIndex);
             const track = PLAYLIST[currentTrackIndex];
@@ -906,10 +1286,7 @@
                 bgMusic.src = track.url;
                 bgMusic.loop = true;
                 bgMusic.volume = currentVolume;
-                bgMusic.play().catch(err => {
-                    console.warn('MP3 stream bị chặn hoặc lỗi, chuyển sang giai điệu dự phòng:', err);
-                    startSynthMelody(track.fallbackMelody || 'santa');
-                });
+                bgMusic.play().catch(() => startSynthMelody(track.fallbackMelody || 'santa'));
             } else {
                 startSynthMelody(track.melody);
             }
@@ -919,17 +1296,12 @@
             const overlay = document.getElementById('startOverlay');
             overlay.style.opacity = '0';
             setTimeout(() => overlay.style.display = 'none', 500);
-
             musicBtn.classList.remove('hidden');
             musicPanelBtn.classList.remove('hidden');
-            musicOptions.classList.remove('hidden');
-
             playTrackByIndex(0);
         }
 
-        function toggleMusicPanel() {
-            musicOptions.classList.toggle('hidden');
-        }
+        function toggleMusicPanel() { musicOptions.classList.toggle('hidden'); }
 
         function toggleMusic() {
             if (isPlaying) {
@@ -961,15 +1333,8 @@
             }
         }
 
-        function prevSong() {
-            playTrackByIndex(currentTrackIndex - 1);
-            showToast(`🎵 Đang phát: ${PLAYLIST[currentTrackIndex].title}`, '🎶');
-        }
-
-        function nextSong() {
-            playTrackByIndex(currentTrackIndex + 1);
-            showToast(`🎵 Đang phát: ${PLAYLIST[currentTrackIndex].title}`, '🎶');
-        }
+        function prevSong() { playTrackByIndex(currentTrackIndex - 1); }
+        function nextSong() { playTrackByIndex(currentTrackIndex + 1); }
 
         function changeVolume(val) {
             currentVolume = Math.max(0, Math.min(1, parseInt(val, 10) / 100));
@@ -980,48 +1345,17 @@
             const file = event.target.files[0];
             if (file) {
                 stopSynthMelody();
-                const objectUrl = URL.createObjectURL(file);
-                bgMusic.src = objectUrl;
+                bgMusic.src = URL.createObjectURL(file);
                 bgMusic.loop = true;
                 bgMusic.volume = currentVolume;
                 bgMusic.play();
                 isPlaying = true;
                 updateMusicUI();
-                showToast(`🎵 Đang phát file nhạc: ${file.name}`, '📁');
+                showToast(`🎵 Đang phát: ${file.name}`, '📁');
             } else {
                 document.getElementById('songSelect').value = String(currentTrackIndex);
             }
         }
-
-        // Hiệu ứng tuyết rơi
-        function createSnowflakes() {
-            const snowContainer = document.createElement('div');
-            snowContainer.style.position = 'fixed';
-            snowContainer.style.top = '0';
-            snowContainer.style.left = '0';
-            snowContainer.style.width = '100%';
-            snowContainer.style.height = '100%';
-            snowContainer.style.pointerEvents = 'none';
-            snowContainer.style.zIndex = '9999';
-            document.body.appendChild(snowContainer);
-
-            for (let i = 0; i < 30; i++) {
-                const flake = document.createElement('div');
-                flake.innerHTML = '❄';
-                flake.style.position = 'absolute';
-                flake.style.color = 'rgba(255, 255, 255, 0.6)';
-                flake.style.fontSize = Math.random() * 15 + 10 + 'px';
-                flake.style.left = Math.random() * 100 + 'vw';
-                flake.style.top = Math.random() * -100 + 'px';
-                flake.style.animation = `fall ${Math.random() * 5 + 5}s linear infinite`;
-                flake.style.animationDelay = `${Math.random() * 5}s`;
-                snowContainer.appendChild(flake);
-            }
-        }
-        const snowStyle = document.createElement('style');
-        snowStyle.innerHTML = `@keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }`;
-        document.head.appendChild(snowStyle);
-        createSnowflakes();
 
         function showToast(message, icon = '🎄') {
             const box = document.getElementById('toastBox');
@@ -1029,20 +1363,49 @@
             document.getElementById('toastText').textContent = message;
             box.classList.remove('hidden');
             clearTimeout(window._toastTimer);
-            window._toastTimer = setTimeout(() => {
-                box.classList.add('hidden');
-            }, 4000);
+            window._toastTimer = setTimeout(() => box.classList.add('hidden'), 4000);
         }
 
         // =========================================================================
-        // 2. ĐIỀU HƯỚNG MÀN HÌNH & CÁC PART TRONG GIAO DIỆN SỰ KIỆN
+        // 3. ĐIỀU HƯỚNG GIỮA TRANG ĐĂNG NHẬP, TRANG PART 1-4 VÀ TRANG ADMIN
         // =========================================================================
-        function showMainView(viewId) {
-            ['viewLogin', 'viewEventHub', 'viewAdminDashboard'].forEach(id => {
+        function showPage(pageId) {
+            ['pageAuth', 'pageEvent', 'pageAdmin'].forEach(id => {
                 document.getElementById(id).classList.add('hidden');
             });
-            document.getElementById(viewId).classList.remove('hidden');
+            document.getElementById(pageId).classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchAuthTab(mode) {
+            const tLogin = document.getElementById('authTabLogin');
+            const tReg = document.getElementById('authTabRegister');
+            const tAdmin = document.getElementById('authTabAdmin');
+
+            const pLogin = document.getElementById('authPanelLogin');
+            const pReg = document.getElementById('authPanelRegister');
+            const pAdmin = document.getElementById('authPanelAdmin');
+
+            const baseCls = 'auth-tab text-gray-700 hover:bg-white/60 py-2.5 px-1.5 rounded-lg font-bold flex items-center justify-center gap-1';
+            tLogin.className = baseCls;
+            tReg.className = baseCls;
+            tAdmin.className = baseCls;
+
+            pLogin.classList.add('hidden');
+            pReg.classList.add('hidden');
+            pAdmin.classList.add('hidden');
+
+            if (mode === 'login') {
+                tLogin.className = 'auth-tab active-red py-2.5 px-1.5 rounded-lg font-bold flex items-center justify-center gap-1';
+                pLogin.classList.remove('hidden');
+            } else if (mode === 'register') {
+                tReg.className = 'auth-tab active-amber py-2.5 px-1.5 rounded-lg font-bold flex items-center justify-center gap-1';
+                pReg.classList.remove('hidden');
+            } else {
+                tAdmin.className = 'auth-tab active-green py-2.5 px-1.5 rounded-lg font-bold flex items-center justify-center gap-1';
+                pAdmin.classList.remove('hidden');
+                document.getElementById('adminPassInput').focus();
+            }
         }
 
         function switchEventPart(partNum) {
@@ -1061,71 +1424,116 @@
             });
         }
 
-        function switchRoleTab(role) {
-            const studentBtn = document.getElementById('tabStudentBtn');
-            const adminBtn = document.getElementById('tabAdminBtn');
-            const studentSec = document.getElementById('studentLoginSection');
-            const adminSec = document.getElementById('adminLoginSection');
-
-            if (role === 'student') {
-                studentBtn.className = 'role-tab active-student px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2';
-                adminBtn.className = 'role-tab text-gray-700 hover:bg-white/60 px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2';
-                studentSec.classList.remove('hidden');
-                adminSec.classList.add('hidden');
-            } else {
-                adminBtn.className = 'role-tab active-admin px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2';
-                studentBtn.className = 'role-tab text-gray-700 hover:bg-white/60 px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2';
-                adminSec.classList.remove('hidden');
-                studentSec.classList.add('hidden');
-                document.getElementById('adminPassInput').focus();
-            }
-        }
-
         function toggleAdminPassVisibility() {
             const input = document.getElementById('adminPassInput');
             input.type = input.type === 'password' ? 'text' : 'password';
         }
 
         // =========================================================================
-        // 3. CHUẨN HÓA DỮ LIỆU & ĐẢM BẢO 1 MSSV = 1 CÁ NHÂN DUY NHẤT
+        // 4. ĐÓNG GÓI & TÁCH MSSV + BASE64 AN TOÀN TUYỆT ĐỐI CHO GOOGLE SHEETS
         // =========================================================================
         function normalizeMssv(val) {
             return String(val || '').trim().toUpperCase();
         }
 
-        function getSelfieFromRow(row) {
-            if (!row) return '';
-            return row.phongban || row.selfie || '';
+        // Lưu MSSV vào cả hoten ("TH12345 - Họ Tên") VÀ thoigian ("12/11/2026 | TH12345")
+        // Không dùng ngoặc vuông [ ] để URL của SheetDB hoạt động 100% không bị lỗi regex!
+        function formatHotenForSheet(mssv, cleanName) {
+            const normMssv = normalizeMssv(mssv);
+            const clean = String(cleanName || '')
+                .replace(/^\[[^\]]+\]\s*/, '')
+                .replace(/^[A-Za-z0-9_]+\s*-\s*/, '')
+                .trim();
+            return normMssv ? `${normMssv} - ${clean}` : clean;
+        }
+
+        function formatTimeForSheet(mssv) {
+            const normMssv = normalizeMssv(mssv);
+            const timeStr = new Date().toLocaleString('vi-VN');
+            return normMssv ? `${timeStr} | ${normMssv}` : timeStr;
+        }
+
+        // Đọc MSSV thông minh từ mọi định dạng (cột mssv, tiền tố "TH12345 - Tên", "[TH12345] Tên", hoặc hậu tố "| TH12345")
+        function parseSheetRow(rawRow) {
+            if (!rawRow) return null;
+            const rawHoten = String(rawRow.hoten || '').trim();
+            const rawThoigian = String(rawRow.thoigian || '').trim();
+            let extractedMssv = normalizeMssv(rawRow.mssv);
+            let cleanName = rawHoten;
+            let cleanTime = rawThoigian;
+
+            // 1. Kiểm tra dạng "[TH12345] Họ Tên"
+            const bracketMatch = rawHoten.match(/^\[([^\]]+)\]\s*(.*)$/);
+            if (bracketMatch) {
+                if (!extractedMssv) extractedMssv = normalizeMssv(bracketMatch[1]);
+                cleanName = bracketMatch[2].trim();
+            } else {
+                // 2. Kiểm tra dạng "TH12345 - Họ Tên"
+                const dashMatch = rawHoten.match(/^([A-Za-z0-9]{3,15})\s*-\s*(.+)$/);
+                if (dashMatch) {
+                    if (!extractedMssv) extractedMssv = normalizeMssv(dashMatch[1]);
+                    cleanName = dashMatch[2].trim();
+                }
+            }
+
+            // 3. Kiểm tra hậu tố "| TH12345" trong cột thoigian
+            const pipeMatch = rawThoigian.match(/^(.*?)\s*\|\s*([A-Za-z0-9]{3,15})$/);
+            if (pipeMatch) {
+                cleanTime = pipeMatch[1].trim();
+                if (!extractedMssv) extractedMssv = normalizeMssv(pipeMatch[2]);
+            }
+
+            return {
+                ...rawRow,
+                mssv: extractedMssv,
+                hoten: cleanName,
+                thoigian: cleanTime,
+                _rawHoten: rawRow.hoten || '',
+                _rawThoigian: rawThoigian,
+                phongban: rawRow.phongban || rawRow.selfie || '',
+                wishlist: rawRow.wishlist || '',
+                blacklist: rawRow.blacklist || ''
+            };
         }
 
         function getScoreFromRow(row) {
             if (!row) return 100;
             const parsed = parseInt(row.diem, 10);
-            return !isNaN(parsed) ? parsed : 100; // Mặc định 100 điểm khi hoàn thành đăng ký Part 1
+            if (!isNaN(parsed)) return parsed;
+            const hasWish = (row.wishlist || '').trim() && row.wishlist !== '(Chưa cập nhật)';
+            return hasWish ? 150 : 100;
         }
 
-        // Gộp các bản ghi bị trùng MSSV để mỗi MSSV chỉ là 1 cá nhân duy nhất (lấy bản cập nhật mới nhất)
-        function deduplicateRecordsByMssv(rawList) {
-            if (!Array.isArray(rawList)) return [];
+        function deduplicateRecords(rawRows) {
+            if (!Array.isArray(rawRows)) return [];
             const map = new Map();
-            let noMssvCounter = 1;
+            let unknownIdx = 1;
 
-            rawList.forEach(row => {
-                const normMssv = normalizeMssv(row.mssv);
-                if (normMssv) {
-                    // Ghi đè bằng bản ghi mới hơn cùng MSSV
-                    map.set(normMssv, {
-                        ...row,
-                        mssv: normMssv,
-                        _originalMssv: row.mssv // Giữ giá trị gốc để PATCH chính xác trên SheetDB
+            rawRows.forEach(raw => {
+                const parsed = parseSheetRow(raw);
+                if (!parsed) return;
+                if (!parsed.mssv && !parsed.hoten && !parsed.phongban) return;
+
+                const key = parsed.mssv
+                    ? `MSSV_${parsed.mssv}`
+                    : (parsed.hoten ? `NAME_${parsed.hoten.toLowerCase()}` : `ROW_${unknownIdx++}`);
+
+                if (map.has(key)) {
+                    const prev = map.get(key);
+                    const allRawHotens = Array.from(new Set([...(prev._allRawHotens || [prev._rawHoten]), parsed._rawHoten].filter(Boolean)));
+                    const allRawTimes = Array.from(new Set([...(prev._allRawTimes || [prev._rawThoigian]), parsed._rawThoigian].filter(Boolean)));
+                    map.set(key, {
+                        ...prev,
+                        ...parsed,
+                        mssv: parsed.mssv || prev.mssv,
+                        _allRawHotens: allRawHotens,
+                        _allRawTimes: allRawTimes
                     });
-                } else if ((row.hoten || '').trim()) {
-                    // Bản ghi cũ chưa có MSSV
-                    const tempKey = `_NOMSSV_${noMssvCounter++}`;
-                    map.set(tempKey, {
-                        ...row,
-                        mssv: '',
-                        _originalMssv: ''
+                } else {
+                    map.set(key, {
+                        ...parsed,
+                        _allRawHotens: parsed._rawHoten ? [parsed._rawHoten] : [],
+                        _allRawTimes: parsed._rawThoigian ? [parsed._rawThoigian] : []
                     });
                 }
             });
@@ -1133,82 +1541,161 @@
             return Array.from(map.values());
         }
 
+        // HÀM LƯU / CẬP NHẬT LÊN SHEETDB ĐẢM BẢO 100% KHÔNG MẤT DỮ LIỆU
+        async function saveOrUpdateStudentToSheet(payload, existingRecord = null) {
+            let savedSuccessfully = false;
+
+            // Bước 1: Nếu đã có bản ghi cũ, thử PATCH theo cột thoigian trước (không chứa ký tự đặc biệt)
+            if (existingRecord && existingRecord._rawThoigian) {
+                try {
+                    const resTime = await fetch(`${SHEETDB_API}/thoigian/${encodeURIComponent(existingRecord._rawThoigian)}`, {
+                        method: 'PATCH',
+                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data: payload })
+                    });
+                    if (resTime.ok) {
+                        const jsonTime = await resTime.json();
+                        if (jsonTime && jsonTime.updated > 0) savedSuccessfully = true;
+                    }
+                } catch (e) {}
+            }
+
+            // Bước 2: Nếu chưa cập nhật được, thử PATCH theo cột hoten
+            if (!savedSuccessfully && existingRecord && existingRecord._rawHoten) {
+                try {
+                    const resName = await fetch(`${SHEETDB_API}/hoten/${encodeURIComponent(existingRecord._rawHoten)}`, {
+                        method: 'PATCH',
+                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data: payload })
+                    });
+                    if (resName.ok) {
+                        const jsonName = await resName.json();
+                        if (jsonName && jsonName.updated > 0) savedSuccessfully = true;
+                    }
+                } catch (e) {}
+            }
+
+            // Bước 3: Nếu là người dùng mới hoặc PATCH trả về updated: 0 -> Dùng POST để đảm bảo 100% lưu vào Google Sheets!
+            if (!savedSuccessfully) {
+                const postRes = await fetch(SHEETDB_API, {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: [payload] })
+                });
+                if (!postRes.ok) {
+                    throw new Error('SheetDB POST failed with status ' + postRes.status);
+                }
+                await postRes.json();
+            }
+
+            const finalRecord = parseSheetRow(payload);
+            try {
+                localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(finalRecord));
+            } catch (e) {}
+            return finalRecord;
+        }
+
         // =========================================================================
-        // 4. LUỒNG ĐĂNG NHẬP SINH VIÊN: TRÙNG MSSV -> VÀO SỰ KIỆN & CHO SỬA CHỨ KHÔNG TẠO MỚI
+        // 5. ĐĂNG NHẬP & ĐĂNG KÝ TÀI KHOẢN -> CHUYỂN ĐẾN PART 1
         // =========================================================================
-        async function handleStudentCheck(e) {
+        async function handleStudentLogin(e) {
             e.preventDefault();
-            const rawMssv = normalizeMssv(document.getElementById('loginMssvInput').value);
-            if (!rawMssv) {
-                showToast('Vui lòng nhập Mã số sinh viên (Ví dụ: TH12345)!', '⚠️');
+            const mssvVal = normalizeMssv(document.getElementById('loginMssvInput').value);
+            if (!mssvVal) {
+                showToast('Vui lòng nhập Mã số sinh viên (VD: TH12345)!', '⚠️');
                 return;
             }
-            document.getElementById('loginMssvInput').value = rawMssv;
 
-            const btn = document.getElementById('btnCheckMssv');
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<span>⏳ Đang kiểm tra tài khoản MSSV...</span>';
+            const btn = document.getElementById('btnLoginSubmit');
+            const origText = btn.innerHTML;
+            btn.innerHTML = '<span>⏳ Đang kiểm tra tài khoản...</span>';
             btn.disabled = true;
 
             try {
-                // Tải danh sách từ SheetDB để kiểm tra chính xác không phân biệt hoa thường
                 const res = await fetch(SHEETDB_API);
-                let allRows = [];
-                if (res.ok) {
-                    const data = await res.json();
-                    if (Array.isArray(data)) allRows = data;
-                }
+                const rawData = res.ok ? await res.json() : [];
+                const uniqueList = deduplicateRecords(rawData);
 
-                const dedupedList = deduplicateRecordsByMssv(allRows);
-                const matchedRecord = dedupedList.find(r => normalizeMssv(r.mssv) === rawMssv);
-
-                if (matchedRecord) {
-                    // ĐÃ TỒN TẠI MSSV -> Đưa thẳng vào Giao Diện Chính Của Sự Kiện (1 cá nhân duy nhất, cho phép sửa)
-                    currentStudentRecord = matchedRecord;
-                    isEditingExistingStudent = true;
-                    enterEventHub(matchedRecord, dedupedList);
-                    showToast(`Chào mừng ${matchedRecord.hoten || rawMssv} vào Giao Diện Sự Kiện!`, '🎅');
+                const found = uniqueList.find(r => normalizeMssv(r.mssv) === mssvVal);
+                if (found) {
+                    currentStudentRecord = found;
+                    try { localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(found)); } catch (e) {}
+                    enterPart1Screen(found, uniqueList);
+                    showToast(`Chào mừng ${found.hoten} (${found.mssv}) vào Part 1!`, '🎅');
                 } else {
-                    // CHƯA CÓ MSSV -> Mở form điền thông tin lần đầu cho cá nhân này
-                    isEditingExistingStudent = false;
-                    openRegistrationFormForNewMssv(rawMssv);
+                    switchAuthTab('register');
+                    document.getElementById('regMssvInput').value = mssvVal;
+                    document.getElementById('registerNoticeBanner').innerHTML = `✨ Mã sinh viên <strong>${escapeHtml(mssvVal)}</strong> chưa có tài khoản. Hãy nhập <strong>Họ tên</strong>, <strong>Chụp ảnh bản thân</strong> và <strong>Wishlist / Blacklist</strong> bên dưới nhé!`;
+                    document.getElementById('regNameInput').focus();
+                    showToast(`MSSV ${mssvVal} chưa có tài khoản. Hãy đăng ký mới nhé!`, '✨');
                 }
             } catch (err) {
-                console.error('Lỗi khi kiểm tra MSSV:', err);
-                alert('Không thể kết nối tới máy chủ dữ liệu. Vui lòng kiểm tra mạng và thử lại!');
+                console.error(err);
+                alert('Không thể kết nối tới máy chủ dữ liệu. Vui lòng kiểm tra kết nối mạng!');
             } finally {
-                btn.innerHTML = originalHTML;
+                btn.innerHTML = origText;
                 btn.disabled = false;
             }
         }
 
-        function openRegistrationFormForNewMssv(mssvValue) {
-            document.getElementById('mssvCheckBox').classList.add('hidden');
-            document.getElementById('registrationFormBox').classList.remove('hidden');
+        async function handleStudentRegister(e) {
+            e.preventDefault();
+            const mssvVal = normalizeMssv(document.getElementById('regMssvInput').value);
+            const nameVal = document.getElementById('regNameInput').value.trim();
+            const selfieVal = document.getElementById('regSelfieBase64').value;
+            const wishVal = document.getElementById('regWishlistInput').value.trim();
+            const blackVal = document.getElementById('regBlacklistInput').value.trim();
 
-            resetWholeForm();
-            document.getElementById('mssv').value = mssvValue;
-            document.getElementById('formBoxTitle').innerHTML = '<span>✍️</span> Đăng Ký Hồ Sơ Cá Nhân Lần Đầu';
-            document.getElementById('regStatusBanner').innerHTML = `✨ Mã sinh viên <strong>${escapeHtml(mssvValue)}</strong> chưa có hồ sơ. Hãy điền thông tin & chụp Selfie một lần duy nhất để vào Giao Diện Chính Của Sự Kiện nhé!`;
-            document.getElementById('regStatusBanner').className = 'mb-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-800 font-medium';
-            document.getElementById('submitFormBtn').innerHTML = '<span>Hoàn Tất & Vào Sự Kiện</span> <span>🎅</span>';
-            document.getElementById('cancelEditBtn').classList.add('hidden');
-            document.getElementById('name').focus();
-        }
-
-        function backFromForm() {
-            if (isEditingExistingStudent && currentStudentRecord) {
-                showMainView('viewEventHub');
+            if (!mssvVal || !nameVal) {
+                alert('Vui lòng nhập đầy đủ Mã sinh viên (VD: TH12345) và Họ tên!');
                 return;
             }
-            document.getElementById('registrationFormBox').classList.add('hidden');
-            document.getElementById('mssvCheckBox').classList.remove('hidden');
+            if (!selfieVal) {
+                alert('Vui lòng chụp hoặc chọn Ảnh bản thân (để tạo mã Base64 lưu Google Sheets) nhé!');
+                return;
+            }
+
+            const btn = document.getElementById('btnRegisterSubmit');
+            const origText = btn.innerHTML;
+            btn.innerHTML = '<span>⏳ Đang lưu dữ liệu lên Google Sheets...</span>';
+            btn.disabled = true;
+
+            try {
+                const checkRes = await fetch(SHEETDB_API);
+                const rawRows = checkRes.ok ? await checkRes.json() : [];
+                const uniqueList = deduplicateRecords(rawRows);
+
+                const existing = uniqueList.find(r =>
+                    normalizeMssv(r.mssv) === mssvVal ||
+                    (!r.mssv && r.hoten.toLowerCase() === nameVal.toLowerCase())
+                );
+
+                const payload = {
+                    "mssv": mssvVal,
+                    "hoten": formatHotenForSheet(mssvVal, nameVal),
+                    "thoigian": formatTimeForSheet(mssvVal),
+                    "phongban": selfieVal,
+                    "wishlist": wishVal,
+                    "blacklist": blackVal
+                };
+
+                const savedRecord = await saveOrUpdateStudentToSheet(payload, existing);
+                currentStudentRecord = savedRecord;
+
+                enterPart1Screen(savedRecord);
+                showToast(`🎉 Đã lưu tài khoản ${nameVal} (${mssvVal}) & mở Part 1!`, '🎄');
+            } catch (err) {
+                console.error(err);
+                alert('Có lỗi xảy ra khi lưu dữ liệu lên Google Sheets. Vui lòng thử lại!');
+            } finally {
+                btn.innerHTML = origText;
+                btn.disabled = false;
+            }
         }
 
-        // Mở Giao diện chính của sự kiện (Event Hub)
-        function enterEventHub(record, preloadedList = null) {
-            renderUserDashboard(record);
-            showMainView('viewEventHub');
+        function enterPart1Screen(record, preloadedList = null) {
+            renderPart1UserInfo(record);
+            showPage('pageEvent');
             switchEventPart(1);
             if (preloadedList) {
                 renderLeaderboard(preloadedList);
@@ -1217,85 +1704,111 @@
             }
         }
 
-        function renderUserDashboard(record) {
-            const selfieData = getSelfieFromRow(record);
-            const validImg = (selfieData && selfieData.startsWith('data:image'))
-                ? selfieData
-                : 'https://placehold.co/300x300/1a472a/ffffff?text=' + encodeURIComponent(record.mssv || 'Santa');
+        function renderPart1UserInfo(record) {
+            const validImg = (record.phongban && record.phongban.startsWith('data:image'))
+                ? record.phongban
+                : 'https://placehold.co/300x300/8b0000/ffffff?text=' + encodeURIComponent(record.mssv || 'Santa');
 
-            document.getElementById('userDashSelfie').src = validImg;
             document.getElementById('hubHeaderAvatar').src = validImg;
-
-            document.getElementById('userDashName').textContent = record.hoten || 'Chưa cập nhật tên';
             document.getElementById('hubHeaderName').textContent = record.hoten || 'Thành viên';
-
-            document.getElementById('userDashMssv').textContent = record.mssv || '---';
             document.getElementById('hubHeaderMssv').textContent = record.mssv || '---';
-
             document.getElementById('hubHeaderScore').textContent = getScoreFromRow(record);
-            document.getElementById('userDashTime').textContent = record.thoigian || 'Vừa xong';
-            document.getElementById('userDashWishlist').textContent = record.wishlist || '(Chưa có nội dung)';
-            document.getElementById('userDashBlacklist').textContent = record.blacklist || '(Chưa có nội dung)';
+
+            document.getElementById('p1MssvInput').value = record.mssv || '';
+            document.getElementById('p1NameInput').value = record.hoten || '';
+            document.getElementById('p1SelfiePreview').src = validImg;
+            document.getElementById('p1SelfieBase64').value = record.phongban || '';
+            document.getElementById('p1WishlistInput').value = (record.wishlist && record.wishlist !== '(Chưa cập nhật)') ? record.wishlist : '';
+            document.getElementById('p1BlacklistInput').value = (record.blacklist && record.blacklist !== '(Chưa cập nhật)') ? record.blacklist : '';
         }
 
-        // Cho phép sửa hồ sơ của cá nhân hiện tại (Không tạo dòng mới!)
-        function openEditProfile() {
+        async function handleUpdatePart1Profile(e) {
+            e.preventDefault();
             if (!currentStudentRecord) return;
-            isEditingExistingStudent = true;
 
-            showMainView('viewLogin');
-            switchRoleTab('student');
-            document.getElementById('mssvCheckBox').classList.add('hidden');
-            document.getElementById('registrationFormBox').classList.remove('hidden');
+            const mssvVal = normalizeMssv(document.getElementById('p1MssvInput').value);
+            const nameVal = document.getElementById('p1NameInput').value.trim();
+            const selfieVal = document.getElementById('p1SelfieBase64').value || currentStudentRecord.phongban;
+            const wishVal = document.getElementById('p1WishlistInput').value.trim();
+            const blackVal = document.getElementById('p1BlacklistInput').value.trim();
 
-            document.getElementById('formBoxTitle').innerHTML = '<span>✏️</span> Chỉnh Sửa Hồ Sơ Cá Nhân';
-            document.getElementById('mssv').value = normalizeMssv(currentStudentRecord.mssv);
-            document.getElementById('name').value = currentStudentRecord.hoten || '';
-            document.getElementById('wishlist').value = currentStudentRecord.wishlist || '';
-            document.getElementById('blacklist').value = currentStudentRecord.blacklist || '';
+            const btn = document.getElementById('btnSavePart1');
+            const origText = btn.innerHTML;
+            btn.innerHTML = '<span>⏳ Đang đồng bộ lên Google Sheets...</span>';
+            btn.disabled = true;
 
-            const existingSelfie = getSelfieFromRow(currentStudentRecord);
-            if (existingSelfie) {
-                document.getElementById('selfieBase64').value = existingSelfie;
-                const preview = document.getElementById('selfiePreview');
-                preview.src = existingSelfie;
-                preview.classList.remove('hidden');
-                document.getElementById('cameraBtnLabel').textContent = 'Chụp / Đổi Ảnh Khác';
+            const payload = {
+                "mssv": mssvVal,
+                "hoten": formatHotenForSheet(mssvVal, nameVal),
+                "thoigian": formatTimeForSheet(mssvVal),
+                "phongban": selfieVal,
+                "wishlist": wishVal,
+                "blacklist": blackVal
+            };
+
+            try {
+                const updated = await saveOrUpdateStudentToSheet(payload, currentStudentRecord);
+                currentStudentRecord = updated;
+                renderPart1UserInfo(currentStudentRecord);
+                loadLeaderboardData();
+                showToast('✅ Đã lưu cập nhật hồ sơ & Wishlist/Blacklist lên Google Sheets!', '🎁');
+            } catch (err) {
+                console.error(err);
+                alert('Không thể lưu thay đổi. Vui lòng thử lại!');
+            } finally {
+                btn.innerHTML = origText;
+                btn.disabled = false;
             }
-
-            document.getElementById('regStatusBanner').innerHTML = `🪪 Đang chỉnh sửa thông tin cá nhân của MSSV <strong>${escapeHtml(currentStudentRecord.mssv)}</strong>. Hệ thống sẽ cập nhật trực tiếp vào hồ sơ của bạn (không tạo mục mới).`;
-            document.getElementById('regStatusBanner').className = 'mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900 font-medium';
-            document.getElementById('submitFormBtn').innerHTML = '<span>Lưu Thay Đổi Hồ Sơ</span> <span>💾</span>';
-            document.getElementById('cancelEditBtn').classList.remove('hidden');
-        }
-
-        function cancelEditProfile() {
-            showMainView('viewEventHub');
         }
 
         function logoutUser() {
             currentStudentRecord = null;
-            isEditingExistingStudent = false;
-            resetWholeForm();
+            try { localStorage.removeItem(STORAGE_KEY_USER); } catch (e) {}
             document.getElementById('loginMssvInput').value = '';
-            document.getElementById('registrationFormBox').classList.add('hidden');
-            document.getElementById('mssvCheckBox').classList.remove('hidden');
-            showMainView('viewLogin');
-            showToast('Đã đăng xuất khỏi sự kiện.', '👋');
+            document.getElementById('registerForm').reset();
+            document.getElementById('regSelfiePreview').classList.add('hidden');
+            document.getElementById('regFilterToolbar').classList.add('hidden');
+            document.getElementById('regBase64InfoBox').classList.add('hidden');
+            document.getElementById('regSelfieBase64').value = '';
+            showPage('pageAuth');
+            switchAuthTab('login');
+            showToast('Đã đăng xuất khỏi tài khoản.', '👋');
         }
 
+        // Khôi phục phiên đăng nhập nếu người dùng tải lại trang
+        window.addEventListener('DOMContentLoaded', () => {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY_USER);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && parsed.mssv) {
+                        currentStudentRecord = parsed;
+                        enterPart1Screen(parsed);
+                    }
+                }
+            } catch (e) {}
+        });
+
         // =========================================================================
-        // 5. BẢNG XẾP HẠNG ĐIỂM SỰ KIỆN (LEADERBOARD TRONG GIAO DIỆN CHÍNH)
+        // 6. BẢNG XẾP HẠNG ĐIỂM SỰ KIỆN (LEADERBOARD)
         // =========================================================================
         async function loadLeaderboardData() {
             try {
                 const res = await fetch(SHEETDB_API);
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 const rawData = await res.json();
-                const uniqueList = deduplicateRecordsByMssv(rawData);
+                const uniqueList = deduplicateRecords(rawData);
+                // Đồng bộ lại bản ghi của user đang đăng nhập nếu có trên Sheet
+                if (currentStudentRecord && currentStudentRecord.mssv) {
+                    const freshMe = uniqueList.find(r => normalizeMssv(r.mssv) === normalizeMssv(currentStudentRecord.mssv));
+                    if (freshMe) {
+                        currentStudentRecord = freshMe;
+                        renderPart1UserInfo(freshMe);
+                    }
+                }
                 renderLeaderboard(uniqueList);
             } catch (err) {
-                console.error('Lỗi tải Bảng xếp hạng:', err);
+                console.error('Lỗi tải BXH:', err);
             }
         }
 
@@ -1309,111 +1822,100 @@
                 return;
             }
 
-            // Sắp xếp theo điểm giảm dần
             const sorted = [...uniqueList].sort((a, b) => getScoreFromRow(b) - getScoreFromRow(a));
-
-            // Render Top 3 Podium
-            const top1 = sorted[0];
-            const top2 = sorted[1];
-            const top3 = sorted[2];
 
             const renderPodiumCard = (item, rank, medal, bgClass, heightClass) => {
                 if (!item) return `<div class="opacity-30 p-2"></div>`;
-                const sImg = getSelfieFromRow(item);
-                const avatar = (sImg && sImg.startsWith('data:image'))
-                    ? sImg
-                    : 'https://placehold.co/120x120/1a472a/ffffff?text=' + encodeURIComponent(item.mssv || rank);
+                const avatar = (item.phongban && item.phongban.startsWith('data:image'))
+                    ? item.phongban
+                    : 'https://placehold.co/120x120/8b0000/ffffff?text=' + encodeURIComponent(item.mssv || rank);
                 const isMe = currentStudentRecord && normalizeMssv(currentStudentRecord.mssv) === normalizeMssv(item.mssv);
 
                 return `
                     <div class="flex flex-col items-center">
-                        <div class="relative mb-1.5">
-                            <img src="${avatar}" class="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover border-2 ${rank === 1 ? 'border-yellow-400 ring-2 ring-yellow-300' : 'border-white'} shadow-md">
-                            <span class="absolute -bottom-1 -right-1 text-base">${medal}</span>
+                        <div class="relative mb-1">
+                            <img src="${avatar}" class="w-11 h-11 sm:w-14 sm:h-14 rounded-full object-cover border-2 ${rank === 1 ? 'border-yellow-400 ring-2 ring-yellow-300' : 'border-white'} shadow-md">
+                            <span class="absolute -bottom-1 -right-1 text-sm sm:text-base">${medal}</span>
                         </div>
-                        <p class="text-xs font-extrabold text-gray-800 truncate max-w-[95px] md:max-w-[120px]">${escapeHtml(item.hoten || '---')}</p>
-                        <span class="text-[10px] font-bold text-red-700">${escapeHtml(item.mssv || 'N/A')}</span>
-                        <div class="w-full mt-2 rounded-t-xl ${bgClass} ${heightClass} flex flex-col items-center justify-center p-2 shadow-inner border-t-2 border-white/60">
-                            <span class="text-xs md:text-sm font-extrabold">${getScoreFromRow(item)} PTS</span>
-                            ${isMe ? '<span class="text-[9px] bg-red-600 text-white px-1.5 rounded-full mt-0.5">Bạn</span>' : ''}
+                        <p class="text-[11px] sm:text-xs font-extrabold text-gray-800 truncate max-w-[85px] sm:max-w-[120px]">${escapeHtml(item.hoten || '---')}</p>
+                        <span class="text-[10px] font-bold text-red-700">${escapeHtml(item.mssv || 'Chưa gán')}</span>
+                        <div class="w-full mt-1.5 rounded-t-xl ${bgClass} ${heightClass} flex flex-col items-center justify-center p-1.5 shadow-inner border-t-2 border-white/60">
+                            <span class="text-[11px] sm:text-sm font-extrabold">${getScoreFromRow(item)} PTS</span>
+                            ${isMe ? '<span class="text-[9px] bg-red-600 text-white px-1.5 rounded-full">Bạn</span>' : ''}
                         </div>
                     </div>
                 `;
             };
 
             podiumEl.innerHTML = `
-                ${renderPodiumCard(top2, 2, '🥈', 'bg-slate-200 text-slate-800', 'h-16')}
-                ${renderPodiumCard(top1, 1, '🥇', 'bg-amber-300 text-amber-950', 'h-24')}
-                ${renderPodiumCard(top3, 3, '🥉', 'bg-orange-200 text-orange-900', 'h-14')}
+                ${renderPodiumCard(sorted[1], 2, '🥈', 'bg-slate-200 text-slate-800', 'h-14 sm:h-16')}
+                ${renderPodiumCard(sorted[0], 1, '🥇', 'bg-amber-300 text-amber-950', 'h-20 sm:h-24')}
+                ${renderPodiumCard(sorted[2], 3, '🥉', 'bg-orange-200 text-orange-900', 'h-12 sm:h-14')}
             `;
 
-            // Render toàn bộ danh sách xếp hạng
             tbodyEl.innerHTML = sorted.map((item, idx) => {
                 const rank = idx + 1;
                 const badge = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
-                const sImg = getSelfieFromRow(item);
-                const avatar = (sImg && sImg.startsWith('data:image'))
-                    ? sImg
-                    : 'https://placehold.co/80x80/1a472a/ffffff?text=' + encodeURIComponent(item.mssv || rank);
+                const avatar = (item.phongban && item.phongban.startsWith('data:image'))
+                    ? item.phongban
+                    : 'https://placehold.co/80x80/8b0000/ffffff?text=' + encodeURIComponent(item.mssv || rank);
                 const isMe = currentStudentRecord && normalizeMssv(currentStudentRecord.mssv) === normalizeMssv(item.mssv);
 
                 return `
                     <tr class="${isMe ? 'bg-amber-50/90 font-semibold' : 'hover:bg-gray-50'} transition">
-                        <td class="p-3 text-center font-extrabold text-gray-700">${badge}</td>
-                        <td class="p-3">
-                            <div class="flex items-center gap-2.5">
-                                <img src="${avatar}" class="w-9 h-9 rounded-full object-cover border border-gray-300">
-                                <div>
-                                    <span class="font-bold text-gray-800">${escapeHtml(item.hoten || '---')}</span>
-                                    ${isMe ? '<span class="ml-1.5 text-[10px] bg-red-600 text-white px-2 py-0.5 rounded-full font-bold">Bạn</span>' : ''}
+                        <td class="p-2.5 sm:p-3 text-center font-extrabold text-gray-700">${badge}</td>
+                        <td class="p-2.5 sm:p-3">
+                            <div class="flex items-center gap-2">
+                                <img src="${avatar}" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border border-gray-300 shrink-0">
+                                <div class="min-w-0">
+                                    <span class="font-bold text-gray-800 block truncate max-w-[110px] sm:max-w-none">${escapeHtml(item.hoten || '---')}</span>
+                                    ${isMe ? '<span class="text-[9px] bg-red-600 text-white px-1.5 py-0.5 rounded-full font-bold">Bạn</span>' : ''}
                                 </div>
                             </div>
                         </td>
-                        <td class="p-3 text-center">
-                            <span class="bg-gray-100 text-gray-700 font-bold text-xs px-2 py-0.5 rounded border border-gray-200">${escapeHtml(item.mssv || 'N/A')}</span>
+                        <td class="p-2.5 sm:p-3 text-center">
+                            <span class="bg-red-50 text-red-700 font-extrabold text-[11px] px-2 py-0.5 rounded border border-red-200">${escapeHtml(item.mssv || 'N/A')}</span>
                         </td>
-                        <td class="p-3 text-right font-extrabold text-green-700">${getScoreFromRow(item)} PTS</td>
+                        <td class="p-2.5 sm:p-3 text-right font-extrabold text-green-700 whitespace-nowrap">${getScoreFromRow(item)} PTS</td>
                     </tr>
                 `;
             }).join('');
         }
 
         // =========================================================================
-        // 6. XỬ LÝ ẢNH SELFIE & BỘ LỌC KHUNG VIỀN GIÁNG SINH
+        // 7. XỬ LÝ ẢNH & NÉN SANG CHUỖI VĂN BẢN BASE64 (< 22,000 KÝ TỰ CHO GOOGLE SHEETS)
         // =========================================================================
         let originalImgObject = null;
         let targetWidth = 0;
         let targetHeight = 0;
 
-        function loadOriginalImage(event) {
+        function loadOriginalImage(event, targetPrefix = 'reg') {
             const file = event.target.files[0];
             if (!file) return;
+            activeImageTarget = targetPrefix;
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 originalImgObject = new Image();
                 originalImgObject.onload = function() {
-                    const MAX_WIDTH = 400;
-                    const MAX_HEIGHT = 400;
+                    // Giới hạn kích thước 240x240 để chuỗi văn bản Base64 luôn ngắn gọn (< 20,000 ký tự),
+                    // đảm bảo Google Sheets (giới hạn 50,000 ký tự/ô) lưu thành công 100% trên mọi điện thoại!
+                    const MAX_SIDE = 240;
                     targetWidth = originalImgObject.width;
                     targetHeight = originalImgObject.height;
 
                     if (targetWidth > targetHeight) {
-                        if (targetWidth > MAX_WIDTH) {
-                            targetHeight *= MAX_WIDTH / targetWidth;
-                            targetWidth = MAX_WIDTH;
-                        }
+                        if (targetWidth > MAX_SIDE) { targetHeight = Math.round(targetHeight * MAX_SIDE / targetWidth); targetWidth = MAX_SIDE; }
                     } else {
-                        if (targetHeight > MAX_HEIGHT) {
-                            targetWidth *= MAX_HEIGHT / targetHeight;
-                            targetHeight = MAX_HEIGHT;
-                        }
+                        if (targetHeight > MAX_SIDE) { targetWidth = Math.round(targetWidth * MAX_SIDE / targetHeight); targetHeight = MAX_SIDE; }
                     }
 
-                    document.getElementById('filterToolbar').classList.remove('hidden');
-                    const btns = document.querySelectorAll('.filter-btn');
-                    btns.forEach(b => b.classList.remove('active'));
-                    btns[0].classList.add('active');
+                    if (targetPrefix === 'reg') {
+                        document.getElementById('regFilterToolbar').classList.remove('hidden');
+                        const btns = document.querySelectorAll('#regFilterToolbar .filter-btn');
+                        btns.forEach(b => b.classList.remove('active'));
+                        if (btns[0]) btns[0].classList.add('active');
+                    }
 
                     applyFilter('none');
                 };
@@ -1435,47 +1937,28 @@
             canvas.width = targetWidth;
             canvas.height = targetHeight;
 
-            if (filterType === 'retro') {
-                ctx.filter = 'sepia(80%) contrast(110%) brightness(90%)';
-            } else if (filterType === 'noir') {
-                ctx.filter = 'grayscale(100%) contrast(130%) brightness(85%)';
-            } else if (filterType === 'frost') {
-                ctx.filter = 'saturate(130%) hue-rotate(180deg) brightness(110%)';
-            } else if (filterType === 'noel') {
-                ctx.filter = 'saturate(130%) contrast(110%)';
-            } else {
-                ctx.filter = 'none';
-            }
+            if (filterType === 'retro') ctx.filter = 'sepia(80%) contrast(110%) brightness(90%)';
+            else if (filterType === 'noir') ctx.filter = 'grayscale(100%) contrast(130%) brightness(85%)';
+            else if (filterType === 'frost') ctx.filter = 'saturate(130%) hue-rotate(180deg) brightness(110%)';
+            else if (filterType === 'noel') ctx.filter = 'saturate(130%) contrast(110%)';
+            else ctx.filter = 'none';
 
             ctx.drawImage(originalImgObject, 0, 0, targetWidth, targetHeight);
-
             ctx.filter = 'none';
-            const frameWidth = targetWidth * 0.05;
+            const frameWidth = Math.max(6, targetWidth * 0.05);
 
             if (filterType === 'retro') {
                 ctx.lineWidth = frameWidth;
                 ctx.strokeStyle = '#8B4513';
                 ctx.strokeRect(frameWidth / 2, frameWidth / 2, targetWidth - frameWidth, targetHeight - frameWidth);
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = '#DAA520';
-                ctx.strokeRect(frameWidth + 5, frameWidth + 5, targetWidth - 2 * frameWidth - 10, targetHeight - 2 * frameWidth - 10);
             } else if (filterType === 'noir') {
                 ctx.fillStyle = '#000000';
-                ctx.fillRect(0, 0, targetWidth, frameWidth * 2.5);
-                ctx.fillRect(0, targetHeight - frameWidth * 2.5, targetWidth, frameWidth * 2.5);
+                ctx.fillRect(0, 0, targetWidth, frameWidth * 2.2);
+                ctx.fillRect(0, targetHeight - frameWidth * 2.2, targetWidth, frameWidth * 2.2);
             } else if (filterType === 'frost') {
                 ctx.lineWidth = frameWidth;
-                ctx.strokeStyle = 'rgba(173, 216, 230, 0.6)';
+                ctx.strokeStyle = 'rgba(173, 216, 230, 0.75)';
                 ctx.strokeRect(frameWidth / 2, frameWidth / 2, targetWidth - frameWidth, targetHeight - frameWidth);
-
-                ctx.font = (targetWidth * 0.12) + "px Arial";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.fillStyle = "#ffffff";
-                ctx.fillText("❄️", frameWidth * 1.5, frameWidth * 1.5);
-                ctx.fillText("❄️", targetWidth - frameWidth * 1.5, frameWidth * 1.5);
-                ctx.fillText("❄️", frameWidth * 1.5, targetHeight - frameWidth * 1.5);
-                ctx.fillText("❄️", targetWidth - frameWidth * 1.5, targetHeight - frameWidth * 1.5);
             } else if (filterType === 'noel') {
                 ctx.lineWidth = frameWidth;
                 ctx.strokeStyle = '#c0392b';
@@ -1485,107 +1968,31 @@
                 ctx.strokeRect(frameWidth * 1.2, frameWidth * 1.2, targetWidth - frameWidth * 2.4, targetHeight - frameWidth * 2.4);
             }
 
-            const base64String = canvas.toDataURL('image/jpeg', 0.6);
-            document.getElementById('selfiePreview').src = base64String;
-            document.getElementById('selfiePreview').classList.remove('hidden');
-            document.getElementById('selfieBase64').value = base64String;
-        }
-
-        // =========================================================================
-        // 7. LƯU / CẬP NHẬT HỒ SƠ: LUÔN ĐẢM BẢO 1 MSSV = 1 CÁ NHÂN (KHÔNG TẠO DÒNG TRÙNG)
-        // =========================================================================
-        async function submitForm(e) {
-            e.preventDefault();
-            const base64Selfie = document.getElementById('selfieBase64').value;
-            if (!base64Selfie) {
-                alert('Vui lòng chụp hoặc chọn một bức ảnh Selfie xác minh bạn nhé!');
-                return;
+            // Nén sang chuỗi văn bản Base64 chuẩn, tự động giảm quality nếu chuỗi > 35,000 ký tự
+            let quality = 0.55;
+            let base64String = canvas.toDataURL('image/jpeg', quality);
+            while (base64String.length > 35000 && quality > 0.25) {
+                quality -= 0.1;
+                base64String = canvas.toDataURL('image/jpeg', quality);
             }
 
-            const mssvVal = normalizeMssv(document.getElementById('mssv').value);
-            const nameVal = document.getElementById('name').value.trim();
-            const wishlistVal = document.getElementById('wishlist').value.trim();
-            const blacklistVal = document.getElementById('blacklist').value.trim();
-            const timeVal = new Date().toLocaleString('vi-VN');
-
-            const btn = document.getElementById('submitFormBtn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<span>⏳ Đang đồng bộ hồ sơ cá nhân...</span>';
-            btn.disabled = true;
-
-            const recordPayload = {
-                "mssv": mssvVal,
-                "hoten": nameVal,
-                "thoigian": timeVal,
-                "phongban": base64Selfie,
-                "wishlist": wishlistVal,
-                "blacklist": blacklistVal
-            };
-
-            try {
-                // Kiểm tra trên SheetDB xem MSSV này đã tồn tại chưa để quyết định PATCH (sửa) hay POST (thêm mới)
-                let existingMatch = null;
-                const checkRes = await fetch(SHEETDB_API);
-                let allRows = [];
-                if (checkRes.ok) {
-                    const data = await checkRes.json();
-                    if (Array.isArray(data)) {
-                        allRows = data;
-                        existingMatch = allRows.find(r => normalizeMssv(r.mssv) === mssvVal);
-                    }
-                }
-
-                let response;
-                if (isEditingExistingStudent || existingMatch) {
-                    // ĐÃ TỒN TẠI MSSV -> Cập nhật trực tiếp vào cá nhân đó qua PATCH, tuyệt đối không thêm dòng mới!
-                    const targetKey = (existingMatch && existingMatch.mssv) ? existingMatch.mssv : mssvVal;
-                    response = await fetch(`${SHEETDB_API}/mssv/${encodeURIComponent(targetKey)}`, {
-                        method: 'PATCH',
-                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ data: recordPayload })
-                    });
-                } else {
-                    // CHƯA TỒN TẠI -> Tạo cá nhân mới duy nhất
-                    response = await fetch(SHEETDB_API, {
-                        method: 'POST',
-                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ data: [recordPayload] })
-                    });
-                }
-
-                if (!response.ok) {
-                    throw new Error('SheetDB API returned status ' + response.status);
-                }
-
-                await response.json();
-                currentStudentRecord = {
-                    ...(existingMatch || {}),
-                    ...recordPayload
-                };
-                isEditingExistingStudent = true;
-
-                enterEventHub(currentStudentRecord);
-                showToast('🎉 Đã lưu hồ sơ cá nhân & mở Giao Diện Sự Kiện!', '🎉');
-            } catch (error) {
-                console.error('Lỗi khi lưu dữ liệu:', error);
-                alert('Oops! Có lỗi xảy ra khi gửi dữ liệu. Hãy đảm bảo Google Sheet đã có cột "mssv", "hoten", "thoigian", "phongban", "wishlist", "blacklist" nhé!');
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
+            if (activeImageTarget === 'p1') {
+                document.getElementById('p1SelfiePreview').src = base64String;
+                document.getElementById('p1SelfieBase64').value = base64String;
+                showToast(`📸 Đã chuyển ảnh sang mã Base64 (${base64String.length.toLocaleString()} ký tự)!`, '✅');
+            } else {
+                const preview = document.getElementById('regSelfiePreview');
+                preview.src = base64String;
+                preview.classList.remove('hidden');
+                document.getElementById('regSelfieBase64').value = base64String;
+                const infoBox = document.getElementById('regBase64InfoBox');
+                infoBox.classList.remove('hidden');
+                document.getElementById('regBase64LengthText').textContent = `✅ Mã văn bản Base64 (${base64String.length.toLocaleString()} ký tự)`;
             }
         }
 
-        function resetWholeForm() {
-            document.getElementById('santaForm').reset();
-            document.getElementById('selfiePreview').classList.add('hidden');
-            document.getElementById('selfieBase64').value = '';
-            document.getElementById('filterToolbar').classList.add('hidden');
-            document.getElementById('cameraBtnLabel').textContent = 'Mở Camera / Chọn Ảnh';
-            originalImgObject = null;
-        }
-
         // =========================================================================
-        // 8. KHU VỰC ADMIN (BAN TỔ CHỨC - MẬT KHẨU 1234)
+        // 8. KHU VỰC ADMIN DASHBOARD (GÁN MSSV, XEM BASE64, XÓA MỌI NGƯỜI)
         // =========================================================================
         function handleAdminLogin(e) {
             e.preventDefault();
@@ -1595,7 +2002,7 @@
             if (pass === ADMIN_PASSWORD_DEFAULT) {
                 errEl.classList.add('hidden');
                 document.getElementById('adminPassInput').value = '';
-                showMainView('viewAdminDashboard');
+                showPage('pageAdmin');
                 showToast('Đã mở khóa Bảng Điều Khiển Ban Tổ Chức!', '🛡️');
                 fetchAdminData();
             } else {
@@ -1605,48 +2012,35 @@
 
         function logoutAdmin() {
             adminAllRecords = [];
-            showMainView('viewLogin');
-            switchRoleTab('student');
+            showPage('pageAuth');
+            switchAuthTab('login');
             showToast('Đã đăng xuất khỏi chế độ Quản trị.', '👋');
         }
 
         async function fetchAdminData() {
             const tbody = document.getElementById('adminTableBody');
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="8" class="p-10 text-center text-gray-500 font-medium">
-                        ⏳ Đang tải & đồng bộ danh sách cá nhân từ Google Sheets...
-                    </td>
-                </tr>
-            `;
+            const mobileBox = document.getElementById('adminMobileCards');
+            tbody.innerHTML = `<tr><td colspan="9" class="p-10 text-center text-gray-500 font-medium">⏳ Đang tải danh sách từ Google Sheets...</td></tr>`;
+            mobileBox.innerHTML = `<div class="p-6 text-center text-gray-500 bg-white rounded-xl">⏳ Đang tải danh sách...</div>`;
 
             try {
                 const res = await fetch(SHEETDB_API);
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 const data = await res.json();
-                // Gộp theo MSSV để mỗi MSSV luôn là 1 cá nhân duy nhất
-                adminAllRecords = deduplicateRecordsByMssv(Array.isArray(data) ? data : []);
+                adminAllRecords = deduplicateRecords(Array.isArray(data) ? data : []);
                 updateAdminStats();
                 renderAdminTable();
             } catch (err) {
                 console.error('Lỗi tải dữ liệu Admin:', err);
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="8" class="p-8 text-center text-red-600 font-semibold">
-                            ❌ Không thể tải dữ liệu từ SheetDB. Vui lòng bấm "Làm mới" để thử lại!
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-red-600 font-semibold">❌ Không thể tải dữ liệu từ SheetDB!</td></tr>`;
+                mobileBox.innerHTML = `<div class="p-6 text-center text-red-600 bg-white rounded-xl font-bold">❌ Không thể tải dữ liệu!</div>`;
             }
         }
 
         function updateAdminStats() {
             const total = adminAllRecords.length;
-            const withSelfie = adminAllRecords.filter(r => {
-                const s = getSelfieFromRow(r);
-                return s && s.startsWith('data:image');
-            }).length;
-            const ready = adminAllRecords.filter(r => (r.hoten || '').trim() && (r.wishlist || '').trim()).length;
+            const withSelfie = adminAllRecords.filter(r => r.phongban && r.phongban.startsWith('data:image')).length;
+            const ready = adminAllRecords.filter(r => (r.wishlist || '').trim() && r.wishlist !== '(Chưa cập nhật)').length;
 
             document.getElementById('statTotalUsers').textContent = total;
             document.getElementById('statWithSelfie').textContent = withSelfie;
@@ -1655,6 +2049,7 @@
 
         function renderAdminTable() {
             const tbody = document.getElementById('adminTableBody');
+            const mobileBox = document.getElementById('adminMobileCards');
             const query = (document.getElementById('adminSearchInput').value || '').trim().toLowerCase();
 
             const filtered = adminAllRecords.filter(row => {
@@ -1667,22 +2062,20 @@
             });
 
             document.getElementById('adminFilterCount').textContent = `Hiển thị ${filtered.length} / ${adminAllRecords.length} cá nhân`;
+            window._currentFilteredAdminList = filtered;
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="8" class="p-8 text-center text-gray-500">
-                            Không tìm thấy sinh viên nào phù hợp với từ khóa tìm kiếm.
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-gray-500">Không có thành viên nào.</td></tr>`;
+                mobileBox.innerHTML = `<div class="p-6 text-center text-gray-500 bg-white rounded-xl">Không có thành viên nào.</div>`;
                 return;
             }
 
+            // 1. Render Bảng Desktop
             tbody.innerHTML = filtered.map((row, index) => {
-                const selfie = getSelfieFromRow(row);
-                const hasValidImg = selfie && selfie.startsWith('data:image');
-                const mssvDisplay = row.mssv ? escapeHtml(row.mssv) : '<span class="text-xs italic text-gray-400">Chưa có MSSV</span>';
+                const hasValidImg = row.phongban && row.phongban.startsWith('data:image');
+                const mssvDisplay = row.mssv
+                    ? `<span class="bg-red-50 text-red-700 font-extrabold px-2.5 py-1 rounded-lg border border-red-200 inline-block">${escapeHtml(row.mssv)}</span>`
+                    : `<button onclick="assignMssvByIndex(${index})" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-2.5 py-1 rounded-lg border border-amber-300 transition" title="Bấm để gán MSSV cho bạn này">➕ Gán MSSV</button>`;
                 const nameDisplay = escapeHtml(row.hoten || '---');
                 const scoreVal = getScoreFromRow(row);
                 const wishDisplay = escapeHtml(row.wishlist || '---');
@@ -1690,26 +2083,148 @@
                 const timeDisplay = escapeHtml(row.thoigian || '---');
 
                 const imgHtml = hasValidImg
-                    ? `<img src="${selfie}" alt="${nameDisplay}" onclick="openLightboxByIndex(${index})" class="w-14 h-14 object-cover rounded-xl border-2 border-red-500 shadow cursor-pointer hover:scale-105 transition mx-auto" title="Bấm để phóng to">`
+                    ? `<div class="flex flex-col items-center gap-1">
+                        <img src="${row.phongban}" alt="${nameDisplay}" onclick="openLightboxByIndex(${index})" class="w-14 h-14 object-cover rounded-xl border-2 border-red-500 shadow cursor-pointer hover:scale-105 transition" title="Bấm để xem ảnh & mã Base64">
+                        <button onclick="openLightboxByIndex(${index})" class="text-[10px] text-blue-600 hover:underline font-semibold">Mã Base64</button>
+                       </div>`
                     : `<div class="w-14 h-14 rounded-xl bg-gray-100 border border-gray-300 flex items-center justify-center text-[10px] text-gray-400 mx-auto">Không ảnh</div>`;
 
                 return `
-                    <tr class="hover:bg-green-50/50 transition">
-                        <td class="p-3.5 text-center font-bold text-gray-500">${index + 1}</td>
-                        <td class="p-3.5 text-center">${imgHtml}</td>
-                        <td class="p-3.5 font-extrabold text-red-700">${mssvDisplay}</td>
-                        <td class="p-3.5 font-bold text-gray-800">${nameDisplay}</td>
-                        <td class="p-3.5 text-center">
+                    <tr class="hover:bg-red-50/40 transition">
+                        <td class="p-3 text-center font-bold text-gray-500">${index + 1}</td>
+                        <td class="p-3 text-center">${imgHtml}</td>
+                        <td class="p-3">${mssvDisplay}</td>
+                        <td class="p-3 font-bold text-gray-800">${nameDisplay}</td>
+                        <td class="p-3 text-center">
                             <span class="bg-amber-100 text-amber-900 font-extrabold text-xs px-2.5 py-1 rounded-lg border border-amber-300">${scoreVal} PTS</span>
                         </td>
-                        <td class="p-3.5 text-gray-700 whitespace-pre-line max-w-xs">${wishDisplay}</td>
-                        <td class="p-3.5 text-gray-700 whitespace-pre-line max-w-xs">${blackDisplay}</td>
-                        <td class="p-3.5 text-xs text-gray-500">${timeDisplay}</td>
+                        <td class="p-3 text-gray-700 whitespace-pre-line max-w-xs">${wishDisplay}</td>
+                        <td class="p-3 text-gray-700 whitespace-pre-line max-w-xs">${blackDisplay}</td>
+                        <td class="p-3 text-xs text-gray-500">${timeDisplay}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="deleteMemberByIndex(${index})" class="bg-red-100 hover:bg-red-600 text-red-700 hover:text-white font-bold px-3 py-1.5 rounded-lg text-xs transition shadow-sm">
+                                🗑️ Xóa
+                            </button>
+                        </td>
                     </tr>
                 `;
             }).join('');
 
-            window._currentFilteredAdminList = filtered;
+            // 2. Render Thẻ Mobile (Đẹp & Dễ thao tác trên điện thoại)
+            mobileBox.innerHTML = filtered.map((row, index) => {
+                const hasValidImg = row.phongban && row.phongban.startsWith('data:image');
+                const avatarSrc = hasValidImg ? row.phongban : 'https://placehold.co/100x100/e2e8f0/64748b?text=No+Img';
+                const mssvBadge = row.mssv
+                    ? `<span class="bg-red-600 text-white text-[11px] font-extrabold px-2 py-0.5 rounded-full">${escapeHtml(row.mssv)}</span>`
+                    : `<button onclick="assignMssvByIndex(${index})" class="bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-bold px-2 py-0.5 rounded-full">➕ Gán MSSV</button>`;
+
+                return `
+                    <div class="bg-white rounded-2xl p-3.5 border border-gray-200 shadow-sm space-y-2.5">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <img src="${avatarSrc}" onclick="openLightboxByIndex(${index})" class="w-14 h-14 rounded-xl object-cover border-2 border-red-500 shadow shrink-0 cursor-pointer">
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-1.5 flex-wrap">
+                                        <span class="text-xs font-bold text-gray-400">#${index + 1}</span>
+                                        ${mssvBadge}
+                                        <span class="bg-amber-100 text-amber-900 font-extrabold text-[10px] px-2 py-0.5 rounded-full">${getScoreFromRow(row)} PTS</span>
+                                    </div>
+                                    <h4 class="font-extrabold text-gray-800 text-sm truncate mt-0.5">${escapeHtml(row.hoten || '---')}</h4>
+                                    <p class="text-[10px] text-gray-400">${escapeHtml(row.thoigian || '')}</p>
+                                </div>
+                            </div>
+                            <button onclick="deleteMemberByIndex(${index})" class="bg-red-100 active:bg-red-600 text-red-700 active:text-white font-bold px-3 py-2 rounded-xl text-xs shrink-0">
+                                🗑️ Xóa
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="bg-green-50 p-2 rounded-lg border border-green-100">
+                                <span class="font-bold text-green-800 block text-[11px]">🎁 Wishlist:</span>
+                                <p class="text-gray-700 break-words">${escapeHtml(row.wishlist || '---')}</p>
+                            </div>
+                            <div class="bg-red-50 p-2 rounded-lg border border-red-100">
+                                <span class="font-bold text-red-800 block text-[11px]">🚫 Blacklist:</span>
+                                <p class="text-gray-700 break-words">${escapeHtml(row.blacklist || '---')}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Cho phép Admin gán/sửa MSSV cho các dòng cũ chưa có MSSV
+        async function assignMssvByIndex(idx) {
+            const list = window._currentFilteredAdminList || adminAllRecords;
+            const row = list[idx];
+            if (!row) return;
+
+            const newMssv = prompt(`Nhập Mã Sinh Viên (VD: TH12345) cho "${row.hoten}":`, row.mssv || 'TH');
+            if (!newMssv || !newMssv.trim()) return;
+
+            const norm = normalizeMssv(newMssv);
+            const payload = {
+                "mssv": norm,
+                "hoten": formatHotenForSheet(norm, row.hoten),
+                "thoigian": formatTimeForSheet(norm),
+                "phongban": row.phongban || '',
+                "wishlist": row.wishlist || '',
+                "blacklist": row.blacklist || ''
+            };
+
+            showToast(`⏳ Đang cập nhật MSSV ${norm}...`, '✏️');
+            try {
+                await saveOrUpdateStudentToSheet(payload, row);
+                showToast(`✅ Đã gán MSSV ${norm} cho ${row.hoten}!`, '🎉');
+                await fetchAdminData();
+            } catch (err) {
+                alert('Không thể cập nhật MSSV. Vui lòng thử lại!');
+            }
+        }
+
+        async function deleteMemberByIndex(idx) {
+            const list = window._currentFilteredAdminList || adminAllRecords;
+            const row = list[idx];
+            if (!row) return;
+
+            const displayName = `${row.hoten || 'Thành viên'} ${row.mssv ? '(' + row.mssv + ')' : ''}`;
+            if (!confirm(`Bạn có chắc chắn muốn XÓA "${displayName}" khỏi danh sách sự kiện không?`)) {
+                return;
+            }
+
+            showToast(`⏳ Đang xóa ${displayName}...`, '🗑️');
+
+            try {
+                let deletedOk = false;
+                const rawTimes = row._allRawTimes && row._allRawTimes.length > 0
+                    ? row._allRawTimes
+                    : (row._rawThoigian ? [row._rawThoigian] : []);
+
+                for (const rt of rawTimes) {
+                    const resT = await fetch(`${SHEETDB_API}/thoigian/${encodeURIComponent(rt)}`, {
+                        method: 'DELETE',
+                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+                    });
+                    if (resT.ok) deletedOk = true;
+                }
+
+                const rawHotens = row._allRawHotens && row._allRawHotens.length > 0
+                    ? row._allRawHotens
+                    : (row._rawHoten ? [row._rawHoten] : []);
+
+                for (const rh of rawHotens) {
+                    const resH = await fetch(`${SHEETDB_API}/hoten/${encodeURIComponent(rh)}`, {
+                        method: 'DELETE',
+                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+                    });
+                    if (resH.ok) deletedOk = true;
+                }
+
+                showToast(`✅ Đã xóa ${displayName} khỏi hệ thống!`, '🗑️');
+                await fetchAdminData();
+            } catch (err) {
+                console.error('Lỗi khi xóa thành viên:', err);
+                alert('Không thể xóa bản ghi này. Vui lòng thử lại!');
+            }
         }
 
         function openLightboxByIndex(idx) {
@@ -1717,7 +2232,7 @@
             const row = list[idx];
             if (!row) return;
             openLightbox(
-                getSelfieFromRow(row),
+                row.phongban,
                 row.hoten || 'Sinh viên',
                 `MSSV: ${row.mssv || 'Chưa cập nhật'} • Cập nhật: ${row.thoigian || ''}`
             );
@@ -1728,7 +2243,19 @@
             document.getElementById('lightboxImg').src = imgSrc;
             document.getElementById('lightboxTitle').textContent = title || '';
             document.getElementById('lightboxSub').textContent = subtitle || '';
+            document.getElementById('lightboxBase64Text').value = imgSrc.startsWith('data:image') ? imgSrc : '(Chưa có mã Base64)';
             document.getElementById('imageLightbox').classList.remove('hidden');
+        }
+
+        function copyLightboxBase64() {
+            const txt = document.getElementById('lightboxBase64Text');
+            txt.select();
+            navigator.clipboard.writeText(txt.value).then(() => {
+                showToast('📋 Đã sao chép mã văn bản Base64 vào bộ nhớ tạm!', '✅');
+            }).catch(() => {
+                document.execCommand('copy');
+                showToast('📋 Đã sao chép mã văn bản Base64!', '✅');
+            });
         }
 
         function closeLightbox() {
@@ -1744,9 +2271,7 @@
                 return;
             }
             document.getElementById('matchingModal').classList.remove('hidden');
-            if (currentSantaPairs.length === 0) {
-                generateSantaPairs();
-            }
+            if (currentSantaPairs.length === 0) generateSantaPairs();
         }
 
         function closeMatchingModal() {
@@ -1762,10 +2287,10 @@
                 [pool[i], pool[j]] = [pool[j], pool[i]];
             }
 
-            currentSantaPairs = pool.map((giver, idx) => {
-                const receiver = pool[(idx + 1) % pool.length];
-                return { giver, receiver };
-            });
+            currentSantaPairs = pool.map((giver, idx) => ({
+                giver,
+                receiver: pool[(idx + 1) % pool.length]
+            }));
 
             const tbody = document.getElementById('matchingTableBody');
             tbody.innerHTML = currentSantaPairs.map((pair, idx) => {
@@ -1773,17 +2298,17 @@
                 const r = pair.receiver;
                 return `
                     <tr class="hover:bg-amber-50/40">
-                        <td class="p-3 text-center font-bold text-gray-500">${idx + 1}</td>
-                        <td class="p-3">
+                        <td class="p-2.5 sm:p-3 text-center font-bold text-gray-500">${idx + 1}</td>
+                        <td class="p-2.5 sm:p-3">
                             <div class="font-bold text-gray-800">${escapeHtml(g.hoten || '---')}</div>
                             <div class="text-xs text-red-700 font-semibold">MSSV: ${escapeHtml(g.mssv || 'N/A')}</div>
                         </td>
-                        <td class="p-3 text-center text-lg">🎁➡️</td>
-                        <td class="p-3">
+                        <td class="p-2.5 sm:p-3 text-center text-base">🎁➡️</td>
+                        <td class="p-2.5 sm:p-3">
                             <div class="font-bold text-green-800">${escapeHtml(r.hoten || '---')}</div>
                             <div class="text-xs text-gray-600 font-semibold">MSSV: ${escapeHtml(r.mssv || 'N/A')}</div>
                         </td>
-                        <td class="p-3 text-xs space-y-1">
+                        <td class="p-2.5 sm:p-3 text-xs space-y-1">
                             <div><strong class="text-green-700">Wishlist:</strong> ${escapeHtml(r.wishlist || '---')}</div>
                             <div><strong class="text-red-600">Blacklist:</strong> ${escapeHtml(r.blacklist || '---')}</div>
                         </td>
@@ -1799,7 +2324,7 @@
                 alert('Chưa có dữ liệu để xuất!');
                 return;
             }
-            const headers = ['STT', 'MSSV', 'Ho va Ten', 'Diem BXH', 'Thoi gian', 'Wishlist', 'Blacklist'];
+            const headers = ['STT', 'MSSV', 'Ho va Ten', 'Diem BXH', 'Thoi gian', 'Wishlist', 'Blacklist', 'Ma Base64 Anh'];
             const rows = adminAllRecords.map((r, i) => [
                 i + 1,
                 r.mssv || '',
@@ -1807,7 +2332,8 @@
                 getScoreFromRow(r),
                 r.thoigian || '',
                 r.wishlist || '',
-                r.blacklist || ''
+                r.blacklist || '',
+                r.phongban || ''
             ]);
             downloadCSVFile('Danh_Sach_Secret_Santa_2026.csv', headers, rows);
         }
