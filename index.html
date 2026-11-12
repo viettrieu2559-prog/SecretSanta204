@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎄 Trạm Bưu Tá Secret Santa 2026 🎄</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            background-color: #1a472a; 
+            background-image: url('https://images.unsplash.com/photo-1543364195-bfe6e4932397?q=80&w=2070&auto=format&fit=crop'); 
+            background-size: cover; background-position: center; background-attachment: fixed; 
+            min-height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; position: relative; overflow-x: hidden; 
+        }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(26, 71, 42, 0.74); z-index: -1; }
+        .glass-panel { background: rgba(255, 255, 255, 0.90); backdrop-filter: blur(12px); border-radius: 18px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18); border: 1px solid rgba(255, 255, 255, 0.45); }
+        .glass-form { background: rgba(255, 255, 255, 0.97); border-radius: 14px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08); }
+        .btn-christmas { background: linear-gradient(135deg, #c0392b, #e74c3c); color: white; font-weight: bold; padding: 12px 24px; border-radius: 10px; box-shadow: 0 4px 15px rgba(192, 57, 43, 0.4); transition: all 0.3s ease; width: 100%; }
+        .btn-christmas:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(192, 57, 43, 0.6); background: linear-gradient(135deg, #a93226, #cb4335); }
+        .btn-christmas:disabled { opacity: 0.65; cursor: not-allowed; }
+        .btn-green { background: linear-gradient(135deg, #1e8449, #27ae60); color: white; font-weight: bold; padding: 12px 24px; border-radius: 10px; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.35); transition: all 0.3s ease; }
+        .btn-green:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(39, 174, 96, 0.55); background: linear-gradient(135deg, #196f3d, #229954); }
+        .form-input { width: 100%; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 5px; transition: all 0.3s; background-color: #f8fafc; }
+        .form-input:focus { outline: none; border-color: #27ae60; box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2); background-color: #ffffff; }
+        .filter-btn { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; background: #e2e8f0; color: #475569; transition: all 0.2s; border: 2px solid transparent; cursor: pointer; }
+        .filter-btn:hover { background: #cbd5e1; }
+        .filter-btn.active { background: #fee2e2; color: #b91c1c; border-color: #ef4444; }
+        .part-tab { transition: all 0.25s ease; position: relative; }
+        .part-tab.active { background: #ffffff; color: #b91c1c; border-bottom: 4px solid #b91c1c; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transform: translateY(-2px); }
+        .part-tab.upcoming { background: rgba(255, 255, 255, 0.75); color: #334155; border-bottom: 4px solid #94a3b8; }
+        .part-tab.upcoming:hover { background: rgba(255, 255, 255, 0.92); transform: translateY(-1px); }
+        .role-tab { transition: all 0.25s ease; }
+        .role-tab.active-student { background: #dc2626; color: white; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35); }
+        .role-tab.active-admin { background: #15803d; color: white; box-shadow: 0 4px 12px rgba(21, 128, 61, 0.35); }
+        .custom-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-gray-800 pb-20">
+    <!-- MÀN HÌNH CHẠM ĐỂ MỞ QUÀ & BẬT NHẠC -->
+    <div id="startOverlay" class="fixed inset-0 bg-black/90 z-[200] flex flex-col items-center justify-center cursor-pointer transition-opacity duration-500" onclick="startExperience()">
+        <div class="text-8xl mb-6 animate-bounce">🎁</div>
+        <h2 class="text-3xl font-bold text-white mb-2 text-center px-4">Chạm để mở hộp quà...</h2>
+        <p class="text-gray-400 text-sm">(Khởi động âm nhạc & bước vào Trạm Bưu Tá Secret Santa 2026)</p>
+    </div>
+
+    <!-- MODAL XEM ẢNH SELFIE PHÓNG TO (LIGHTBOX) -->
+    <div id="imageLightbox" class="hidden fixed inset-0 bg-black/85 z-[180] flex items-center justify-center p-4" onclick="closeLightbox()">
+        <div class="relative max-w-lg w-full bg-white rounded-2xl p-4 shadow-2xl text-center" onclick="event.stopPropagation()">
+            <button onclick="closeLightbox()" class="absolute -top-3 -right-3 bg-red-600 text-white w-9 h-9 rounded-full font-bold shadow-lg hover:bg-red-700 transition">✕</button>
+            <img id="lightboxImg" src="" alt="Selfie" class="w-full max-h-[70vh] object-contain rounded-xl border border-gray-200 mx-auto">
+            <div class="mt-3">
+                <h4 id="lightboxTitle" class="text-lg font-bold text-gray-800"></h4>
+                <p id="lightboxSub" class="text-sm text-gray-500"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL BỐC THĂM / GHÉP CẶP SECRET SANTA (ADMIN) -->
+    <div id="matchingModal" class="hidden fixed inset-0 bg-black/80 z-[170] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="bg-gradient-to-r from-red-700 to-green-800 p-4 md:p-5 text-white flex justify-between items-center">
+                <div>
+                    <h3 class="text-xl font-bold flex items-center gap-2">🎲 Bốc Thăm & Ghép Cặp Secret Santa</h3>
+                    <p class="text-xs text-green-100 mt-0.5">Thuật toán ghép vòng tròn khép kín: Đảm bảo 100% không ai tự bốc trúng chính mình</p>
+                </div>
+                <button onclick="closeMatchingModal()" class="bg-white/20 hover:bg-white/30 text-white w-8 h-8 rounded-full font-bold transition">✕</button>
+            </div>
+            <div class="p-4 md:p-6 overflow-y-auto custom-scroll flex-1 space-y-4">
+                <div class="flex flex-wrap gap-3 justify-between items-center bg-amber-50 border border-amber-200 p-3 rounded-xl text-sm text-amber-900">
+                    <div>
+                        <strong>💡 Hướng dẫn:</strong> Bấm <em>"Quay Số Lại"</em> để tạo danh sách phân công tặng quà mới, sau đó xuất ra file CSV để gửi mật thư.
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="generateSantaPairs()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg shadow transition text-xs md:text-sm">
+                            🎲 Quay Số Lại
+                        </button>
+                        <button onclick="exportPairsCSV()" class="bg-green-700 hover:bg-green-800 text-white font-bold px-4 py-2 rounded-lg shadow transition text-xs md:text-sm">
+                            📥 Xuất Kết Quả (CSV)
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto custom-scroll border border-gray-200 rounded-xl">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-700 border-b border-gray-200">
+                                <th class="p-3 font-bold text-center w-12">#</th>
+                                <th class="p-3 font-bold">🎅 Người Tặng (Secret Santa)</th>
+                                <th class="p-3 font-bold text-center">➡️</th>
+                                <th class="p-3 font-bold">🎁 Người Nhận Quà (Giftee)</th>
+                                <th class="p-3 font-bold">Wishlist & Blacklist của Người Nhận</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matchingTableBody" class="divide-y divide-gray-100">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRÌNH PHÁT NHẠC GIÁNG SINH ĐA BÀI HÁT (GÓC DƯỚI PHẢI) -->
+    <div class="fixed bottom-4 right-4 z-[100] flex flex-col items-end gap-2">
+        <div id="musicOptions" class="hidden bg-gray-900/90 backdrop-blur-md border border-gray-700 rounded-2xl p-3 shadow-2xl mb-1 w-64 text-white">
+            <div class="flex items-center justify-between mb-1.5">
+                <span class="text-[11px] uppercase tracking-wider text-green-400 font-bold flex items-center gap-1">
+                    🎵 Đài Phát Thanh Noel
+                </span>
+                <span id="musicNowPlayingBadge" class="text-[10px] bg-red-600/80 px-2 py-0.5 rounded-full font-semibold">Đang phát</span>
+            </div>
+
+            <select id="songSelect" onchange="changeSong(this.value)" class="w-full bg-gray-800 text-white text-xs rounded-lg border border-gray-600 p-2 outline-none cursor-pointer mb-2">
+                <option value="0">🎅 1. Santa Claus Is Coming (Chính)</option>
+                <option value="1">🔔 2. Jingle Bells (Music Box)</option>
+                <option value="2">🎄 3. We Wish You A Merry Xmas</option>
+                <option value="3">🎶 4. Deck The Halls (Chime)</option>
+                <option value="4">🌟 5. Silent Night (Đêm Thánh)</option>
+                <option value="5">🎺 6. Joy To The World</option>
+                <option value="local">📁 Mở file nhạc MP3 từ máy...</option>
+            </select>
+
+            <div class="flex items-center justify-between gap-2 pt-1 border-t border-gray-700/80">
+                <div class="flex items-center gap-1">
+                    <button type="button" onclick="prevSong()" class="bg-gray-800 hover:bg-gray-700 text-xs px-2.5 py-1 rounded-lg transition" title="Bài trước">⏮</button>
+                    <button type="button" onclick="toggleMusic()" id="miniPlayBtn" class="bg-red-600 hover:bg-red-700 text-xs px-3 py-1 rounded-lg font-bold transition">⏸ Tạm dừng</button>
+                    <button type="button" onclick="nextSong()" class="bg-gray-800 hover:bg-gray-700 text-xs px-2.5 py-1 rounded-lg transition" title="Bài tiếp">⏭</button>
+                </div>
+                <input type="range" id="volumeSlider" min="0" max="100" value="60" oninput="changeVolume(this.value)" class="w-16 accent-red-500 cursor-pointer" title="Âm lượng">
+            </div>
+        </div>
+        
+        <input type="file" id="localAudio" accept="audio/*" class="hidden" onchange="playLocalAudio(event)">
+
+        <div class="flex items-center gap-2">
+            <button id="musicPanelToggleBtn" onclick="toggleMusicPanel()" class="hidden bg-gray-900/85 border border-white/40 text-white rounded-full w-10 h-10 shadow-lg hover:bg-gray-800 transition flex items-center justify-center text-base" title="Chọn bài hát">
+                🎵
+            </button>
+            <button id="musicToggleBtn" onclick="toggleMusic()" class="bg-red-600 border-2 border-white text-white rounded-full px-4 py-2 shadow-[0_0_15px_rgba(255,0,0,0.5)] hover:bg-red-700 transition flex items-center justify-center font-bold text-sm hidden">
+                🔊 Đang Phát Nhạc
+            </button>
+        </div>
+
+        <audio id="bgMusic" preload="auto"></audio>
+    </div>
+
+    <!-- THÔNG BÁO TOAST NHỎ -->
+    <div id="toastBox" class="fixed top-5 right-5 z-[190] hidden max-w-sm bg-gray-900/95 text-white px-4 py-3 rounded-xl shadow-2xl border border-white/20 flex items-center gap-3 transition-all duration-300">
+        <span id="toastIcon" class="text-xl">🎄</span>
+        <span id="toastText" class="text-sm font-medium"></span>
+    </div>
+
+    <div class="overlay"></div>
+
+    <div class="container mx-auto px-4 py-8 md:py-10 max-w-5xl relative z-10">
+        <!-- HEADER CHUNG -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-3 drop-shadow-lg" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                🎅 Trạm Bưu Tá Secret Santa
+            </h1>
+            <p class="text-lg md:text-xl text-green-100 font-medium">Chiến dịch Mùa Đông 2026 đã chính thức khởi động!</p>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- MÀN HÌNH 1: CỔNG ĐĂNG NHẬP & ĐĂNG KÝ LẦN ĐẦU (TRƯỚC KHI VÀO SỰ KIỆN)      -->
+        <!-- ========================================================================= -->
+        <div id="viewLogin" class="glass-panel p-5 md:p-10">
+            <div class="text-center">
+                <h2 class="text-2xl md:text-3xl font-bold text-red-700 mb-2">🎄 Cổng Đăng Nhập Sự Kiện</h2>
+                <p class="text-sm text-gray-600 mb-3">Nhập Mã Sinh Viên (mẫu: <strong>TH12345</strong>) để vào Giao Diện Chính Của Sự Kiện</p>
+                <div class="w-24 h-1 bg-green-600 mx-auto rounded-full mb-6"></div>
+            </div>
+
+            <!-- BỘ CHUYỂN ĐỔI VAI TRÒ: SINH VIÊN / ADMIN (BTC) -->
+            <div class="flex justify-center mb-8">
+                <div class="bg-gray-200/90 p-1.5 rounded-xl inline-flex gap-1 shadow-inner">
+                    <button type="button" id="tabStudentBtn" onclick="switchRoleTab('student')" class="role-tab active-student px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2">
+                        <span>🎓</span> Sinh Viên (User)
+                    </button>
+                    <button type="button" id="tabAdminBtn" onclick="switchRoleTab('admin')" class="role-tab text-gray-700 hover:bg-white/60 px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2">
+                        <span>🛡️</span> Ban Tổ Chức (Admin)
+                    </button>
+                </div>
+            </div>
+
+            <!-- NHÁNH 1A: SINH VIÊN ĐĂNG NHẬP BẰNG MSSV -->
+            <div id="studentLoginSection">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-start">
+                    <!-- Cột trái: Luật chơi & Quy tắc 1 MSSV = 1 Cá nhân -->
+                    <div class="md:col-span-2 space-y-4">
+                        <div class="flex justify-center">
+                            <svg class="w-24 h-24 text-red-600 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1 1h1zm3 0a1 1 0 10-1-1v1h1z" clip-rule="evenodd"></path>
+                                <path d="M9 11H3v5a2 2 0 002 2h4v-7zM11 18h4a2 2 0 002-2v-5h-6v7z"></path>
+                            </svg>
+                        </div>
+                        <div class="bg-white/80 p-5 rounded-xl border border-white shadow-sm">
+                            <h3 class="text-base font-bold text-green-800 mb-2.5">📜 Hành Trình 4 Chặng:</h3>
+                            <ul class="list-disc list-inside text-xs md:text-sm space-y-2 text-gray-700 font-medium">
+                                <li><strong>Part 1 (The Gathering):</strong> Ghi danh bằng MSSV, gửi Wishlist & mở Bảng Xếp Hạng.</li>
+                                <li><strong>Part 2 (The Whisper):</strong> Mini-game giải mật thư tích điểm.</li>
+                                <li><strong>Part 3 (The Sneaky Elf):</strong> Mini-game truy tìm Yêu Tinh.</li>
+                                <li><strong>Part 4 (The Reveal):</strong> Đêm trao quà & vinh danh Top Bảng Xếp Hạng!</li>
+                            </ul>
+                        </div>
+                        <div class="bg-amber-50/90 p-4 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-1">
+                            <div class="font-bold flex items-center gap-1.5 text-sm text-amber-800">
+                                <span>🪪</span> Định danh duy nhất (Ví dụ: TH12345)
+                            </div>
+                            <p>Mỗi MSSV đại diện cho <strong>1 cá nhân duy nhất</strong>. Nếu MSSV của bạn đã có trên hệ thống, bạn sẽ vào thẳng sự kiện và có thể <strong>chỉnh sửa thông tin</strong> bất cứ lúc nào mà không bị tạo trùng lặp.</p>
+                        </div>
+                    </div>
+
+                    <!-- Cột phải: Ô nhập MSSV hoặc Hoàn tất đăng ký lần đầu -->
+                    <div class="md:col-span-3 glass-form p-6 border border-gray-100 relative">
+                        <!-- Bước 1: Nhập MSSV -->
+                        <div id="mssvCheckBox">
+                            <h3 class="text-xl font-bold text-gray-800 border-b pb-3 mb-4 flex items-center gap-2">
+                                <span>🎫</span> Đăng Nhập Vào Sự Kiện
+                            </h3>
+                            <form onsubmit="handleStudentCheck(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700">
+                                        Mã Số Sinh Viên (MSSV) <span class="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="loginMssvInput"
+                                        required
+                                        oninput="this.value = this.value.toUpperCase()"
+                                        class="form-input text-base font-bold tracking-wider uppercase text-red-700"
+                                        placeholder="Nhập MSSV (VD: TH12345)..."
+                                    >
+                                    <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                                        • <strong>Đã có MSSV trên hệ thống:</strong> Vào thẳng <em>Giao Diện Chính Sự Kiện</em> (xem Bảng Xếp Hạng & sửa thông tin cá nhân nếu cần).<br>
+                                        • <strong>Chưa có MSSV:</strong> Điền thông tin lần đầu để kích hoạt tài khoản tham gia.
+                                    </p>
+                                </div>
+                                <button type="submit" id="btnCheckMssv" class="btn-christmas text-base flex justify-center items-center gap-2">
+                                    <span>Vào Sự Kiện Secret Santa</span> <span>🎅</span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Bước 2: Form Điền / Sửa Thông Tin Cá Nhân -->
+                        <div id="registrationFormBox" class="hidden">
+                            <div class="flex items-center justify-between border-b pb-3 mb-4">
+                                <h3 id="formBoxTitle" class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                    <span>✍️</span> Hoàn Tất Hồ Sơ Cá Nhân
+                                </h3>
+                                <button type="button" onclick="backFromForm()" class="text-xs font-semibold text-gray-500 hover:text-red-600 underline">
+                                    ← Quay lại
+                                </button>
+                            </div>
+
+                            <div id="regStatusBanner" class="mb-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-800 font-medium">
+                            </div>
+
+                            <form id="santaForm" onsubmit="submitForm(event)" class="space-y-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700">Mã Sinh Viên (MSSV) <span class="text-red-500">*</span></label>
+                                        <input type="text" id="mssv" required readonly class="form-input bg-gray-100 font-extrabold text-red-700 uppercase cursor-not-allowed">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700">Họ và Tên của bạn <span class="text-red-500">*</span></label>
+                                        <input type="text" id="name" required class="form-input" placeholder="Nhập họ và tên...">
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gray-50 p-4 rounded-lg border border-dashed border-gray-300">
+                                    <label class="block text-sm font-bold text-gray-700 mb-2">
+                                        Selfie Xác Minh (Bắt buộc) 📸 <span class="text-red-500">*</span>
+                                    </label>
+                                    <div class="flex flex-wrap items-center gap-4">
+                                        <label for="selfie" class="cursor-pointer bg-red-100 text-red-700 px-4 py-2 rounded-lg border border-red-300 hover:bg-red-200 transition text-sm font-bold flex items-center gap-1.5">
+                                            <span>📷</span> <span id="cameraBtnLabel">Mở Camera / Chọn Ảnh</span>
+                                        </label>
+                                        <input type="file" id="selfie" accept="image/*" capture="user" class="hidden" onchange="loadOriginalImage(event)">
+                                        <img id="selfiePreview" src="" alt="Preview" class="hidden w-24 h-24 object-cover rounded-lg shadow-md border border-gray-300 cursor-pointer" onclick="openLightbox(this.src, document.getElementById('name').value || 'Ảnh Selfie', 'MSSV: ' + document.getElementById('mssv').value)">
+                                    </div>
+                                    
+                                    <div id="filterToolbar" class="hidden mt-4 p-3 bg-white rounded-lg border border-gray-200 shadow-sm">
+                                        <p class="text-xs font-bold text-gray-600 mb-2">Chọn Màu Ảnh & Khung Viền Giáng Sinh:</p>
+                                        <div class="flex flex-wrap gap-2">
+                                            <button type="button" class="filter-btn active" onclick="applyFilter('none', this)">Ảnh Gốc</button>
+                                            <button type="button" class="filter-btn" onclick="applyFilter('noel', this)">🎄 Viền Noel</button>
+                                            <button type="button" class="filter-btn" onclick="applyFilter('frost', this)">❄️ Băng Giá</button>
+                                            <button type="button" class="filter-btn" onclick="applyFilter('retro', this)">📜 Cổ Điển</button>
+                                            <button type="button" class="filter-btn" onclick="applyFilter('noir', this)">🎞️ Điện Ảnh (B&W)</button>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="selfieBase64">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700">
+                                        🎁 Wishlist (Quà mong muốn) <span class="text-red-500">*</span>
+                                    </label>
+                                    <textarea id="wishlist" required rows="2" class="form-input" placeholder="Gợi ý chi tiết: Sách kinh doanh, nến thơm, gấu bông, cốc giữ nhiệt..."></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700">
+                                        🚫 Blacklist (Quà cần tránh) <span class="text-red-500">*</span>
+                                    </label>
+                                    <textarea id="blacklist" required rows="2" class="form-input" placeholder="Ví dụ: Không ăn đồ ngọt, dị ứng nước hoa mùi nồng..."></textarea>
+                                </div>
+
+                                <div class="flex gap-3 pt-2">
+                                    <button type="button" id="cancelEditBtn" onclick="cancelEditProfile()" class="hidden w-1/3 py-3 px-4 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm transition">
+                                        Hủy
+                                    </button>
+                                    <button type="submit" id="submitFormBtn" class="btn-christmas text-base flex-1 flex justify-center items-center gap-2">
+                                        <span>Lưu & Vào Giao Diện Sự Kiện</span> <span>🎅</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NHÁNH 1B: ĐĂNG NHẬP ADMIN (BAN TỔ CHỨC) -->
+            <div id="adminLoginSection" class="hidden max-w-md mx-auto">
+                <div class="glass-form p-6 md:p-8 border border-green-200 shadow-lg">
+                    <div class="text-center mb-5">
+                        <div class="w-16 h-16 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 shadow-inner">
+                            🛡️
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">Mở Khóa Trang Quản Trị BTC</h3>
+                        <p class="text-xs text-gray-500 mt-1">Dành riêng cho Ban Tổ Chức Secret Santa 2026 để quản lý danh sách, điểm số & bốc thăm</p>
+                    </div>
+
+                    <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700">Mật khẩu Quản trị <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <input type="password" id="adminPassInput" required class="form-input pr-12" placeholder="Nhập mật khẩu Admin...">
+                                <button type="button" onclick="toggleAdminPassVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs font-bold">
+                                    👁️
+                                </button>
+                            </div>
+                            <p id="adminLoginError" class="hidden text-xs text-red-600 font-semibold mt-1.5">
+                                ❌ Mật khẩu quản trị không chính xác! Vui lòng thử lại.
+                            </p>
+                        </div>
+                        <button type="submit" class="btn-green w-full text-base flex justify-center items-center gap-2">
+                            <span>🔑 Mở Khóa Admin Dashboard</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- MÀN HÌNH 2: GIAO DIỆN CHÍNH CỦA SỰ KIỆN (SAU KHI SINH VIÊN ĐĂNG NHẬP)      -->
+        <!-- ========================================================================= -->
+        <div id="viewEventHub" class="hidden">
+            <!-- Thanh Trạng Thái Sinh Viên Đang Đăng Nhập -->
+            <div class="bg-white/95 backdrop-blur-md rounded-2xl px-5 py-3.5 mb-6 shadow-lg border border-white flex flex-wrap justify-between items-center gap-3">
+                <div class="flex items-center gap-3">
+                    <img id="hubHeaderAvatar" src="" alt="Avatar" class="w-11 h-11 rounded-full object-cover border-2 border-red-600 shadow">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span id="hubHeaderName" class="font-extrabold text-gray-800 text-base">---</span>
+                            <span id="hubHeaderMssv" class="bg-red-100 text-red-700 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-red-200">TH12345</span>
+                        </div>
+                        <p class="text-xs text-green-700 font-semibold">🎄 Đã tham gia sự kiện • Điểm tích lũy: <strong id="hubHeaderScore">100</strong> PTS</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="openEditProfile()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-3.5 py-2 rounded-xl shadow text-xs transition flex items-center gap-1.5">
+                        <span>✏️</span> Sửa Hồ Sơ Cá Nhân
+                    </button>
+                    <button onclick="logoutUser()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1">
+                        <span>🚪</span> Đăng xuất
+                    </button>
+                </div>
+            </div>
+
+            <!-- THANH CHUYỂN ĐỔI 4 CHẶNG SỰ KIỆN (PART 1 - 2 - 3 - 4) -->
+            <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6">
+                <button type="button" id="partTab1" onclick="switchEventPart(1)" class="part-tab active font-bold py-2.5 px-4 md:px-6 rounded-t-xl text-sm md:text-base flex items-center gap-2">
+                    <span>🎄</span> Part 1: The Gathering
+                </button>
+                <button type="button" id="partTab2" onclick="switchEventPart(2)" class="part-tab upcoming font-semibold py-2.5 px-4 md:px-6 rounded-t-xl text-sm md:text-base flex items-center gap-2">
+                    <span>🤫</span> Part 2: The Whisper
+                    <span class="text-[10px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp mở</span>
+                </button>
+                <button type="button" id="partTab3" onclick="switchEventPart(3)" class="part-tab upcoming font-semibold py-2.5 px-4 md:px-6 rounded-t-xl text-sm md:text-base flex items-center gap-2">
+                    <span>🧝</span> Part 3: The Sneaky Elf
+                    <span class="text-[10px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp mở</span>
+                </button>
+                <button type="button" id="partTab4" onclick="switchEventPart(4)" class="part-tab upcoming font-semibold py-2.5 px-4 md:px-6 rounded-t-xl text-sm md:text-base flex items-center gap-2">
+                    <span>🎁</span> Part 4: The Reveal
+                    <span class="text-[10px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp mở</span>
+                </button>
+            </div>
+
+            <!-- KHUNG NỘI DUNG TỪNG PART TRONG SỰ KIỆN -->
+            <div class="glass-panel p-5 md:p-8">
+
+                <!-- =============================================================== -->
+                <!-- NỘI DUNG PART 1: BẢNG XẾP HẠNG ĐIỂM SỰ KIỆN & HỒ SƠ CÁ NHÂN    -->
+                <!-- =============================================================== -->
+                <div id="eventPart1Content" class="space-y-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        
+                        <!-- CỘT TRÁI (7/12): BẢNG XẾP HẠNG ĐIỂM SỰ KIỆN (LEADERBOARD) -->
+                        <div class="lg:col-span-7 glass-form p-5 md:p-6 border border-amber-200">
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gray-200 pb-3 mb-4">
+                                <div>
+                                    <h3 class="text-xl font-extrabold text-gray-800 flex items-center gap-2">
+                                        <span>🏆</span> Bảng Xếp Hạng Điểm Sự Kiện
+                                    </h3>
+                                    <p class="text-xs text-gray-500 mt-0.5">Tích điểm qua Part 1, 2, 3, 4 để đua Top nhận quà đặc biệt từ BTC</p>
+                                </div>
+                                <button onclick="loadLeaderboardData()" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                                    <span>🔄</span> Cập nhật BXH
+                                </button>
+                            </div>
+
+                            <!-- Podium Top 3 -->
+                            <div id="leaderboardPodium" class="grid grid-cols-3 gap-2 md:gap-3 mb-5 text-center items-end pt-2">
+                            </div>
+
+                            <!-- Danh sách xếp hạng chi tiết -->
+                            <div class="overflow-y-auto custom-scroll max-h-[380px] border border-gray-100 rounded-xl">
+                                <table class="w-full text-left border-collapse text-sm">
+                                    <thead class="bg-gray-100 text-gray-600 text-xs uppercase sticky top-0">
+                                        <tr>
+                                            <th class="p-3 font-bold text-center w-14">Hạng</th>
+                                            <th class="p-3 font-bold">Thành Viên</th>
+                                            <th class="p-3 font-bold text-center">MSSV</th>
+                                            <th class="p-3 font-bold text-right">Điểm Số</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="leaderboardTableBody" class="divide-y divide-gray-100">
+                                        <tr>
+                                            <td colspan="4" class="p-6 text-center text-gray-400">Đang tải Bảng Xếp Hạng...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- CỘT PHẢI (5/12): HỒ SƠ CÁ NHÂN & MẬT THƯ CỦA RIÊNG BẠN -->
+                        <div class="lg:col-span-5 space-y-4">
+                            <div class="glass-form p-5 border border-gray-100">
+                                <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                                    <h3 class="text-base font-extrabold text-red-700 flex items-center gap-2">
+                                        <span>🪪</span> Hồ Sơ Secret Santa Của Bạn
+                                    </h3>
+                                    <button onclick="openEditProfile()" class="text-xs bg-red-50 hover:bg-red-100 text-red-700 font-bold px-2.5 py-1 rounded-lg border border-red-200 transition">
+                                        ✏️ Chỉnh sửa
+                                    </button>
+                                </div>
+
+                                <div class="flex items-center gap-4 mb-4">
+                                    <img id="userDashSelfie" src="" alt="Selfie" onclick="openLightbox(this.src, document.getElementById('userDashName').textContent, 'MSSV: ' + document.getElementById('userDashMssv').textContent)" class="w-20 h-20 object-cover rounded-2xl border-2 border-red-500 shadow cursor-pointer hover:scale-105 transition">
+                                    <div>
+                                        <h4 id="userDashName" class="text-lg font-extrabold text-gray-800">---</h4>
+                                        <span class="inline-block bg-red-50 text-red-700 font-bold text-xs px-2.5 py-0.5 rounded border border-red-200 mt-0.5">
+                                            MSSV: <span id="userDashMssv">---</span>
+                                        </span>
+                                        <p class="text-[11px] text-gray-400 mt-1">Cập nhật: <span id="userDashTime">---</span></p>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <div class="bg-green-50/70 p-3 rounded-xl border border-green-200">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-xs font-bold text-green-800">🎁 Wishlist Của Bạn (Chỉ mình bạn & BTC thấy)</span>
+                                            <span class="text-[10px] bg-green-200 text-green-900 px-2 py-0.5 rounded-full font-bold">Ẩn danh</span>
+                                        </div>
+                                        <p id="userDashWishlist" class="text-xs md:text-sm text-gray-700 whitespace-pre-line"></p>
+                                    </div>
+
+                                    <div class="bg-red-50/70 p-3 rounded-xl border border-red-200">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-xs font-bold text-red-800">🚫 Blacklist Của Bạn (Quà cần tránh)</span>
+                                            <span class="text-[10px] bg-red-200 text-red-900 px-2 py-0.5 rounded-full font-bold">Bảo mật</span>
+                                        </div>
+                                        <p id="userDashBlacklist" class="text-xs md:text-sm text-gray-700 whitespace-pre-line"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Thẻ giới thiệu nhanh các Game sắp mở -->
+                            <div class="bg-gradient-to-br from-green-900 to-green-800 text-white p-5 rounded-2xl shadow-lg space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-amber-300">🎮 Chuỗi Mini-Game Tích Điểm</span>
+                                    <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">Part 2 • 3 • 4</span>
+                                </div>
+                                <p class="text-xs text-green-100 leading-relaxed">
+                                    Bạn đã nhận được <strong>+100 điểm</strong> khởi động khi hoàn tất hồ sơ Part 1! Hãy bấm vào các tab <strong>Part 2, Part 3, Part 4</strong> phía trên để xem thông tin các trò chơi sắp diễn ra nhé!
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- =============================================================== -->
+                <!-- NỘI DUNG PART 2: THE WHISPER (MINI-GAME SẮP TỚI)                -->
+                <!-- =============================================================== -->
+                <div id="eventPart2Content" class="hidden py-10 px-4 text-center max-w-2xl mx-auto space-y-5">
+                    <div class="w-24 h-24 bg-purple-100 text-purple-700 rounded-3xl flex items-center justify-center text-5xl mx-auto shadow-inner animate-bounce">
+                        🤫
+                    </div>
+                    <span class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider">
+                        ⏳ Dành Cho Sự Kiện Sắp Tới (Coming Soon)
+                    </span>
+                    <h3 class="text-3xl font-extrabold text-gray-800">Part 2: The Whisper — Lời Thì Thầm Đêm Đông</h3>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">
+                        Đây là <strong>Mini-Game Chặng 2</strong> dành riêng cho các thành viên đã ghi danh. Người chơi sẽ giải mã các mật thư ẩn danh và gửi lời nhắn bí mật đến người nhận quà để mang về tới <strong>+300 điểm thưởng</strong> trên Bảng Xếp Hạng!
+                    </p>
+                    <div class="bg-white/90 p-4 rounded-xl border border-gray-200 max-w-md mx-auto text-xs text-gray-600 space-y-1">
+                        <div class="font-bold text-gray-800">📌 Trạng thái chặng đua:</div>
+                        <p>Ban Tổ Chức đang hoàn tất danh sách ở Part 1 trước khi chính thức mở khóa cổng game Part 2.</p>
+                    </div>
+                    <div class="pt-2">
+                        <button onclick="switchEventPart(1)" class="btn-green px-6 py-2.5 text-sm inline-flex items-center gap-2">
+                            <span>← Quay lại Bảng Xếp Hạng (Part 1)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- =============================================================== -->
+                <!-- NỘI DUNG PART 3: THE SNEAKY ELF (MINI-GAME SẮP TỚI)             -->
+                <!-- =============================================================== -->
+                <div id="eventPart3Content" class="hidden py-10 px-4 text-center max-w-2xl mx-auto space-y-5">
+                    <div class="w-24 h-24 bg-green-100 text-green-700 rounded-3xl flex items-center justify-center text-5xl mx-auto shadow-inner animate-bounce">
+                        🧝
+                    </div>
+                    <span class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider">
+                        ⏳ Dành Cho Sự Kiện Sắp Tới (Coming Soon)
+                    </span>
+                    <h3 class="text-3xl font-extrabold text-gray-800">Part 3: The Sneaky Elf — Truy Tìm Yêu Tinh</h3>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">
+                        <strong>Mini-Game Chặng 3</strong> kịch tính! Các Yêu Tinh Giáng Sinh sẽ giấu những hộp quà bí ẩn và câu đố tốc độ. Nhanh tay bắt trúng Yêu Tinh để bứt phá thứ hạng trên <strong>Bảng Xếp Hạng Điểm Sự Kiện</strong> với giải thưởng tới <strong>+500 điểm</strong>!
+                    </p>
+                    <div class="bg-white/90 p-4 rounded-xl border border-gray-200 max-w-md mx-auto text-xs text-gray-600 space-y-1">
+                        <div class="font-bold text-gray-800">📌 Trạng thái chặng đua:</div>
+                        <p>Sẽ được mở khóa ngay sau khi kết thúc Part 2: The Whisper.</p>
+                    </div>
+                    <div class="pt-2">
+                        <button onclick="switchEventPart(1)" class="btn-green px-6 py-2.5 text-sm inline-flex items-center gap-2">
+                            <span>← Quay lại Bảng Xếp Hạng (Part 1)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- =============================================================== -->
+                <!-- NỘI DUNG PART 4: THE REVEAL (SỰ KIỆN CÔNG BỐ SẮP TỚI)           -->
+                <!-- =============================================================== -->
+                <div id="eventPart4Content" class="hidden py-10 px-4 text-center max-w-2xl mx-auto space-y-5">
+                    <div class="w-24 h-24 bg-red-100 text-red-700 rounded-3xl flex items-center justify-center text-5xl mx-auto shadow-inner animate-bounce">
+                        🎁
+                    </div>
+                    <span class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider">
+                        ⏳ Dành Cho Sự Kiện Sắp Tới (Coming Soon)
+                    </span>
+                    <h3 class="text-3xl font-extrabold text-gray-800">Part 4: The Reveal — Đêm Hội Mở Quà & Vinh Danh</h3>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">
+                        Chặng cuối cùng của hành trình <strong>Secret Santa 2026</strong>! Thử thách đoán danh tính Ông Già Noel bí mật của bạn, công bố danh tính toàn bộ các cặp đôi và trao thưởng cho <strong>Top Bảng Xếp Hạng Chung Cuộc</strong>!
+                    </p>
+                    <div class="bg-white/90 p-4 rounded-xl border border-gray-200 max-w-md mx-auto text-xs text-gray-600 space-y-1">
+                        <div class="font-bold text-gray-800">📌 Trạng thái chặng đua:</div>
+                        <p>Sự kiện đặc biệt mở khóa vào Đêm Hội Trao Quà Giáng Sinh 2026.</p>
+                    </div>
+                    <div class="pt-2">
+                        <button onclick="switchEventPart(1)" class="btn-green px-6 py-2.5 text-sm inline-flex items-center gap-2">
+                            <span>← Quay lại Bảng Xếp Hạng (Part 1)</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- MÀN HÌNH 3: KHU VỰC ADMIN DASHBOARD (BTC QUẢN LÝ TOÀN BỘ DANH SÁCH)       -->
+        <!-- ========================================================================= -->
+        <div id="viewAdminDashboard" class="hidden glass-panel p-5 md:p-10">
+            <!-- Thanh tiêu đề & nút chức năng BTC -->
+            <div class="flex flex-wrap justify-between items-center gap-4 border-b border-gray-200 pb-4 mb-6">
+                <div>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 mb-1">
+                        🛡️ Khu Vực Quản Trị Ban Tổ Chức (Admin Dashboard)
+                    </span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800">📋 Quản Lý Sinh Viên & Điểm Bảng Xếp Hạng</h2>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="fetchAdminData()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3.5 py-2 rounded-lg shadow text-xs md:text-sm transition flex items-center gap-1.5">
+                        <span>🔄</span> Làm mới
+                    </button>
+                    <button onclick="openMatchingModal()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-3.5 py-2 rounded-lg shadow text-xs md:text-sm transition flex items-center gap-1.5">
+                        <span>🎲</span> Bốc thăm / Ghép cặp
+                    </button>
+                    <button onclick="exportAdminCSV()" class="bg-green-700 hover:bg-green-800 text-white font-bold px-3.5 py-2 rounded-lg shadow text-xs md:text-sm transition flex items-center gap-1.5">
+                        <span>📥</span> Xuất Excel / CSV
+                    </button>
+                    <button onclick="logoutAdmin()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold px-3.5 py-2 rounded-lg text-xs md:text-sm transition flex items-center gap-1.5">
+                        <span>🚪</span> Đăng xuất
+                    </button>
+                </div>
+            </div>
+
+            <!-- Thống kê nhanh -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white/90 p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-2xl font-bold">🎅</div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Tổng số cá nhân (MSSV duy nhất)</p>
+                        <p id="statTotalUsers" class="text-2xl font-extrabold text-gray-800">0</p>
+                    </div>
+                </div>
+                <div class="bg-white/90 p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-green-100 text-green-600 flex items-center justify-center text-2xl font-bold">📸</div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Có ảnh Selfie xác minh</p>
+                        <p id="statWithSelfie" class="text-2xl font-extrabold text-gray-800">0</p>
+                    </div>
+                </div>
+                <div class="bg-white/90 p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl font-bold">🎁</div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-semibold uppercase">Đủ điều kiện ghép cặp</p>
+                        <p id="statReadyMatch" class="text-2xl font-extrabold text-gray-800">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thanh tìm kiếm & lọc -->
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mb-4">
+                <div class="relative w-full sm:w-96">
+                    <input type="text" id="adminSearchInput" oninput="renderAdminTable()" class="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-300 bg-white text-sm focus:outline-none focus:border-green-600" placeholder="Tìm theo MSSV (VD: TH12345), Họ tên, Wishlist...">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+                </div>
+                <p id="adminFilterCount" class="text-xs font-semibold text-gray-600"></p>
+            </div>
+
+            <!-- Bảng dữ liệu Admin -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto custom-scroll max-h-[600px]">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead class="bg-gray-800 text-white sticky top-0 z-10">
+                            <tr>
+                                <th class="p-3.5 font-bold text-center w-12">STT</th>
+                                <th class="p-3.5 font-bold text-center w-20">Selfie</th>
+                                <th class="p-3.5 font-bold w-28">MSSV</th>
+                                <th class="p-3.5 font-bold w-44">Họ và Tên</th>
+                                <th class="p-3.5 font-bold text-center w-28">🏆 Điểm BXH</th>
+                                <th class="p-3.5 font-bold">🎁 Wishlist</th>
+                                <th class="p-3.5 font-bold">🚫 Blacklist</th>
+                                <th class="p-3.5 font-bold w-32">Cập nhật</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTableBody" class="divide-y divide-gray-200">
+                            <tr>
+                                <td colspan="8" class="p-8 text-center text-gray-500">Đang tải dữ liệu...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // =========================================================================
+        // CẤU HÌNH HỆ THỐNG & DATABASE (SHEETDB API)
+        // =========================================================================
+        const SHEETDB_API = 'https://sheetdb.io/api/v1/fnqbi32e6xcc0';
+        const ADMIN_PASSWORD_DEFAULT = '1234';
+
+        // Biến trạng thái ứng dụng
+        let currentStudentRecord = null; // Lưu thông tin cá nhân đang đăng nhập
+        let isEditingExistingStudent = false; // Đang tạo lần đầu hay sửa thông tin cá nhân
+        let adminAllRecords = []; // Danh sách cá nhân duy nhất (đã gộp theo MSSV)
+        let currentSantaPairs = []; // Kết quả ghép cặp Secret Santa
+
+        // =========================================================================
+        // 1. HỆ THỐNG ÂM NHẠC ĐA BÀI HÁT (MP3 + SYNTH MUSIC BOX ĐẢM BẢO 100% PHÁT ĐƯỢC)
+        // =========================================================================
+        const bgMusic = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicToggleBtn');
+        const musicPanelBtn = document.getElementById('musicPanelToggleBtn');
+        const musicOptions = document.getElementById('musicOptions');
+        const miniPlayBtn = document.getElementById('miniPlayBtn');
+
+        let isPlaying = false;
+        let currentTrackIndex = 0;
+        let currentVolume = 0.6;
+        let synthTimer = null;
+        let audioCtx = null;
+
+        // Danh sách 6 bài hát Giáng Sinh tích hợp sẵn trong web
+        const PLAYLIST = [
+            {
+                title: 'Santa Claus Is Coming',
+                type: 'mp3',
+                url: 'https://raw.githubusercontent.com/dragonaf247/secret-santa-2026/main/vincemcgill-santa-claus-614837.mp3',
+                fallbackMelody: 'santa'
+            },
+            {
+                title: 'Jingle Bells (Music Box)',
+                type: 'synth',
+                melody: 'jingle'
+            },
+            {
+                title: 'We Wish You A Merry Xmas',
+                type: 'synth',
+                melody: 'wewish'
+            },
+            {
+                title: 'Deck The Halls (Chime)',
+                type: 'synth',
+                melody: 'deck'
+            },
+            {
+                title: 'Silent Night (Đêm Thánh)',
+                type: 'synth',
+                melody: 'silent'
+            },
+            {
+                title: 'Joy To The World',
+                type: 'synth',
+                melody: 'joy'
+            }
+        ];
+
+        // Tần số nốt nhạc cho Music Box Synthesizer
+        const NOTE_FREQ = {
+            'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'F#4': 369.99, 'G4': 392.00, 'A4': 440.00, 'Bb4': 466.16, 'B4': 493.88,
+            'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'F#5': 739.99, 'G5': 783.99, 'A5': 880.00, 'R': 0
+        };
+
+        // Giai điệu đầy đủ của các bài nhạc Giáng Sinh kinh điển
+        const MELODIES = {
+            jingle: {
+                tempo: 230,
+                notes: [
+                    ['E5',1],['E5',1],['E5',2], ['E5',1],['E5',1],['E5',2], ['E5',1],['G5',1],['C5',1.5],['D5',0.5],['E5',4],
+                    ['F5',1],['F5',1],['F5',1.5],['F5',0.5], ['F5',1],['E5',1],['E5',1],['E5',0.5],['E5',0.5],
+                    ['E5',1],['D5',1],['D5',1],['E5',1], ['D5',2],['G5',2],
+                    ['E5',1],['E5',1],['E5',2], ['E5',1],['E5',1],['E5',2], ['E5',1],['G5',1],['C5',1.5],['D5',0.5],['E5',4],
+                    ['F5',1],['F5',1],['F5',1.5],['F5',0.5], ['F5',1],['E5',1],['E5',1],['E5',0.5],['E5',0.5],
+                    ['G5',1],['G5',1],['F5',1],['D5',1], ['C5',4]
+                ]
+            },
+            wewish: {
+                tempo: 240,
+                notes: [
+                    ['D4',1], ['G4',1],['G4',0.5],['A4',0.5],['G4',0.5],['F#4',0.5], ['E4',1],['E4',1],['E4',1],
+                    ['A4',1],['A4',0.5],['B4',0.5],['A4',0.5],['G4',0.5], ['F#4',1],['D4',1],['D4',1],
+                    ['B4',1],['B4',0.5],['C5',0.5],['B4',0.5],['A4',0.5], ['G4',1],['E4',1],['D4',0.5],['D4',0.5],
+                    ['E4',1],['A4',1],['F#4',1], ['G4',3]
+                ]
+            },
+            deck: {
+                tempo: 220,
+                notes: [
+                    ['G5',1.5],['F5',0.5],['E5',1],['D5',1], ['C5',1],['D5',1],['E5',1],['C5',1],
+                    ['D5',0.5],['E5',0.5],['F5',0.5],['D5',0.5],['E5',1.5],['D5',0.5], ['C5',1],['B4',1],['C5',2],
+                    ['G5',1.5],['F5',0.5],['E5',1],['D5',1], ['C5',1],['D5',1],['E5',1],['C5',1],
+                    ['D5',0.5],['E5',0.5],['F5',0.5],['D5',0.5],['E5',1.5],['D5',0.5], ['C5',1],['B4',1],['C5',2]
+                ]
+            },
+            silent: {
+                tempo: 380,
+                notes: [
+                    ['G4',1.5],['A4',0.5],['G4',1], ['E4',3], ['G4',1.5],['A4',0.5],['G4',1], ['E4',3],
+                    ['D5',2],['D5',1], ['B4',3], ['C5',2],['C5',1], ['G4',3],
+                    ['A4',2],['A4',1], ['C5',1.5],['B4',0.5],['A4',1], ['G4',1.5],['A4',0.5],['G4',1], ['E4',3],
+                    ['A4',2],['A4',1], ['C5',1.5],['B4',0.5],['A4',1], ['G4',1.5],['A4',0.5],['G4',1], ['E4',3],
+                    ['D5',2],['D5',1], ['F5',1.5],['D5',0.5],['B4',1], ['C5',3], ['E5',3],
+                    ['C5',1],['G4',1],['E4',1], ['G4',1.5],['F4',0.5],['D4',1], ['C4',4]
+                ]
+            },
+            joy: {
+                tempo: 240,
+                notes: [
+                    ['C5',2],['B4',1.5],['A4',0.5],['G4',3],['F4',1], ['E4',2],['D4',2],['C4',3],['G4',1],
+                    ['A4',3],['A4',1],['B4',3],['B4',1], ['C5',4],
+                    ['C5',1],['C5',1],['B4',1],['A4',1],['G4',1],['G4',1.5],['F4',0.5],['E4',1],
+                    ['C5',1],['C5',1],['B4',1],['A4',1],['G4',1],['G4',1.5],['F4',0.5],['E4',1],
+                    ['E4',1],['E4',1],['E4',1],['E4',1],['E4',0.5],['F4',0.5],['G4',3],
+                    ['F4',0.5],['E4',0.5],['D4',1],['D4',1],['D4',1],['D4',0.5],['E4',0.5],['F4',3],
+                    ['E4',0.5],['D4',0.5],['C4',1],['C5',2],['A4',1],['G4',1.5],['F4',0.5],['E4',1],['F4',1],['E4',2],['D4',2],['C4',4]
+                ]
+            },
+            santa: {
+                tempo: 250,
+                notes: [
+                    ['G4',1],['E4',0.5],['F4',0.5],['G4',1],['G4',2], ['G4',1],['A4',0.5],['B4',0.5],['C5',1],['C5',2],
+                    ['E4',0.5],['F4',0.5],['G4',1],['G4',1],['G4',1],['A4',0.5],['G4',0.5], ['F4',1],['F4',3],
+                    ['E4',1],['G4',1],['C4',1],['E4',1], ['D4',1],['F4',2],['B4',1], ['C5',4]
+                ]
+            }
+        };
+
+        function stopSynthMelody() {
+            if (synthTimer) {
+                clearTimeout(synthTimer);
+                synthTimer = null;
+            }
+        }
+
+        function playSynthNote(freq, durationMs) {
+            if (!freq || !isPlaying) return;
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const now = audioCtx.currentTime;
+                const durSec = Math.max(0.15, durationMs / 1000);
+
+                // Tạo âm thanh Music Box / Chime ấm áp (Sine + Overtone)
+                const osc1 = audioCtx.createOscillator();
+                const osc2 = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc1.type = 'triangle';
+                osc1.frequency.setValueAtTime(freq, now);
+
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(freq * 2, now);
+
+                const gain2 = audioCtx.createGain();
+                gain2.gain.setValueAtTime(0.18, now);
+
+                const peakGain = Math.max(0.01, currentVolume * 0.28);
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.linearRampToValueAtTime(peakGain, now + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0008, now + durSec * 1.15);
+
+                osc1.connect(gain);
+                osc2.connect(gain2);
+                gain2.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + durSec * 1.2);
+                osc2.stop(now + durSec * 1.2);
+            } catch (err) {
+                console.log('WebAudio error:', err);
+            }
+        }
+
+        function startSynthMelody(melodyKey) {
+            stopSynthMelody();
+            const songData = MELODIES[melodyKey] || MELODIES.jingle;
+            let stepIdx = 0;
+
+            function step() {
+                if (!isPlaying) return;
+                const [noteName, beats] = songData.notes[stepIdx];
+                const dur = beats * songData.tempo;
+                const freq = NOTE_FREQ[noteName] || 0;
+                if (freq > 0) {
+                    playSynthNote(freq, dur);
+                }
+                stepIdx = (stepIdx + 1) % songData.notes.length;
+                synthTimer = setTimeout(step, dur);
+            }
+            step();
+        }
+
+        function updateMusicUI() {
+            if (isPlaying) {
+                musicBtn.innerHTML = '🔊 Đang Phát Nhạc';
+                musicBtn.classList.replace('bg-gray-600', 'bg-red-600');
+                miniPlayBtn.innerHTML = '⏸ Tạm dừng';
+                document.getElementById('musicNowPlayingBadge').textContent = 'Đang phát';
+                document.getElementById('musicNowPlayingBadge').className = 'text-[10px] bg-green-600 px-2 py-0.5 rounded-full font-semibold';
+            } else {
+                musicBtn.innerHTML = '🔇 Đã Tắt Nhạc';
+                musicBtn.classList.replace('bg-red-600', 'bg-gray-600');
+                miniPlayBtn.innerHTML = '▶️ Phát tiếp';
+                document.getElementById('musicNowPlayingBadge').textContent = 'Tạm dừng';
+                document.getElementById('musicNowPlayingBadge').className = 'text-[10px] bg-gray-600 px-2 py-0.5 rounded-full font-semibold';
+            }
+        }
+
+        function playTrackByIndex(idx) {
+            stopSynthMelody();
+            bgMusic.pause();
+
+            currentTrackIndex = (idx + PLAYLIST.length) % PLAYLIST.length;
+            document.getElementById('songSelect').value = String(currentTrackIndex);
+            const track = PLAYLIST[currentTrackIndex];
+            isPlaying = true;
+            updateMusicUI();
+
+            if (track.type === 'mp3') {
+                bgMusic.src = track.url;
+                bgMusic.loop = true;
+                bgMusic.volume = currentVolume;
+                bgMusic.play().catch(err => {
+                    console.warn('MP3 stream bị chặn hoặc lỗi, chuyển sang giai điệu dự phòng:', err);
+                    startSynthMelody(track.fallbackMelody || 'santa');
+                });
+            } else {
+                startSynthMelody(track.melody);
+            }
+        }
+
+        function startExperience() {
+            const overlay = document.getElementById('startOverlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.style.display = 'none', 500);
+
+            musicBtn.classList.remove('hidden');
+            musicPanelBtn.classList.remove('hidden');
+            musicOptions.classList.remove('hidden');
+
+            playTrackByIndex(0);
+        }
+
+        function toggleMusicPanel() {
+            musicOptions.classList.toggle('hidden');
+        }
+
+        function toggleMusic() {
+            if (isPlaying) {
+                isPlaying = false;
+                bgMusic.pause();
+                stopSynthMelody();
+                updateMusicUI();
+            } else {
+                isPlaying = true;
+                const selectVal = document.getElementById('songSelect').value;
+                if (selectVal === 'local' && bgMusic.src) {
+                    bgMusic.play();
+                    updateMusicUI();
+                } else {
+                    playTrackByIndex(currentTrackIndex);
+                }
+            }
+        }
+
+        function changeSong(val) {
+            if (val === 'local') {
+                document.getElementById('localAudio').click();
+                return;
+            }
+            const idx = parseInt(val, 10);
+            if (!isNaN(idx)) {
+                playTrackByIndex(idx);
+                showToast(`🎵 Đang phát: ${PLAYLIST[idx].title}`, '🎶');
+            }
+        }
+
+        function prevSong() {
+            playTrackByIndex(currentTrackIndex - 1);
+            showToast(`🎵 Đang phát: ${PLAYLIST[currentTrackIndex].title}`, '🎶');
+        }
+
+        function nextSong() {
+            playTrackByIndex(currentTrackIndex + 1);
+            showToast(`🎵 Đang phát: ${PLAYLIST[currentTrackIndex].title}`, '🎶');
+        }
+
+        function changeVolume(val) {
+            currentVolume = Math.max(0, Math.min(1, parseInt(val, 10) / 100));
+            bgMusic.volume = currentVolume;
+        }
+
+        function playLocalAudio(event) {
+            const file = event.target.files[0];
+            if (file) {
+                stopSynthMelody();
+                const objectUrl = URL.createObjectURL(file);
+                bgMusic.src = objectUrl;
+                bgMusic.loop = true;
+                bgMusic.volume = currentVolume;
+                bgMusic.play();
+                isPlaying = true;
+                updateMusicUI();
+                showToast(`🎵 Đang phát file nhạc: ${file.name}`, '📁');
+            } else {
+                document.getElementById('songSelect').value = String(currentTrackIndex);
+            }
+        }
+
+        // Hiệu ứng tuyết rơi
+        function createSnowflakes() {
+            const snowContainer = document.createElement('div');
+            snowContainer.style.position = 'fixed';
+            snowContainer.style.top = '0';
+            snowContainer.style.left = '0';
+            snowContainer.style.width = '100%';
+            snowContainer.style.height = '100%';
+            snowContainer.style.pointerEvents = 'none';
+            snowContainer.style.zIndex = '9999';
+            document.body.appendChild(snowContainer);
+
+            for (let i = 0; i < 30; i++) {
+                const flake = document.createElement('div');
+                flake.innerHTML = '❄';
+                flake.style.position = 'absolute';
+                flake.style.color = 'rgba(255, 255, 255, 0.6)';
+                flake.style.fontSize = Math.random() * 15 + 10 + 'px';
+                flake.style.left = Math.random() * 100 + 'vw';
+                flake.style.top = Math.random() * -100 + 'px';
+                flake.style.animation = `fall ${Math.random() * 5 + 5}s linear infinite`;
+                flake.style.animationDelay = `${Math.random() * 5}s`;
+                snowContainer.appendChild(flake);
+            }
+        }
+        const snowStyle = document.createElement('style');
+        snowStyle.innerHTML = `@keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }`;
+        document.head.appendChild(snowStyle);
+        createSnowflakes();
+
+        function showToast(message, icon = '🎄') {
+            const box = document.getElementById('toastBox');
+            document.getElementById('toastIcon').textContent = icon;
+            document.getElementById('toastText').textContent = message;
+            box.classList.remove('hidden');
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => {
+                box.classList.add('hidden');
+            }, 4000);
+        }
+
+        // =========================================================================
+        // 2. ĐIỀU HƯỚNG MÀN HÌNH & CÁC PART TRONG GIAO DIỆN SỰ KIỆN
+        // =========================================================================
+        function showMainView(viewId) {
+            ['viewLogin', 'viewEventHub', 'viewAdminDashboard'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(viewId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchEventPart(partNum) {
+            [1, 2, 3, 4].forEach(n => {
+                const tab = document.getElementById('partTab' + n);
+                const content = document.getElementById('eventPart' + n + 'Content');
+                if (n === partNum) {
+                    tab.classList.add('active');
+                    tab.classList.remove('upcoming');
+                    content.classList.remove('hidden');
+                } else {
+                    tab.classList.remove('active');
+                    tab.classList.add('upcoming');
+                    content.classList.add('hidden');
+                }
+            });
+        }
+
+        function switchRoleTab(role) {
+            const studentBtn = document.getElementById('tabStudentBtn');
+            const adminBtn = document.getElementById('tabAdminBtn');
+            const studentSec = document.getElementById('studentLoginSection');
+            const adminSec = document.getElementById('adminLoginSection');
+
+            if (role === 'student') {
+                studentBtn.className = 'role-tab active-student px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2';
+                adminBtn.className = 'role-tab text-gray-700 hover:bg-white/60 px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2';
+                studentSec.classList.remove('hidden');
+                adminSec.classList.add('hidden');
+            } else {
+                adminBtn.className = 'role-tab active-admin px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2';
+                studentBtn.className = 'role-tab text-gray-700 hover:bg-white/60 px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2';
+                adminSec.classList.remove('hidden');
+                studentSec.classList.add('hidden');
+                document.getElementById('adminPassInput').focus();
+            }
+        }
+
+        function toggleAdminPassVisibility() {
+            const input = document.getElementById('adminPassInput');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        // =========================================================================
+        // 3. CHUẨN HÓA DỮ LIỆU & ĐẢM BẢO 1 MSSV = 1 CÁ NHÂN DUY NHẤT
+        // =========================================================================
+        function normalizeMssv(val) {
+            return String(val || '').trim().toUpperCase();
+        }
+
+        function getSelfieFromRow(row) {
+            if (!row) return '';
+            return row.phongban || row.selfie || '';
+        }
+
+        function getScoreFromRow(row) {
+            if (!row) return 100;
+            const parsed = parseInt(row.diem, 10);
+            return !isNaN(parsed) ? parsed : 100; // Mặc định 100 điểm khi hoàn thành đăng ký Part 1
+        }
+
+        // Gộp các bản ghi bị trùng MSSV để mỗi MSSV chỉ là 1 cá nhân duy nhất (lấy bản cập nhật mới nhất)
+        function deduplicateRecordsByMssv(rawList) {
+            if (!Array.isArray(rawList)) return [];
+            const map = new Map();
+            let noMssvCounter = 1;
+
+            rawList.forEach(row => {
+                const normMssv = normalizeMssv(row.mssv);
+                if (normMssv) {
+                    // Ghi đè bằng bản ghi mới hơn cùng MSSV
+                    map.set(normMssv, {
+                        ...row,
+                        mssv: normMssv,
+                        _originalMssv: row.mssv // Giữ giá trị gốc để PATCH chính xác trên SheetDB
+                    });
+                } else if ((row.hoten || '').trim()) {
+                    // Bản ghi cũ chưa có MSSV
+                    const tempKey = `_NOMSSV_${noMssvCounter++}`;
+                    map.set(tempKey, {
+                        ...row,
+                        mssv: '',
+                        _originalMssv: ''
+                    });
+                }
+            });
+
+            return Array.from(map.values());
+        }
+
+        // =========================================================================
+        // 4. LUỒNG ĐĂNG NHẬP SINH VIÊN: TRÙNG MSSV -> VÀO SỰ KIỆN & CHO SỬA CHỨ KHÔNG TẠO MỚI
+        // =========================================================================
+        async function handleStudentCheck(e) {
+            e.preventDefault();
+            const rawMssv = normalizeMssv(document.getElementById('loginMssvInput').value);
+            if (!rawMssv) {
+                showToast('Vui lòng nhập Mã số sinh viên (Ví dụ: TH12345)!', '⚠️');
+                return;
+            }
+            document.getElementById('loginMssvInput').value = rawMssv;
+
+            const btn = document.getElementById('btnCheckMssv');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<span>⏳ Đang kiểm tra tài khoản MSSV...</span>';
+            btn.disabled = true;
+
+            try {
+                // Tải danh sách từ SheetDB để kiểm tra chính xác không phân biệt hoa thường
+                const res = await fetch(SHEETDB_API);
+                let allRows = [];
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data)) allRows = data;
+                }
+
+                const dedupedList = deduplicateRecordsByMssv(allRows);
+                const matchedRecord = dedupedList.find(r => normalizeMssv(r.mssv) === rawMssv);
+
+                if (matchedRecord) {
+                    // ĐÃ TỒN TẠI MSSV -> Đưa thẳng vào Giao Diện Chính Của Sự Kiện (1 cá nhân duy nhất, cho phép sửa)
+                    currentStudentRecord = matchedRecord;
+                    isEditingExistingStudent = true;
+                    enterEventHub(matchedRecord, dedupedList);
+                    showToast(`Chào mừng ${matchedRecord.hoten || rawMssv} vào Giao Diện Sự Kiện!`, '🎅');
+                } else {
+                    // CHƯA CÓ MSSV -> Mở form điền thông tin lần đầu cho cá nhân này
+                    isEditingExistingStudent = false;
+                    openRegistrationFormForNewMssv(rawMssv);
+                }
+            } catch (err) {
+                console.error('Lỗi khi kiểm tra MSSV:', err);
+                alert('Không thể kết nối tới máy chủ dữ liệu. Vui lòng kiểm tra mạng và thử lại!');
+            } finally {
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }
+        }
+
+        function openRegistrationFormForNewMssv(mssvValue) {
+            document.getElementById('mssvCheckBox').classList.add('hidden');
+            document.getElementById('registrationFormBox').classList.remove('hidden');
+
+            resetWholeForm();
+            document.getElementById('mssv').value = mssvValue;
+            document.getElementById('formBoxTitle').innerHTML = '<span>✍️</span> Đăng Ký Hồ Sơ Cá Nhân Lần Đầu';
+            document.getElementById('regStatusBanner').innerHTML = `✨ Mã sinh viên <strong>${escapeHtml(mssvValue)}</strong> chưa có hồ sơ. Hãy điền thông tin & chụp Selfie một lần duy nhất để vào Giao Diện Chính Của Sự Kiện nhé!`;
+            document.getElementById('regStatusBanner').className = 'mb-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-800 font-medium';
+            document.getElementById('submitFormBtn').innerHTML = '<span>Hoàn Tất & Vào Sự Kiện</span> <span>🎅</span>';
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+            document.getElementById('name').focus();
+        }
+
+        function backFromForm() {
+            if (isEditingExistingStudent && currentStudentRecord) {
+                showMainView('viewEventHub');
+                return;
+            }
+            document.getElementById('registrationFormBox').classList.add('hidden');
+            document.getElementById('mssvCheckBox').classList.remove('hidden');
+        }
+
+        // Mở Giao diện chính của sự kiện (Event Hub)
+        function enterEventHub(record, preloadedList = null) {
+            renderUserDashboard(record);
+            showMainView('viewEventHub');
+            switchEventPart(1);
+            if (preloadedList) {
+                renderLeaderboard(preloadedList);
+            } else {
+                loadLeaderboardData();
+            }
+        }
+
+        function renderUserDashboard(record) {
+            const selfieData = getSelfieFromRow(record);
+            const validImg = (selfieData && selfieData.startsWith('data:image'))
+                ? selfieData
+                : 'https://placehold.co/300x300/1a472a/ffffff?text=' + encodeURIComponent(record.mssv || 'Santa');
+
+            document.getElementById('userDashSelfie').src = validImg;
+            document.getElementById('hubHeaderAvatar').src = validImg;
+
+            document.getElementById('userDashName').textContent = record.hoten || 'Chưa cập nhật tên';
+            document.getElementById('hubHeaderName').textContent = record.hoten || 'Thành viên';
+
+            document.getElementById('userDashMssv').textContent = record.mssv || '---';
+            document.getElementById('hubHeaderMssv').textContent = record.mssv || '---';
+
+            document.getElementById('hubHeaderScore').textContent = getScoreFromRow(record);
+            document.getElementById('userDashTime').textContent = record.thoigian || 'Vừa xong';
+            document.getElementById('userDashWishlist').textContent = record.wishlist || '(Chưa có nội dung)';
+            document.getElementById('userDashBlacklist').textContent = record.blacklist || '(Chưa có nội dung)';
+        }
+
+        // Cho phép sửa hồ sơ của cá nhân hiện tại (Không tạo dòng mới!)
+        function openEditProfile() {
+            if (!currentStudentRecord) return;
+            isEditingExistingStudent = true;
+
+            showMainView('viewLogin');
+            switchRoleTab('student');
+            document.getElementById('mssvCheckBox').classList.add('hidden');
+            document.getElementById('registrationFormBox').classList.remove('hidden');
+
+            document.getElementById('formBoxTitle').innerHTML = '<span>✏️</span> Chỉnh Sửa Hồ Sơ Cá Nhân';
+            document.getElementById('mssv').value = normalizeMssv(currentStudentRecord.mssv);
+            document.getElementById('name').value = currentStudentRecord.hoten || '';
+            document.getElementById('wishlist').value = currentStudentRecord.wishlist || '';
+            document.getElementById('blacklist').value = currentStudentRecord.blacklist || '';
+
+            const existingSelfie = getSelfieFromRow(currentStudentRecord);
+            if (existingSelfie) {
+                document.getElementById('selfieBase64').value = existingSelfie;
+                const preview = document.getElementById('selfiePreview');
+                preview.src = existingSelfie;
+                preview.classList.remove('hidden');
+                document.getElementById('cameraBtnLabel').textContent = 'Chụp / Đổi Ảnh Khác';
+            }
+
+            document.getElementById('regStatusBanner').innerHTML = `🪪 Đang chỉnh sửa thông tin cá nhân của MSSV <strong>${escapeHtml(currentStudentRecord.mssv)}</strong>. Hệ thống sẽ cập nhật trực tiếp vào hồ sơ của bạn (không tạo mục mới).`;
+            document.getElementById('regStatusBanner').className = 'mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900 font-medium';
+            document.getElementById('submitFormBtn').innerHTML = '<span>Lưu Thay Đổi Hồ Sơ</span> <span>💾</span>';
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+        }
+
+        function cancelEditProfile() {
+            showMainView('viewEventHub');
+        }
+
+        function logoutUser() {
+            currentStudentRecord = null;
+            isEditingExistingStudent = false;
+            resetWholeForm();
+            document.getElementById('loginMssvInput').value = '';
+            document.getElementById('registrationFormBox').classList.add('hidden');
+            document.getElementById('mssvCheckBox').classList.remove('hidden');
+            showMainView('viewLogin');
+            showToast('Đã đăng xuất khỏi sự kiện.', '👋');
+        }
+
+        // =========================================================================
+        // 5. BẢNG XẾP HẠNG ĐIỂM SỰ KIỆN (LEADERBOARD TRONG GIAO DIỆN CHÍNH)
+        // =========================================================================
+        async function loadLeaderboardData() {
+            try {
+                const res = await fetch(SHEETDB_API);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const rawData = await res.json();
+                const uniqueList = deduplicateRecordsByMssv(rawData);
+                renderLeaderboard(uniqueList);
+            } catch (err) {
+                console.error('Lỗi tải Bảng xếp hạng:', err);
+            }
+        }
+
+        function renderLeaderboard(uniqueList) {
+            const podiumEl = document.getElementById('leaderboardPodium');
+            const tbodyEl = document.getElementById('leaderboardTableBody');
+
+            if (!uniqueList || uniqueList.length === 0) {
+                podiumEl.innerHTML = '';
+                tbodyEl.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-400">Chưa có thành viên nào trên Bảng Xếp Hạng.</td></tr>`;
+                return;
+            }
+
+            // Sắp xếp theo điểm giảm dần
+            const sorted = [...uniqueList].sort((a, b) => getScoreFromRow(b) - getScoreFromRow(a));
+
+            // Render Top 3 Podium
+            const top1 = sorted[0];
+            const top2 = sorted[1];
+            const top3 = sorted[2];
+
+            const renderPodiumCard = (item, rank, medal, bgClass, heightClass) => {
+                if (!item) return `<div class="opacity-30 p-2"></div>`;
+                const sImg = getSelfieFromRow(item);
+                const avatar = (sImg && sImg.startsWith('data:image'))
+                    ? sImg
+                    : 'https://placehold.co/120x120/1a472a/ffffff?text=' + encodeURIComponent(item.mssv || rank);
+                const isMe = currentStudentRecord && normalizeMssv(currentStudentRecord.mssv) === normalizeMssv(item.mssv);
+
+                return `
+                    <div class="flex flex-col items-center">
+                        <div class="relative mb-1.5">
+                            <img src="${avatar}" class="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover border-2 ${rank === 1 ? 'border-yellow-400 ring-2 ring-yellow-300' : 'border-white'} shadow-md">
+                            <span class="absolute -bottom-1 -right-1 text-base">${medal}</span>
+                        </div>
+                        <p class="text-xs font-extrabold text-gray-800 truncate max-w-[95px] md:max-w-[120px]">${escapeHtml(item.hoten || '---')}</p>
+                        <span class="text-[10px] font-bold text-red-700">${escapeHtml(item.mssv || 'N/A')}</span>
+                        <div class="w-full mt-2 rounded-t-xl ${bgClass} ${heightClass} flex flex-col items-center justify-center p-2 shadow-inner border-t-2 border-white/60">
+                            <span class="text-xs md:text-sm font-extrabold">${getScoreFromRow(item)} PTS</span>
+                            ${isMe ? '<span class="text-[9px] bg-red-600 text-white px-1.5 rounded-full mt-0.5">Bạn</span>' : ''}
+                        </div>
+                    </div>
+                `;
+            };
+
+            podiumEl.innerHTML = `
+                ${renderPodiumCard(top2, 2, '🥈', 'bg-slate-200 text-slate-800', 'h-16')}
+                ${renderPodiumCard(top1, 1, '🥇', 'bg-amber-300 text-amber-950', 'h-24')}
+                ${renderPodiumCard(top3, 3, '🥉', 'bg-orange-200 text-orange-900', 'h-14')}
+            `;
+
+            // Render toàn bộ danh sách xếp hạng
+            tbodyEl.innerHTML = sorted.map((item, idx) => {
+                const rank = idx + 1;
+                const badge = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+                const sImg = getSelfieFromRow(item);
+                const avatar = (sImg && sImg.startsWith('data:image'))
+                    ? sImg
+                    : 'https://placehold.co/80x80/1a472a/ffffff?text=' + encodeURIComponent(item.mssv || rank);
+                const isMe = currentStudentRecord && normalizeMssv(currentStudentRecord.mssv) === normalizeMssv(item.mssv);
+
+                return `
+                    <tr class="${isMe ? 'bg-amber-50/90 font-semibold' : 'hover:bg-gray-50'} transition">
+                        <td class="p-3 text-center font-extrabold text-gray-700">${badge}</td>
+                        <td class="p-3">
+                            <div class="flex items-center gap-2.5">
+                                <img src="${avatar}" class="w-9 h-9 rounded-full object-cover border border-gray-300">
+                                <div>
+                                    <span class="font-bold text-gray-800">${escapeHtml(item.hoten || '---')}</span>
+                                    ${isMe ? '<span class="ml-1.5 text-[10px] bg-red-600 text-white px-2 py-0.5 rounded-full font-bold">Bạn</span>' : ''}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-3 text-center">
+                            <span class="bg-gray-100 text-gray-700 font-bold text-xs px-2 py-0.5 rounded border border-gray-200">${escapeHtml(item.mssv || 'N/A')}</span>
+                        </td>
+                        <td class="p-3 text-right font-extrabold text-green-700">${getScoreFromRow(item)} PTS</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // =========================================================================
+        // 6. XỬ LÝ ẢNH SELFIE & BỘ LỌC KHUNG VIỀN GIÁNG SINH
+        // =========================================================================
+        let originalImgObject = null;
+        let targetWidth = 0;
+        let targetHeight = 0;
+
+        function loadOriginalImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                originalImgObject = new Image();
+                originalImgObject.onload = function() {
+                    const MAX_WIDTH = 400;
+                    const MAX_HEIGHT = 400;
+                    targetWidth = originalImgObject.width;
+                    targetHeight = originalImgObject.height;
+
+                    if (targetWidth > targetHeight) {
+                        if (targetWidth > MAX_WIDTH) {
+                            targetHeight *= MAX_WIDTH / targetWidth;
+                            targetWidth = MAX_WIDTH;
+                        }
+                    } else {
+                        if (targetHeight > MAX_HEIGHT) {
+                            targetWidth *= MAX_HEIGHT / targetHeight;
+                            targetHeight = MAX_HEIGHT;
+                        }
+                    }
+
+                    document.getElementById('filterToolbar').classList.remove('hidden');
+                    const btns = document.querySelectorAll('.filter-btn');
+                    btns.forEach(b => b.classList.remove('active'));
+                    btns[0].classList.add('active');
+
+                    applyFilter('none');
+                };
+                originalImgObject.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function applyFilter(filterType, btnElement) {
+            if (!originalImgObject) return;
+
+            if (btnElement) {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+
+            if (filterType === 'retro') {
+                ctx.filter = 'sepia(80%) contrast(110%) brightness(90%)';
+            } else if (filterType === 'noir') {
+                ctx.filter = 'grayscale(100%) contrast(130%) brightness(85%)';
+            } else if (filterType === 'frost') {
+                ctx.filter = 'saturate(130%) hue-rotate(180deg) brightness(110%)';
+            } else if (filterType === 'noel') {
+                ctx.filter = 'saturate(130%) contrast(110%)';
+            } else {
+                ctx.filter = 'none';
+            }
+
+            ctx.drawImage(originalImgObject, 0, 0, targetWidth, targetHeight);
+
+            ctx.filter = 'none';
+            const frameWidth = targetWidth * 0.05;
+
+            if (filterType === 'retro') {
+                ctx.lineWidth = frameWidth;
+                ctx.strokeStyle = '#8B4513';
+                ctx.strokeRect(frameWidth / 2, frameWidth / 2, targetWidth - frameWidth, targetHeight - frameWidth);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#DAA520';
+                ctx.strokeRect(frameWidth + 5, frameWidth + 5, targetWidth - 2 * frameWidth - 10, targetHeight - 2 * frameWidth - 10);
+            } else if (filterType === 'noir') {
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(0, 0, targetWidth, frameWidth * 2.5);
+                ctx.fillRect(0, targetHeight - frameWidth * 2.5, targetWidth, frameWidth * 2.5);
+            } else if (filterType === 'frost') {
+                ctx.lineWidth = frameWidth;
+                ctx.strokeStyle = 'rgba(173, 216, 230, 0.6)';
+                ctx.strokeRect(frameWidth / 2, frameWidth / 2, targetWidth - frameWidth, targetHeight - frameWidth);
+
+                ctx.font = (targetWidth * 0.12) + "px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = "#ffffff";
+                ctx.fillText("❄️", frameWidth * 1.5, frameWidth * 1.5);
+                ctx.fillText("❄️", targetWidth - frameWidth * 1.5, frameWidth * 1.5);
+                ctx.fillText("❄️", frameWidth * 1.5, targetHeight - frameWidth * 1.5);
+                ctx.fillText("❄️", targetWidth - frameWidth * 1.5, targetHeight - frameWidth * 1.5);
+            } else if (filterType === 'noel') {
+                ctx.lineWidth = frameWidth;
+                ctx.strokeStyle = '#c0392b';
+                ctx.strokeRect(frameWidth / 2, frameWidth / 2, targetWidth - frameWidth, targetHeight - frameWidth);
+                ctx.lineWidth = frameWidth / 2;
+                ctx.strokeStyle = '#27ae60';
+                ctx.strokeRect(frameWidth * 1.2, frameWidth * 1.2, targetWidth - frameWidth * 2.4, targetHeight - frameWidth * 2.4);
+            }
+
+            const base64String = canvas.toDataURL('image/jpeg', 0.6);
+            document.getElementById('selfiePreview').src = base64String;
+            document.getElementById('selfiePreview').classList.remove('hidden');
+            document.getElementById('selfieBase64').value = base64String;
+        }
+
+        // =========================================================================
+        // 7. LƯU / CẬP NHẬT HỒ SƠ: LUÔN ĐẢM BẢO 1 MSSV = 1 CÁ NHÂN (KHÔNG TẠO DÒNG TRÙNG)
+        // =========================================================================
+        async function submitForm(e) {
+            e.preventDefault();
+            const base64Selfie = document.getElementById('selfieBase64').value;
+            if (!base64Selfie) {
+                alert('Vui lòng chụp hoặc chọn một bức ảnh Selfie xác minh bạn nhé!');
+                return;
+            }
+
+            const mssvVal = normalizeMssv(document.getElementById('mssv').value);
+            const nameVal = document.getElementById('name').value.trim();
+            const wishlistVal = document.getElementById('wishlist').value.trim();
+            const blacklistVal = document.getElementById('blacklist').value.trim();
+            const timeVal = new Date().toLocaleString('vi-VN');
+
+            const btn = document.getElementById('submitFormBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span>⏳ Đang đồng bộ hồ sơ cá nhân...</span>';
+            btn.disabled = true;
+
+            const recordPayload = {
+                "mssv": mssvVal,
+                "hoten": nameVal,
+                "thoigian": timeVal,
+                "phongban": base64Selfie,
+                "wishlist": wishlistVal,
+                "blacklist": blacklistVal
+            };
+
+            try {
+                // Kiểm tra trên SheetDB xem MSSV này đã tồn tại chưa để quyết định PATCH (sửa) hay POST (thêm mới)
+                let existingMatch = null;
+                const checkRes = await fetch(SHEETDB_API);
+                let allRows = [];
+                if (checkRes.ok) {
+                    const data = await checkRes.json();
+                    if (Array.isArray(data)) {
+                        allRows = data;
+                        existingMatch = allRows.find(r => normalizeMssv(r.mssv) === mssvVal);
+                    }
+                }
+
+                let response;
+                if (isEditingExistingStudent || existingMatch) {
+                    // ĐÃ TỒN TẠI MSSV -> Cập nhật trực tiếp vào cá nhân đó qua PATCH, tuyệt đối không thêm dòng mới!
+                    const targetKey = (existingMatch && existingMatch.mssv) ? existingMatch.mssv : mssvVal;
+                    response = await fetch(`${SHEETDB_API}/mssv/${encodeURIComponent(targetKey)}`, {
+                        method: 'PATCH',
+                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data: recordPayload })
+                    });
+                } else {
+                    // CHƯA TỒN TẠI -> Tạo cá nhân mới duy nhất
+                    response = await fetch(SHEETDB_API, {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data: [recordPayload] })
+                    });
+                }
+
+                if (!response.ok) {
+                    throw new Error('SheetDB API returned status ' + response.status);
+                }
+
+                await response.json();
+                currentStudentRecord = {
+                    ...(existingMatch || {}),
+                    ...recordPayload
+                };
+                isEditingExistingStudent = true;
+
+                enterEventHub(currentStudentRecord);
+                showToast('🎉 Đã lưu hồ sơ cá nhân & mở Giao Diện Sự Kiện!', '🎉');
+            } catch (error) {
+                console.error('Lỗi khi lưu dữ liệu:', error);
+                alert('Oops! Có lỗi xảy ra khi gửi dữ liệu. Hãy đảm bảo Google Sheet đã có cột "mssv", "hoten", "thoigian", "phongban", "wishlist", "blacklist" nhé!');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function resetWholeForm() {
+            document.getElementById('santaForm').reset();
+            document.getElementById('selfiePreview').classList.add('hidden');
+            document.getElementById('selfieBase64').value = '';
+            document.getElementById('filterToolbar').classList.add('hidden');
+            document.getElementById('cameraBtnLabel').textContent = 'Mở Camera / Chọn Ảnh';
+            originalImgObject = null;
+        }
+
+        // =========================================================================
+        // 8. KHU VỰC ADMIN (BAN TỔ CHỨC - MẬT KHẨU 1234)
+        // =========================================================================
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('adminPassInput').value.trim();
+            const errEl = document.getElementById('adminLoginError');
+
+            if (pass === ADMIN_PASSWORD_DEFAULT) {
+                errEl.classList.add('hidden');
+                document.getElementById('adminPassInput').value = '';
+                showMainView('viewAdminDashboard');
+                showToast('Đã mở khóa Bảng Điều Khiển Ban Tổ Chức!', '🛡️');
+                fetchAdminData();
+            } else {
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        function logoutAdmin() {
+            adminAllRecords = [];
+            showMainView('viewLogin');
+            switchRoleTab('student');
+            showToast('Đã đăng xuất khỏi chế độ Quản trị.', '👋');
+        }
+
+        async function fetchAdminData() {
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="p-10 text-center text-gray-500 font-medium">
+                        ⏳ Đang tải & đồng bộ danh sách cá nhân từ Google Sheets...
+                    </td>
+                </tr>
+            `;
+
+            try {
+                const res = await fetch(SHEETDB_API);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                // Gộp theo MSSV để mỗi MSSV luôn là 1 cá nhân duy nhất
+                adminAllRecords = deduplicateRecordsByMssv(Array.isArray(data) ? data : []);
+                updateAdminStats();
+                renderAdminTable();
+            } catch (err) {
+                console.error('Lỗi tải dữ liệu Admin:', err);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="p-8 text-center text-red-600 font-semibold">
+                            ❌ Không thể tải dữ liệu từ SheetDB. Vui lòng bấm "Làm mới" để thử lại!
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function updateAdminStats() {
+            const total = adminAllRecords.length;
+            const withSelfie = adminAllRecords.filter(r => {
+                const s = getSelfieFromRow(r);
+                return s && s.startsWith('data:image');
+            }).length;
+            const ready = adminAllRecords.filter(r => (r.hoten || '').trim() && (r.wishlist || '').trim()).length;
+
+            document.getElementById('statTotalUsers').textContent = total;
+            document.getElementById('statWithSelfie').textContent = withSelfie;
+            document.getElementById('statReadyMatch').textContent = ready;
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('adminTableBody');
+            const query = (document.getElementById('adminSearchInput').value || '').trim().toLowerCase();
+
+            const filtered = adminAllRecords.filter(row => {
+                if (!query) return true;
+                const mssv = String(row.mssv || '').toLowerCase();
+                const hoten = String(row.hoten || '').toLowerCase();
+                const wish = String(row.wishlist || '').toLowerCase();
+                const black = String(row.blacklist || '').toLowerCase();
+                return mssv.includes(query) || hoten.includes(query) || wish.includes(query) || black.includes(query);
+            });
+
+            document.getElementById('adminFilterCount').textContent = `Hiển thị ${filtered.length} / ${adminAllRecords.length} cá nhân`;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="p-8 text-center text-gray-500">
+                            Không tìm thấy sinh viên nào phù hợp với từ khóa tìm kiếm.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((row, index) => {
+                const selfie = getSelfieFromRow(row);
+                const hasValidImg = selfie && selfie.startsWith('data:image');
+                const mssvDisplay = row.mssv ? escapeHtml(row.mssv) : '<span class="text-xs italic text-gray-400">Chưa có MSSV</span>';
+                const nameDisplay = escapeHtml(row.hoten || '---');
+                const scoreVal = getScoreFromRow(row);
+                const wishDisplay = escapeHtml(row.wishlist || '---');
+                const blackDisplay = escapeHtml(row.blacklist || '---');
+                const timeDisplay = escapeHtml(row.thoigian || '---');
+
+                const imgHtml = hasValidImg
+                    ? `<img src="${selfie}" alt="${nameDisplay}" onclick="openLightboxByIndex(${index})" class="w-14 h-14 object-cover rounded-xl border-2 border-red-500 shadow cursor-pointer hover:scale-105 transition mx-auto" title="Bấm để phóng to">`
+                    : `<div class="w-14 h-14 rounded-xl bg-gray-100 border border-gray-300 flex items-center justify-center text-[10px] text-gray-400 mx-auto">Không ảnh</div>`;
+
+                return `
+                    <tr class="hover:bg-green-50/50 transition">
+                        <td class="p-3.5 text-center font-bold text-gray-500">${index + 1}</td>
+                        <td class="p-3.5 text-center">${imgHtml}</td>
+                        <td class="p-3.5 font-extrabold text-red-700">${mssvDisplay}</td>
+                        <td class="p-3.5 font-bold text-gray-800">${nameDisplay}</td>
+                        <td class="p-3.5 text-center">
+                            <span class="bg-amber-100 text-amber-900 font-extrabold text-xs px-2.5 py-1 rounded-lg border border-amber-300">${scoreVal} PTS</span>
+                        </td>
+                        <td class="p-3.5 text-gray-700 whitespace-pre-line max-w-xs">${wishDisplay}</td>
+                        <td class="p-3.5 text-gray-700 whitespace-pre-line max-w-xs">${blackDisplay}</td>
+                        <td class="p-3.5 text-xs text-gray-500">${timeDisplay}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            window._currentFilteredAdminList = filtered;
+        }
+
+        function openLightboxByIndex(idx) {
+            const list = window._currentFilteredAdminList || adminAllRecords;
+            const row = list[idx];
+            if (!row) return;
+            openLightbox(
+                getSelfieFromRow(row),
+                row.hoten || 'Sinh viên',
+                `MSSV: ${row.mssv || 'Chưa cập nhật'} • Cập nhật: ${row.thoigian || ''}`
+            );
+        }
+
+        function openLightbox(imgSrc, title, subtitle) {
+            if (!imgSrc) return;
+            document.getElementById('lightboxImg').src = imgSrc;
+            document.getElementById('lightboxTitle').textContent = title || '';
+            document.getElementById('lightboxSub').textContent = subtitle || '';
+            document.getElementById('imageLightbox').classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('imageLightbox').classList.add('hidden');
+        }
+
+        // =========================================================================
+        // 9. CÔNG CỤ BỐC THĂM / GHÉP CẶP SECRET SANTA & XUẤT FILE CSV
+        // =========================================================================
+        function openMatchingModal() {
+            if (adminAllRecords.length < 2) {
+                alert('Cần ít nhất 2 cá nhân trong danh sách để thực hiện ghép cặp Secret Santa!');
+                return;
+            }
+            document.getElementById('matchingModal').classList.remove('hidden');
+            if (currentSantaPairs.length === 0) {
+                generateSantaPairs();
+            }
+        }
+
+        function closeMatchingModal() {
+            document.getElementById('matchingModal').classList.add('hidden');
+        }
+
+        function generateSantaPairs() {
+            if (adminAllRecords.length < 2) return;
+
+            const pool = [...adminAllRecords];
+            for (let i = pool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [pool[i], pool[j]] = [pool[j], pool[i]];
+            }
+
+            currentSantaPairs = pool.map((giver, idx) => {
+                const receiver = pool[(idx + 1) % pool.length];
+                return { giver, receiver };
+            });
+
+            const tbody = document.getElementById('matchingTableBody');
+            tbody.innerHTML = currentSantaPairs.map((pair, idx) => {
+                const g = pair.giver;
+                const r = pair.receiver;
+                return `
+                    <tr class="hover:bg-amber-50/40">
+                        <td class="p-3 text-center font-bold text-gray-500">${idx + 1}</td>
+                        <td class="p-3">
+                            <div class="font-bold text-gray-800">${escapeHtml(g.hoten || '---')}</div>
+                            <div class="text-xs text-red-700 font-semibold">MSSV: ${escapeHtml(g.mssv || 'N/A')}</div>
+                        </td>
+                        <td class="p-3 text-center text-lg">🎁➡️</td>
+                        <td class="p-3">
+                            <div class="font-bold text-green-800">${escapeHtml(r.hoten || '---')}</div>
+                            <div class="text-xs text-gray-600 font-semibold">MSSV: ${escapeHtml(r.mssv || 'N/A')}</div>
+                        </td>
+                        <td class="p-3 text-xs space-y-1">
+                            <div><strong class="text-green-700">Wishlist:</strong> ${escapeHtml(r.wishlist || '---')}</div>
+                            <div><strong class="text-red-600">Blacklist:</strong> ${escapeHtml(r.blacklist || '---')}</div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            showToast('🎲 Đã quay số ghép cặp Secret Santa thành công!', '🎲');
+        }
+
+        function exportAdminCSV() {
+            if (adminAllRecords.length === 0) {
+                alert('Chưa có dữ liệu để xuất!');
+                return;
+            }
+            const headers = ['STT', 'MSSV', 'Ho va Ten', 'Diem BXH', 'Thoi gian', 'Wishlist', 'Blacklist'];
+            const rows = adminAllRecords.map((r, i) => [
+                i + 1,
+                r.mssv || '',
+                r.hoten || '',
+                getScoreFromRow(r),
+                r.thoigian || '',
+                r.wishlist || '',
+                r.blacklist || ''
+            ]);
+            downloadCSVFile('Danh_Sach_Secret_Santa_2026.csv', headers, rows);
+        }
+
+        function exportPairsCSV() {
+            if (currentSantaPairs.length === 0) {
+                alert('Hãy bấm Quay Số trước khi xuất file!');
+                return;
+            }
+            const headers = [
+                'STT',
+                'MSSV Nguoi Tang (Santa)',
+                'Ho Ten Nguoi Tang (Santa)',
+                'MSSV Nguoi Nhan (Giftee)',
+                'Ho Ten Nguoi Nhan (Giftee)',
+                'Wishlist Nguoi Nhan',
+                'Blacklist Nguoi Nhan'
+            ];
+            const rows = currentSantaPairs.map((p, i) => [
+                i + 1,
+                p.giver.mssv || '',
+                p.giver.hoten || '',
+                p.receiver.mssv || '',
+                p.receiver.hoten || '',
+                p.receiver.wishlist || '',
+                p.receiver.blacklist || ''
+            ]);
+            downloadCSVFile('Ket_Qua_Boc_Tham_Secret_Santa_2026.csv', headers, rows);
+        }
+
+        function downloadCSVFile(filename, headers, rows) {
+            const escapeCSV = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
+            const csvContent = '\uFEFF' + [
+                headers.map(escapeCSV).join(','),
+                ...rows.map(r => r.map(escapeCSV).join(','))
+            ].join('\r\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+    </script>
+</body>
+</html>
