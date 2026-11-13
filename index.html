@@ -608,6 +608,42 @@
         </div>
     </div>
 
+    <!-- MODAL XEM DANH SÁCH NGƯỜI ĐÃ THẢ TIM BÀI ĐĂNG BẢNG TIN -->
+    <div id="feedLikersModal" class="hidden fixed inset-0 bg-black/75 z-[182] flex items-center justify-center p-3 sm:p-4" onclick="closeFeedLikersModal()">
+        <div class="bg-white rounded-2xl max-w-md w-full max-h-[82vh] flex flex-col shadow-2xl overflow-hidden greeting-card-anim" onclick="event.stopPropagation()">
+            <div class="bg-gradient-to-r from-rose-600 via-red-600 to-rose-700 p-4 text-white flex items-center justify-between gap-2">
+                <div class="min-w-0">
+                    <h3 id="feedLikersTitle" class="text-sm sm:text-base font-black flex items-center gap-1.5">❤️ Danh sách người đã thả tim</h3>
+                    <p id="feedLikersSubtitle" class="text-[11px] text-rose-100 truncate mt-0.5"></p>
+                </div>
+                <button type="button" onclick="closeFeedLikersModal()" class="bg-white/20 hover:bg-white/35 text-white w-8 h-8 rounded-full font-bold transition shrink-0">✕</button>
+            </div>
+            <div id="feedLikersList" class="p-3 sm:p-4 overflow-y-auto custom-scroll space-y-2 flex-1 bg-rose-50/30">
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHƠI MINI-GAME PART 2: DỌN PHÒNG HỌP 204 -->
+    <div id="part2GameModal" class="hidden fixed inset-0 bg-slate-950 z-[195] flex flex-col">
+        <div class="bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 border-b border-teal-500/40 px-3 sm:px-5 py-2.5 flex items-center justify-between gap-2 text-white shrink-0">
+            <div class="flex items-center gap-2 min-w-0">
+                <span class="text-xl sm:text-2xl">🧹</span>
+                <div class="min-w-0">
+                    <p class="text-xs sm:text-sm font-black truncate text-amber-300">Part 2: Đại Chiến Dọn Phòng Họp 204</p>
+                    <p class="text-[10px] sm:text-xs text-teal-200 truncate">Hoàn thành từng Ca để nhận tới +300 PTS Secret Santa</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <span id="part2ModalScorePill" class="hidden sm:inline-flex items-center gap-1 bg-amber-400/20 border border-amber-300/40 text-amber-200 text-xs font-extrabold px-2.5 py-1 rounded-full">⭐ BXH: 150 PTS</span>
+                <span id="part2ModalRewardPill" class="bg-emerald-500/25 border border-emerald-400/40 text-emerald-200 text-[11px] sm:text-xs font-extrabold px-2.5 py-1 rounded-full">🎁 Part 2: 0/300 PTS</span>
+                <button type="button" onclick="closePart2GameModal()" class="bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs sm:text-sm px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1">
+                    <span>✕</span> <span class="hidden sm:inline">Thoát Game</span>
+                </button>
+            </div>
+        </div>
+        <iframe id="part2GameFrame" src="about:blank" title="Mini-Game Dọn Phòng Họp 204" class="flex-1 w-full h-full border-0 bg-slate-950" allow="autoplay"></iframe>
+    </div>
+
     <!-- TRÌNH PHÁT NHẠC GIÁNG SINH -->
     <div class="fixed bottom-3 right-3 z-[100] flex flex-col items-end gap-2">
         <div id="musicOptions" class="hidden bg-slate-900/95 backdrop-blur-md border border-amber-400/40 rounded-2xl p-3.5 shadow-2xl mb-1 w-[calc(100vw-1.5rem)] max-w-[280px] text-white space-y-2.5">
@@ -894,20 +930,21 @@
 
             <!-- THANH CHUYỂN ĐỔI 4 PART SỰ KIỆN -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-5">
-                <button type="button" id="partTab1" onclick="switchEventPart(1)" class="part-tab active font-extrabold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1.5">
-                    <span>🎄</span> <span>Part 1: Gathering</span>
+                <button type="button" id="partTab1" onclick="switchEventPart(1)" class="part-tab active font-extrabold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 flex-wrap">
+                    <span>🎄</span> <span id="partTabTitle1">Part 1: Gathering</span>
+                    <span id="partTabBadge1" class="text-[9px] bg-emerald-600 text-white px-1.5 py-0.5 rounded-full font-bold">Đang mở</span>
                 </button>
-                <button type="button" id="partTab2" onclick="switchEventPart(2)" class="part-tab upcoming font-bold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1">
-                    <span>🤫</span> <span>Part 2</span>
-                    <span class="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp tới</span>
+                <button type="button" id="partTab2" onclick="switchEventPart(2)" class="part-tab upcoming font-bold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1 flex-wrap">
+                    <span>🧹</span> <span id="partTabTitle2">Part 2: Dọn Phòng 204</span>
+                    <span id="partTabBadge2" class="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp tới</span>
                 </button>
-                <button type="button" id="partTab3" onclick="switchEventPart(3)" class="part-tab upcoming font-bold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1">
-                    <span>🧝</span> <span>Part 3</span>
-                    <span class="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp tới</span>
+                <button type="button" id="partTab3" onclick="switchEventPart(3)" class="part-tab upcoming font-bold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1 flex-wrap">
+                    <span>🧝</span> <span id="partTabTitle3">Part 3: The Sneaky Elf</span>
+                    <span id="partTabBadge3" class="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp tới</span>
                 </button>
-                <button type="button" id="partTab4" onclick="switchEventPart(4)" class="part-tab upcoming font-bold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1">
-                    <span>🎁</span> <span>Part 4</span>
-                    <span class="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp tới</span>
+                <button type="button" id="partTab4" onclick="switchEventPart(4)" class="part-tab upcoming font-bold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1 flex-wrap">
+                    <span>🎁</span> <span id="partTabTitle4">Part 4: The Reveal</span>
+                    <span id="partTabBadge4" class="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp tới</span>
                 </button>
             </div>
 
@@ -918,6 +955,14 @@
                 <!-- PART 1: THE GATHERING                                           -->
                 <!-- =============================================================== -->
                 <div id="eventPart1Content" class="space-y-5">
+                    <div id="part1LockedBanner" class="hidden py-8 px-4 max-w-xl mx-auto text-center space-y-4">
+                        <div class="w-20 h-20 bg-amber-100 text-amber-700 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-inner">⏳</div>
+                        <span id="part1StatusBadge" class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase">⏳ Chờ Mở Khóa</span>
+                        <h3 id="part1TitleEl" class="text-2xl font-extrabold text-gray-800">Part 1: Gathering</h3>
+                        <p id="part1DescEl" class="text-xs sm:text-sm text-gray-600"></p>
+                        <div id="part1CountdownBanner" class="bg-slate-900 text-white rounded-2xl p-4 border-2 border-amber-400 shadow-lg space-y-1"></div>
+                    </div>
+                    <div id="part1UnlockedWrapper" class="space-y-5">
 
                     <!-- =========================================================== -->
                     <!-- THANH TAB RIÊNG: TRANG CHÍNH / CÂY THÔNG / BẢNG TIN / CHAT   -->
@@ -1250,7 +1295,7 @@
                                         </h3>
                                         <p class="text-[11px] text-rose-100 flex items-center gap-1.5">
                                             <span class="inline-block w-2 h-2 rounded-full bg-lime-300 animate-pulse"></span>
-                                            <span id="chatHeaderCount">0 tin nhắn</span> • Tự động cập nhật mỗi 10 giây
+                                            <span id="chatHeaderCount">0 tin nhắn</span> • <span id="chatSyncStatusLabel">⚡ Tự động cập nhật nhanh mỗi 5 giây</span>
                                         </p>
                                     </div>
                                     <button type="button" onclick="loadLeaderboardData(true)" class="text-xs bg-white/20 hover:bg-white/30 font-bold px-3 py-1.5 rounded-lg border border-white/30 transition shrink-0">
@@ -1292,6 +1337,7 @@
                         </div>
                     </div>
 
+                    </div>
                 </div>
 
                 <!-- =============================================================== -->
@@ -1299,56 +1345,95 @@
                 <!-- =============================================================== -->
                 <div id="eventPart2Content" class="hidden py-6 px-2 sm:px-4 max-w-3xl mx-auto space-y-6">
                     <div class="text-center space-y-3">
-                        <div class="w-20 h-20 bg-purple-100 text-purple-700 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
-                            🤫
+                        <div class="w-20 h-20 bg-teal-100 text-teal-700 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
+                            🧹
                         </div>
-                        <span class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase">
+                        <span id="part2StatusBadge" class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase">
                             ⏳ Dành Cho Sự Kiện Sắp Tới
                         </span>
-                        <h3 class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 2: The Whisper — Mini-Game Tích Điểm & Đổi Ấn Phẩm</h3>
-                        <p class="text-gray-600 text-xs sm:text-base leading-relaxed">
-                            Tại Chặng 2 sắp mở khóa, bạn sẽ tham gia <strong>Mini-Game Giải Mã Lời Thì Thầm</strong> để tích lũy điểm thưởng <strong>(+300 PTS)</strong> dùng để quy đổi các <strong>Ấn Phẩm Giáng Sinh</strong>. Khi sưu tầm đủ bộ Ấn Phẩm qua Part 2, 3, 4, bạn sẽ đổi được <strong>🎁 1 Món Quà Bí Mật Đặc Biệt từ Ban Tổ Chức (BTC)</strong>!
+                        <h3 id="part2TitleEl" class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 2: Dọn Phòng Họp 204 — Đại Chiến Tổng Vệ Sinh</h3>
+                        <p id="part2DescEl" class="text-gray-600 text-xs sm:text-base leading-relaxed">
+                            Tại Chặng 2, hãy phối hợp cùng bé Poodle trắng <strong>Bông 🐩</strong> tổng vệ sinh Phòng 204 qua 4 Ca trực để tích lũy tới <strong>+300 PTS</strong> vào Bảng Xếp Hạng Secret Santa và quy đổi <strong>Ấn Phẩm Giáng Sinh</strong>!
                         </p>
+                        <div id="part2CountdownBanner" class="hidden max-w-lg mx-auto bg-slate-900 text-white rounded-2xl p-4 border-2 border-amber-400 shadow-lg space-y-1"></div>
+                        <div id="part2UnlockedBar" class="hidden max-w-xl mx-auto bg-gradient-to-r from-emerald-600 to-green-700 text-white rounded-2xl p-4 border-2 border-lime-300 shadow-lg space-y-1.5">
+                            <p class="text-xs sm:text-sm font-black uppercase tracking-wide">🟢 Chặng 2 Đã Chính Thức Mở Khóa!</p>
+                            <p id="part2UnlockedNote" class="text-xs text-emerald-50"></p>
+                            <p class="text-xs font-extrabold text-amber-200">🏆 Điểm tích lũy hiện tại của bạn: <span id="part2MyScoreText">150</span> PTS</p>
+                        </div>
+                    </div>
+
+                    <!-- THẺ KHỞI CHẠY MINI-GAME DỌN PHÒNG HỌP 204 -->
+                    <div id="part2GameLauncherCard" class="bg-gradient-to-br from-slate-900 via-teal-950 to-emerald-950 text-white border-2 border-teal-400/60 rounded-2xl p-4 sm:p-5 shadow-xl overflow-hidden">
+                        <div class="grid grid-cols-1 sm:grid-cols-5 gap-4 items-center">
+                            <div class="sm:col-span-2 relative rounded-xl overflow-hidden border-2 border-teal-300/50 shadow-lg bg-black/40">
+                                <img src="room204.jpg" alt="Sơ đồ Phòng Họp 204" class="w-full h-40 sm:h-44 object-cover" />
+                                <span class="absolute top-2 left-2 bg-sky-600/95 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full shadow">PHÒNG 204</span>
+                                <span class="absolute bottom-2 right-2 bg-slate-900/85 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded-lg border border-amber-400/40">🐩 Hỗ trợ: Poodle Bông</span>
+                            </div>
+                            <div class="sm:col-span-3 space-y-2.5 text-left">
+                                <div class="flex items-center justify-between gap-2 flex-wrap">
+                                    <h4 class="text-base sm:text-lg font-black text-amber-300">🧹 Đại Chiến Dọn Phòng 204</h4>
+                                    <span id="part2RewardProgressBadge" class="text-[11px] bg-emerald-500/25 text-emerald-200 border border-emerald-400/50 font-extrabold px-2.5 py-0.5 rounded-full">🎁 Đã nhận: 0/300 PTS</span>
+                                </div>
+                                <p class="text-xs text-teal-100 leading-relaxed">
+                                    Kéo thả rác vào đúng thùng, chà sạch vết bẩn trên sàn/bảng trắng, chỉnh 3 bảng khẩu hiệu, tắt TV, dựng bình hoa &amp; cùng bé Poodle Bông tiêu diệt lũ gián tinh quái!
+                                </p>
+                                <div class="flex flex-wrap gap-1.5 text-[10px] font-bold">
+                                    <span class="bg-white/10 border border-white/15 px-2 py-1 rounded-lg text-amber-200">Ca 1: +75 PTS</span>
+                                    <span class="bg-white/10 border border-white/15 px-2 py-1 rounded-lg text-amber-200">Ca 2: +150 PTS</span>
+                                    <span class="bg-white/10 border border-white/15 px-2 py-1 rounded-lg text-amber-200">Ca 3: +225 PTS</span>
+                                    <span class="bg-emerald-500/25 border border-emerald-300/40 px-2 py-1 rounded-lg text-emerald-200">Ca 4: Trọn 300 PTS</span>
+                                    <span id="part2GameBestBadge" class="bg-sky-500/25 border border-sky-300/40 px-2 py-1 rounded-lg text-sky-200">🏆 Kỷ lục game: 0đ</span>
+                                </div>
+                                <div class="pt-1 flex flex-col sm:flex-row sm:items-center gap-2">
+                                    <button type="button" id="btnLaunchPart2Game" onclick="openPart2GameModal()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 shadow-lg hover:brightness-105 transition inline-flex items-center justify-center gap-2">
+                                        <span>🚀</span> <span>Chơi Mini-Game Dọn Phòng 204</span>
+                                    </button>
+                                    <span id="part2GameLockNote" class="text-[11px] text-amber-200/90 font-semibold"></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="bg-gradient-to-br from-amber-50 via-white to-red-50 border-2 border-amber-300 rounded-2xl p-4 sm:p-6 shadow-md">
-                        <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
                             <h4 class="text-sm sm:text-base font-extrabold text-red-800 flex items-center gap-1.5">
-                                <span>🎒</span> Trạm Đổi Ấn Phẩm & Quà Bí Mật BTC (Sắp Mở Khóa)
+                                <span>🎒</span> Trạm Đổi Ấn Phẩm &amp; Quà Bí Mật BTC
                             </h4>
-                            <span class="text-[11px] bg-gray-200 text-gray-700 font-bold px-2.5 py-0.5 rounded-full">🔒 Sắp ra mắt</span>
+                            <span id="part2ShopStatusBadge" class="text-[11px] bg-gray-200 text-gray-700 font-bold px-2.5 py-0.5 rounded-full">🔒 Sắp ra mắt</span>
                         </div>
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                            <div class="bg-white p-3 rounded-xl border border-dashed border-amber-400 opacity-80">
+                            <div class="bg-white p-3 rounded-xl border border-dashed border-amber-400">
                                 <div class="text-3xl mb-1">🦌</div>
                                 <p class="text-xs font-extrabold text-gray-800">Ấn Phẩm 1</p>
                                 <p class="text-[10px] text-amber-700 font-semibold">Huy Hiệu Tuần Lộc</p>
-                                <span class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">300 PTS</span>
+                                <span id="part2Item1Status" class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">300 PTS</span>
                             </div>
-                            <div class="bg-white p-3 rounded-xl border border-dashed border-amber-400 opacity-80">
+                            <div class="bg-white p-3 rounded-xl border border-dashed border-amber-400">
                                 <div class="text-3xl mb-1">🔔</div>
                                 <p class="text-xs font-extrabold text-gray-800">Ấn Phẩm 2</p>
                                 <p class="text-[10px] text-amber-700 font-semibold">Chuông Bạc Yêu Tinh</p>
-                                <span class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">500 PTS</span>
+                                <span id="part2Item2Status" class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">500 PTS</span>
                             </div>
-                            <div class="bg-white p-3 rounded-xl border border-dashed border-amber-400 opacity-80">
+                            <div class="bg-white p-3 rounded-xl border border-dashed border-amber-400">
                                 <div class="text-3xl mb-1">🌟</div>
                                 <p class="text-xs font-extrabold text-gray-800">Ấn Phẩm 3</p>
                                 <p class="text-[10px] text-amber-700 font-semibold">Ngôi Sao Bắc Cực</p>
-                                <span class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">700 PTS</span>
+                                <span id="part2Item3Status" class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">700 PTS</span>
                             </div>
                             <div class="bg-gradient-to-b from-red-600 to-red-800 text-white p-3 rounded-xl border-2 border-amber-300 shadow">
                                 <div class="text-3xl mb-1">🎁</div>
                                 <p class="text-xs font-extrabold">Quà Bí Mật BTC</p>
                                 <p class="text-[10px] text-amber-200">Đủ 3 Ấn Phẩm</p>
-                                <span class="inline-block mt-1.5 text-[10px] bg-amber-400 text-red-950 font-black px-2 py-0.5 rounded">Sắp mở</span>
+                                <span id="part2SecretStatus" class="inline-block mt-1.5 text-[10px] bg-amber-400 text-red-950 font-black px-2 py-0.5 rounded">Sắp mở</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="text-center">
                         <button onclick="switchEventPart(1)" class="btn-green px-5 py-2.5 text-xs sm:text-sm inline-flex items-center gap-2">
-                            <span>← Quay lại Part 1 & Bảng Tin Giáng Sinh</span>
+                            <span>← Quay lại Part 1 &amp; Bảng Tin Giáng Sinh</span>
                         </button>
                     </div>
                 </div>
@@ -1357,15 +1442,20 @@
                     <div class="w-20 h-20 bg-green-100 text-green-700 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
                         🧝
                     </div>
-                    <span class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase">
+                    <span id="part3StatusBadge" class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase">
                         ⏳ Dành Cho Sự Kiện Sắp Tới
                     </span>
-                    <h3 class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 3: The Sneaky Elf — Săn Yêu Tinh Tích Điểm Đổi Ấn Phẩm</h3>
-                    <p class="text-gray-600 text-xs sm:text-base leading-relaxed max-w-2xl mx-auto">
+                    <h3 id="part3TitleEl" class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 3: The Sneaky Elf — Săn Yêu Tinh Tích Điểm Đổi Ấn Phẩm</h3>
+                    <p id="part3DescEl" class="text-gray-600 text-xs sm:text-base leading-relaxed max-w-2xl mx-auto">
                         <strong>Mini-Game Chặng 3</strong> dành cho sự kiện sắp tới! Săn tìm các chú Yêu Tinh Giáng Sinh tinh quái để tích lũy <strong>+500 PTS</strong>, dùng điểm đổi trọn bộ <strong>Ấn Phẩm Sự Kiện</strong> và mở khóa <strong>🎁 Món Quà Bí Mật từ Ban Tổ Chức</strong>!
                     </p>
+                    <div id="part3CountdownBanner" class="hidden max-w-lg mx-auto bg-slate-900 text-white rounded-2xl p-4 border-2 border-amber-400 shadow-lg space-y-1"></div>
+                    <div id="part3UnlockedBar" class="hidden max-w-xl mx-auto bg-gradient-to-r from-emerald-600 to-green-700 text-white rounded-2xl p-4 border-2 border-lime-300 shadow-lg space-y-1.5">
+                        <p class="text-xs sm:text-sm font-black uppercase tracking-wide">🟢 Chặng 3 Đã Chính Thức Mở Khóa!</p>
+                        <p id="part3UnlockedNote" class="text-xs text-emerald-50"></p>
+                    </div>
                     <button onclick="switchEventPart(1)" class="btn-green px-5 py-2.5 text-xs sm:text-sm inline-flex items-center gap-2">
-                        <span>← Quay lại Part 1 & Bảng Tin Giáng Sinh</span>
+                        <span>← Quay lại Part 1 &amp; Bảng Tin Giáng Sinh</span>
                     </button>
                 </div>
 
@@ -1373,15 +1463,20 @@
                     <div class="w-20 h-20 bg-red-100 text-red-700 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
                         🎁
                     </div>
-                    <span class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase">
+                    <span id="part4StatusBadge" class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase">
                         ⏳ Dành Cho Sự Kiện Sắp Tới
                     </span>
-                    <h3 class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 4: The Reveal — Đổi Quà Bí Mật BTC & Đêm Hội Mở Quà</h3>
-                    <p class="text-gray-600 text-xs sm:text-base leading-relaxed max-w-2xl mx-auto">
+                    <h3 id="part4TitleEl" class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 4: The Reveal — Đổi Quà Bí Mật BTC &amp; Đêm Hội Mở Quà</h3>
+                    <p id="part4DescEl" class="text-gray-600 text-xs sm:text-base leading-relaxed max-w-2xl mx-auto">
                         Chặng cuối dành cho sự kiện sắp tới: Quy đổi các <strong>Ấn Phẩm</strong> đã sưu tầm từ Mini-Game lấy <strong>Món Quà Bí Mật của BTC</strong>, công bố các cặp Secret Santa và vinh danh <strong>Top Bảng Xếp Hạng Chung Cuộc</strong>!
                     </p>
+                    <div id="part4CountdownBanner" class="hidden max-w-lg mx-auto bg-slate-900 text-white rounded-2xl p-4 border-2 border-amber-400 shadow-lg space-y-1"></div>
+                    <div id="part4UnlockedBar" class="hidden max-w-xl mx-auto bg-gradient-to-r from-emerald-600 to-green-700 text-white rounded-2xl p-4 border-2 border-lime-300 shadow-lg space-y-1.5">
+                        <p class="text-xs sm:text-sm font-black uppercase tracking-wide">🟢 Chặng 4 Đã Chính Thức Mở Khóa!</p>
+                        <p id="part4UnlockedNote" class="text-xs text-emerald-50"></p>
+                    </div>
                     <button onclick="switchEventPart(1)" class="btn-green px-5 py-2.5 text-xs sm:text-sm inline-flex items-center gap-2">
-                        <span>← Quay lại Part 1 & Bảng Tin Giáng Sinh</span>
+                        <span>← Quay lại Part 1 &amp; Bảng Tin Giáng Sinh</span>
                     </button>
                 </div>
 
@@ -1444,6 +1539,28 @@
                         <p class="text-[10px] sm:text-xs text-gray-500 font-bold uppercase">BTC Đã Duyệt</p>
                         <p id="statApprovedGift" class="text-lg sm:text-2xl font-extrabold text-emerald-700">0</p>
                     </div>
+                </div>
+            </div>
+
+            <!-- CÀI ĐẶT NGÀY/GIỜ MỞ CÁC CHẶNG SỰ KIỆN (PART 1 - 4) -->
+            <div class="bg-gradient-to-br from-amber-50 via-white to-red-50 rounded-2xl border-2 border-amber-300 p-4 sm:p-5 shadow-md space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-amber-200 pb-3">
+                    <div>
+                        <span class="inline-block bg-amber-400 text-red-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase mb-1">
+                            🗓️ Lịch Trình Sự Kiện Đồng Bộ Toàn Hệ Thống
+                        </span>
+                        <h3 class="text-base sm:text-lg font-extrabold text-gray-800 flex items-center gap-1.5">
+                            <span>⏰ Cài Đặt Ngày Giờ Mở Khóa Part 1 – 2 – 3 – 4</span>
+                        </h3>
+                        <p class="text-xs text-gray-600 mt-0.5">
+                            Chọn mở ngay, tạm khóa, hoặc hẹn ngày giờ tự động mở cho từng Part — áp dụng chung cho tất cả PC &amp; Điện thoại!
+                        </p>
+                    </div>
+                    <button type="button" id="btnSaveScheduleConfig" onclick="saveAdminEventSchedule()" class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow transition flex items-center gap-1.5 whitespace-nowrap">
+                        <span>💾 Lưu Lịch Sự Kiện &amp; Đồng Bộ Ngay</span>
+                    </button>
+                </div>
+                <div id="adminScheduleGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                 </div>
             </div>
 
@@ -1609,6 +1726,8 @@
         let _lastDbFetchAt = 0;
         let _lastDbError = '';
         let _isLoadingBoardData = false;
+        let _hasFullFetchedOnce = false;
+        const _rowImageCache = new Map();
 
         function isGoogleAppsScript(url = SHEETDB_API) {
             return String(url || '').includes('script.google.com');
@@ -1617,6 +1736,18 @@
         function isSqlServerApi(url = SHEETDB_API) {
             const u = String(url || '').toLowerCase();
             return u.includes('/api/v1/secret-santa') || u.includes('localhost:8080') || u.includes('127.0.0.1:8080');
+        }
+
+        function hydrateImageCacheFromRows(rows) {
+            if (!Array.isArray(rows)) return;
+            rows.forEach(r => {
+                if (!r) return;
+                const k = String(r.hoten || '').trim();
+                const pb = String(r.phongban || '');
+                if (k && pb.startsWith('data:image')) {
+                    _rowImageCache.set(k, pb);
+                }
+            });
         }
 
         function getLocalCachedRows() {
@@ -1632,11 +1763,16 @@
 
         function saveLocalCachedRows(rows) {
             try {
-                if (Array.isArray(rows)) {
+                if (!Array.isArray(rows)) return;
+                // Không bao giờ lưu placeholder __IMG_REF__ vào cache bộ nhớ cục bộ
+                const hasUnresolved = rows.some(r => String((r && r.phongban) || '').startsWith('__IMG_REF__:'));
+                if (!hasUnresolved) {
                     localStorage.setItem(STORAGE_KEY_CACHED_ROWS, JSON.stringify(rows));
                 }
             } catch (e) {}
         }
+
+        hydrateImageCacheFromRows(getLocalCachedRows());
 
         function describeDbError(err, targetUrl = SHEETDB_API) {
             const msg = String((err && err.message) || err || '');
@@ -1685,16 +1821,21 @@
         }
 
         // =========================================================================
-        // CÁC HÀM TRUY XUẤT CƠ SỞ DỮ LIỆU ĐỒNG BỘ 100% (KHÔNG GHI ẢO LỆCH MÁY)
+        // CÁC HÀM TRUY XUẤT CƠ SỞ DỮ LIỆU ĐỒNG BỘ 100% (TỐI ƯU CHẾ ĐỘ FAST LITE)
         // =========================================================================
-        async function dbFetchRows() {
+        async function dbFetchRows(options = {}) {
             const ctrl = new AbortController();
             const timer = setTimeout(() => ctrl.abort(), 10000);
+            const canUseFast = Boolean(options && options.fast)
+                && (_rowImageCache.size > 0 || _hasFullFetchedOnce)
+                && (isGoogleAppsScript() || isSqlServerApi());
+
             try {
-                // Chỉ gắn query chống cache cho Apps Script / SQL Server Local (SheetDB dùng query param làm filter cột)
-                const fetchUrl = (isGoogleAppsScript() || isSqlServerApi())
-                    ? `${SHEETDB_API}${SHEETDB_API.includes('?') ? '&' : '?'}_t=${Date.now()}`
-                    : SHEETDB_API;
+                let fetchUrl = SHEETDB_API;
+                if (isGoogleAppsScript() || isSqlServerApi()) {
+                    const sep = SHEETDB_API.includes('?') ? '&' : '?';
+                    fetchUrl = `${SHEETDB_API}${sep}_t=${Date.now()}${canUseFast ? '&mode=fast' : ''}`;
+                }
 
                 const res = await fetch(fetchUrl, {
                     method: 'GET',
@@ -1722,6 +1863,29 @@
                 }
 
                 const rows = Array.isArray(data) ? data : [];
+                let needFullHydration = false;
+                rows.forEach(r => {
+                    if (!r) return;
+                    const k = String(r.hoten || '').trim();
+                    const pb = String(r.phongban || '');
+                    if (pb.startsWith('__IMG_REF__:')) {
+                        const expectedLen = parseInt(pb.split(':')[1], 10) || 0;
+                        const cachedImg = _rowImageCache.get(k);
+                        if (cachedImg && (!expectedLen || cachedImg.length === expectedLen)) {
+                            r.phongban = cachedImg;
+                        } else {
+                            needFullHydration = true;
+                        }
+                    } else if (k && pb.startsWith('data:image')) {
+                        _rowImageCache.set(k, pb);
+                    }
+                });
+
+                if (canUseFast && needFullHydration) {
+                    return await dbFetchRows({ fast: false });
+                }
+
+                _hasFullFetchedOnce = true;
                 _lastDbFetchAt = Date.now();
                 _lastDbError = '';
                 saveLocalCachedRows(rows);
@@ -2009,6 +2173,24 @@
         let adminAllRecords = [];
         let currentSantaPairs = [];
         let activeImageTarget = 'reg';
+        let _pendingOptimisticChats = [];
+        let _pendingOptimisticPosts = [];
+        let _eventConfigRawHotens = [];
+        let _lastUsersSig = '';
+        let _lastFeedSig = '';
+        let _lastChatSig = '';
+        let _lastCheckinSig = '';
+        let _lastCfgSig = '';
+
+        const DEFAULT_EVENT_SCHEDULE = {
+            parts: {
+                1: { title: 'Part 1: Gathering', mode: 'open', openAt: '', note: 'Check-in quà, Cây Thông, Bảng Tin & Kênh Chat Chung' },
+                2: { title: 'Part 2: Dọn Phòng 204', mode: 'locked', openAt: '', note: 'Mini-Game Đại Chiến Dọn Phòng Họp 204 (+300 PTS) & Đổi Ấn Phẩm' },
+                3: { title: 'Part 3: The Sneaky Elf', mode: 'locked', openAt: '', note: 'Săn Yêu Tinh Giáng Sinh tích điểm (+500 PTS) & Sưu tầm Ấn Phẩm' },
+                4: { title: 'Part 4: The Reveal', mode: 'locked', openAt: '', note: 'Đổi Quà Bí Mật BTC, Công Bố Cặp Secret Santa & Đêm Hội Mở Quà' }
+            }
+        };
+        let eventScheduleConfig = JSON.parse(JSON.stringify(DEFAULT_EVENT_SCHEDULE));
 
         // =========================================================================
         // KHO LỜI CHÚC GIÁNG SINH BÍ MẬT & ĐỘC BẢN (KHÔNG AI TRÙNG AI, CHỈ RIÊNG MÌNH XEM)
@@ -2557,6 +2739,581 @@
                     content.classList.add('hidden');
                 }
             });
+            updatePartCountdowns();
+        }
+
+        // ---------------- Quản lý Lịch Mở Khóa Part 1-2-3-4 (Admin & Realtime) ----------------
+        function parsePartOpenTimestamp(openAtStr) {
+            const s = String(openAtStr || '').trim();
+            if (!s) return 0;
+            const m = s.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?/);
+            if (m) {
+                return new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0)).getTime();
+            }
+            const parsed = new Date(s).getTime();
+            return isNaN(parsed) ? 0 : parsed;
+        }
+
+        function formatVietnamDateTime(openAtStr) {
+            const ts = parsePartOpenTimestamp(openAtStr);
+            if (!ts) return 'Chưa đặt lịch';
+            const d = new Date(ts);
+            const pad = (x) => String(x).padStart(2, '0');
+            return `${pad(d.getHours())}:${pad(d.getMinutes())} ngày ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+        }
+
+        function formatShortDateBadge(openAtStr) {
+            const ts = parsePartOpenTimestamp(openAtStr);
+            if (!ts) return 'Hẹn lịch';
+            const d = new Date(ts);
+            const pad = (x) => String(x).padStart(2, '0');
+            return `Mở ${pad(d.getDate())}/${pad(d.getMonth() + 1)} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+
+        function formatCountdownText(ms) {
+            if (ms <= 0) return '00:00:00';
+            const totalSec = Math.floor(ms / 1000);
+            const days = Math.floor(totalSec / 86400);
+            const hrs = Math.floor((totalSec % 86400) / 3600);
+            const mins = Math.floor((totalSec % 3600) / 60);
+            const secs = totalSec % 60;
+            const pad = (x) => String(x).padStart(2, '0');
+            return (days > 0 ? `${days} ngày ` : '') + `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+        }
+
+        function mergeEventScheduleConfig(rawJson) {
+            const base = JSON.parse(JSON.stringify(DEFAULT_EVENT_SCHEDULE));
+            if (!rawJson) return base;
+            try {
+                const obj = typeof rawJson === 'string' ? JSON.parse(rawJson) : rawJson;
+                const srcParts = (obj && obj.parts) ? obj.parts : {};
+                [1, 2, 3, 4].forEach(n => {
+                    const p = srcParts[n] || srcParts[String(n)];
+                    if (p && typeof p === 'object') {
+                        base.parts[n] = {
+                            title: String(p.title || base.parts[n].title).trim() || base.parts[n].title,
+                            mode: ['open', 'auto', 'locked'].includes(p.mode) ? p.mode : base.parts[n].mode,
+                            openAt: String(p.openAt || ''),
+                            note: String(p.note !== undefined ? p.note : base.parts[n].note)
+                        };
+                    }
+                });
+            } catch (e) {}
+            return base;
+        }
+
+        function getPartUnlockState(partNum) {
+            const cfg = (eventScheduleConfig && eventScheduleConfig.parts && eventScheduleConfig.parts[partNum])
+                || DEFAULT_EVENT_SCHEDULE.parts[partNum];
+            const openTs = parsePartOpenTimestamp(cfg.openAt);
+            const now = Date.now();
+
+            if (cfg.mode === 'open') {
+                return { unlocked: true, mode: 'open', openAt: cfg.openAt, openTs, remainingMs: 0, title: cfg.title, note: cfg.note };
+            }
+            if (cfg.mode === 'auto' && openTs > 0) {
+                const remaining = Math.max(0, openTs - now);
+                return { unlocked: now >= openTs, mode: 'auto', openAt: cfg.openAt, openTs, remainingMs: remaining, title: cfg.title, note: cfg.note };
+            }
+            return { unlocked: false, mode: cfg.mode || 'locked', openAt: cfg.openAt, openTs, remainingMs: 0, title: cfg.title, note: cfg.note };
+        }
+
+        function applyEventScheduleUI() {
+            const myScore = currentStudentRecord ? getScoreFromRow(currentStudentRecord) : 150;
+            [1, 2, 3, 4].forEach(n => {
+                const st = getPartUnlockState(n);
+                const tabTitle = document.getElementById('partTabTitle' + n);
+                const tabBadge = document.getElementById('partTabBadge' + n);
+                if (tabTitle) tabTitle.textContent = st.title;
+                if (tabBadge) {
+                    if (st.unlocked) {
+                        tabBadge.textContent = 'Đang mở';
+                        tabBadge.className = 'text-[9px] bg-emerald-600 text-white px-1.5 py-0.5 rounded-full font-bold';
+                    } else if (st.mode === 'auto' && st.openTs > 0) {
+                        tabBadge.textContent = formatShortDateBadge(st.openAt);
+                        tabBadge.className = 'text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold';
+                    } else {
+                        tabBadge.textContent = 'Đang khóa';
+                        tabBadge.className = 'text-[9px] bg-slate-500 text-white px-1.5 py-0.5 rounded-full font-bold';
+                    }
+                }
+
+                const titleEl = document.getElementById('part' + n + 'TitleEl');
+                const descEl = document.getElementById('part' + n + 'DescEl');
+                const statusBadge = document.getElementById('part' + n + 'StatusBadge');
+                const countdownBanner = document.getElementById('part' + n + 'CountdownBanner');
+                const unlockedBar = document.getElementById('part' + n + 'UnlockedBar');
+                const unlockedNote = document.getElementById('part' + n + 'UnlockedNote');
+
+                if (titleEl) titleEl.textContent = st.title;
+                if (descEl && st.note) descEl.textContent = st.note;
+
+                if (n === 1) {
+                    const lockedWrap = document.getElementById('part1LockedBanner');
+                    const unlockedWrap = document.getElementById('part1UnlockedWrapper');
+                    if (lockedWrap && unlockedWrap) {
+                        lockedWrap.classList.toggle('hidden', st.unlocked);
+                        unlockedWrap.classList.toggle('hidden', !st.unlocked);
+                    }
+                }
+
+                if (statusBadge) {
+                    if (st.unlocked) {
+                        statusBadge.textContent = '🟢 Đang Mở Khóa Sự Kiện';
+                        statusBadge.className = 'inline-block bg-emerald-100 text-emerald-800 border border-emerald-400 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase';
+                    } else if (st.mode === 'auto' && st.openTs > 0) {
+                        statusBadge.textContent = `⏳ Tự Động Mở Lúc ${formatVietnamDateTime(st.openAt)}`;
+                        statusBadge.className = 'inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase';
+                    } else {
+                        statusBadge.textContent = '🔒 Ban Tổ Chức Đang Tạm Khóa';
+                        statusBadge.className = 'inline-block bg-slate-200 text-slate-700 border border-slate-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase';
+                    }
+                }
+
+                if (unlockedBar) {
+                    unlockedBar.classList.toggle('hidden', !st.unlocked);
+                    if (unlockedNote) unlockedNote.textContent = st.note || 'Chúc bạn tham gia chặng sự kiện thật vui vẻ!';
+                }
+                if (countdownBanner) {
+                    countdownBanner.classList.toggle('hidden', st.unlocked);
+                }
+            });
+
+            // Cập nhật trạng thái điểm đổi Ấn Phẩm ở Part 2
+            const p2 = getPartUnlockState(2);
+            const scoreEl = document.getElementById('part2MyScoreText');
+            const shopBadge = document.getElementById('part2ShopStatusBadge');
+            if (scoreEl) scoreEl.textContent = myScore;
+            if (shopBadge) {
+                if (p2.unlocked) {
+                    shopBadge.textContent = '🟢 Đang mở đổi điểm';
+                    shopBadge.className = 'text-[11px] bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-300';
+                } else {
+                    shopBadge.textContent = '🔒 Sắp ra mắt';
+                    shopBadge.className = 'text-[11px] bg-gray-200 text-gray-700 font-bold px-2.5 py-0.5 rounded-full';
+                }
+            }
+            const tiers = [
+                { id: 'part2Item1Status', need: 300 },
+                { id: 'part2Item2Status', need: 500 },
+                { id: 'part2Item3Status', need: 700 }
+            ];
+            tiers.forEach(t => {
+                const el = document.getElementById(t.id);
+                if (!el) return;
+                if (!p2.unlocked) {
+                    el.textContent = `${t.need} PTS`;
+                    el.className = 'inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded';
+                } else if (myScore >= t.need) {
+                    el.textContent = `✅ Đủ điểm (${t.need} PTS)`;
+                    el.className = 'inline-block mt-1.5 text-[10px] bg-emerald-600 text-white font-black px-2 py-0.5 rounded';
+                } else {
+                    el.textContent = `Cần thêm ${t.need - myScore} PTS`;
+                    el.className = 'inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded';
+                }
+            });
+            const secEl = document.getElementById('part2SecretStatus');
+            if (secEl) {
+                secEl.textContent = p2.unlocked ? (myScore >= 700 ? '🎁 Sẵn sàng đổi' : 'Đang tích điểm') : 'Sắp mở';
+            }
+
+            const p2Earned = Math.min(300, Math.max(0, Number(currentStudentRecord && currentStudentRecord.part2Pts) || 0));
+            const p2Best = Math.max(0, Number(currentStudentRecord && currentStudentRecord.part2Best) || 0);
+            const p2ProgEl = document.getElementById('part2RewardProgressBadge');
+            const p2BestEl = document.getElementById('part2GameBestBadge');
+            const p2LaunchBtn = document.getElementById('btnLaunchPart2Game');
+            const p2LockNote = document.getElementById('part2GameLockNote');
+            const p2ModalScore = document.getElementById('part2ModalScorePill');
+            const p2ModalReward = document.getElementById('part2ModalRewardPill');
+
+            if (p2ProgEl) p2ProgEl.textContent = `🎁 Đã nhận: ${p2Earned}/300 PTS`;
+            if (p2BestEl) p2BestEl.textContent = `🏆 Kỷ lục game: ${p2Best.toLocaleString('vi-VN')}đ`;
+            if (p2ModalScore) p2ModalScore.textContent = `⭐ BXH: ${myScore} PTS`;
+            if (p2ModalReward) p2ModalReward.textContent = `🎁 Part 2: ${p2Earned}/300 PTS`;
+
+            if (p2LaunchBtn) {
+                p2LaunchBtn.disabled = !p2.unlocked;
+                if (p2.unlocked) {
+                    p2LaunchBtn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 shadow-lg hover:brightness-105 transition inline-flex items-center justify-center gap-2 cursor-pointer';
+                    p2LaunchBtn.innerHTML = p2Earned >= 300
+                        ? '<span>🏆</span> <span>Chơi Lại Để Phá Kỷ Lục Phòng 204</span>'
+                        : '<span>🚀</span> <span>Chơi Mini-Game Dọn Phòng 204</span>';
+                } else {
+                    p2LaunchBtn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm bg-slate-700/80 text-slate-300 border border-slate-500/50 cursor-not-allowed inline-flex items-center justify-center gap-2 opacity-80';
+                    p2LaunchBtn.innerHTML = '<span>🔒</span> <span>Chờ Mở Khóa Part 2</span>';
+                }
+            }
+            if (p2LockNote) {
+                p2LockNote.textContent = p2.unlocked
+                    ? (p2Earned >= 300 ? '✅ Bạn đã nhận tối đa +300 PTS từ Part 2!' : `Hoàn thành các Ca còn lại để nhận thêm +${300 - p2Earned} PTS`)
+                    : (p2.mode === 'auto' && p2.openTs > 0 ? `Mở lúc ${formatVietnamDateTime(p2.openAt)}` : 'Admin chưa mở khóa chặng này.');
+            }
+
+            updatePartCountdowns();
+        }
+
+        let _isSavingPart2Progress = false;
+        let _queuedPart2Progress = null;
+
+        function openPart2GameModal() {
+            const p2 = getPartUnlockState(2);
+            if (!p2.unlocked) {
+                showToast('🔒 Mini-Game Part 2 sẽ mở theo lịch của Ban Tổ Chức!', '⏳');
+                return;
+            }
+            const modal = document.getElementById('part2GameModal');
+            const frame = document.getElementById('part2GameFrame');
+            if (!modal || !frame) return;
+            applyEventScheduleUI();
+            frame.src = 'Part2.html?embed=1';
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePart2GameModal() {
+            const modal = document.getElementById('part2GameModal');
+            const frame = document.getElementById('part2GameFrame');
+            if (frame) {
+                try { frame.contentWindow && frame.contentWindow.postMessage({ type: 'SECRET_SANTA_STOP_GAME' }, '*'); } catch (e) {}
+                frame.src = 'about:blank';
+            }
+            if (modal) modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        async function handlePart2GameProgress(data) {
+            if (!data || !currentStudentRecord || !getPartUnlockState(2).unlocked) return;
+            const levelCleared = Math.min(4, Math.max(0, parseInt(data.levelCleared, 10) || 0));
+            const gameScore = Math.max(0, parseInt(data.gameScore, 10) || 0);
+            if (levelCleared <= 0 && gameScore <= 0) return;
+
+            if (_isSavingPart2Progress) {
+                _queuedPart2Progress = {
+                    levelCleared: Math.max((_queuedPart2Progress && _queuedPart2Progress.levelCleared) || 0, levelCleared),
+                    gameScore: Math.max((_queuedPart2Progress && _queuedPart2Progress.gameScore) || 0, gameScore)
+                };
+                return;
+            }
+
+            const prevPart2Pts = Math.min(300, Math.max(0, Number(currentStudentRecord.part2Pts) || 0));
+            const prevBest = Math.max(0, Number(currentStudentRecord.part2Best) || 0);
+            const targetPart2Pts = Math.min(300, Math.max(prevPart2Pts, levelCleared * 75));
+            const nextBest = Math.max(prevBest, gameScore);
+            const deltaPts = Math.max(0, targetPart2Pts - prevPart2Pts);
+
+            if (deltaPts === 0 && nextBest <= prevBest) return;
+
+            _isSavingPart2Progress = true;
+            try {
+                const mssvVal = normalizeMssv(currentStudentRecord.mssv);
+                const wishData = buildUniqueWishData(currentStudentRecord, allSheetRecordsCache);
+                const newTotalScore = getScoreFromRow(currentStudentRecord) + deltaPts;
+                const nextMeta = { ...currentStudentRecord, part2Pts: targetPart2Pts, part2Best: nextBest };
+
+                const payload = {
+                    "mssv": mssvVal,
+                    "hoten": formatHotenForSheet(mssvVal, currentStudentRecord.hoten),
+                    "thoigian": formatTimeForSheet(mssvVal, wishData.wishId, newTotalScore, nextMeta),
+                    "phongban": currentStudentRecord.phongban || '',
+                    "wishlist": currentStudentRecord.wishlist || '',
+                    "blacklist": currentStudentRecord.blacklist || ''
+                };
+
+                const updated = await saveOrUpdateStudentToSheet(payload, currentStudentRecord);
+                updated.part2Pts = targetPart2Pts;
+                updated.part2Best = nextBest;
+                currentStudentRecord = updated;
+                try { localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(updated)); } catch (e) {}
+
+                renderPart1UserInfo(updated, allSheetRecordsCache);
+                applyEventScheduleUI();
+
+                if (deltaPts > 0) {
+                    showToast(`🧹 Hoàn thành Ca ${levelCleared}/4 Dọn Phòng 204! Cộng +${deltaPts} PTS (BXH: ${newTotalScore} PTS)`, '🏆');
+                } else if (nextBest > prevBest) {
+                    showToast(`🏆 Kỷ lục Mini-Game Phòng 204 mới: ${nextBest.toLocaleString('vi-VN')} điểm!`, '🧹');
+                }
+                loadLeaderboardData(false, { fast: _hasFullFetchedOnce });
+            } catch (err) {
+                console.warn('Lỗi lưu điểm Part 2:', err.message);
+            } finally {
+                _isSavingPart2Progress = false;
+                if (_queuedPart2Progress) {
+                    const queued = _queuedPart2Progress;
+                    _queuedPart2Progress = null;
+                    handlePart2GameProgress(queued);
+                }
+            }
+        }
+
+        window.addEventListener('message', (ev) => {
+            if (!ev || !ev.data || typeof ev.data !== 'object') return;
+            if (ev.data.type === 'SECRET_SANTA_PART2_PROGRESS') {
+                handlePart2GameProgress(ev.data);
+            } else if (ev.data.type === 'SECRET_SANTA_PART2_CLOSE') {
+                closePart2GameModal();
+            }
+        });
+
+        function updatePartCountdowns() {
+            let needRefresh = false;
+            [1, 2, 3, 4].forEach(n => {
+                const banner = document.getElementById('part' + n + 'CountdownBanner');
+                if (!banner) return;
+                const st = getPartUnlockState(n);
+                if (st.unlocked) {
+                    if (!banner.classList.contains('hidden')) needRefresh = true;
+                    return;
+                }
+                if (st.mode === 'auto' && st.openTs > 0) {
+                    banner.innerHTML = `
+                        <p class="text-[11px] uppercase tracking-wider text-amber-300 font-bold">⏰ Đếm Ngược Tự Động Mở Khóa</p>
+                        <p class="text-xl sm:text-2xl font-black text-lime-300 font-mono tracking-wider">${formatCountdownText(st.remainingMs)}</p>
+                        <p class="text-xs text-slate-300">Mở chính thức vào: <strong>${escapeHtml(formatVietnamDateTime(st.openAt))}</strong></p>
+                    `;
+                } else {
+                    banner.innerHTML = `
+                        <p class="text-xs font-extrabold text-amber-300">🔒 Ban Tổ Chức chưa công bố giờ mở khóa cho chặng này</p>
+                        <p class="text-[11px] text-slate-300">Hãy theo dõi thông báo từ BTC trên Bảng Tin &amp; Kênh Chat nhé!</p>
+                    `;
+                }
+            });
+            if (needRefresh) {
+                applyEventScheduleUI();
+            }
+        }
+
+        function getSchedulePreviewHtml(mode, openAt) {
+            const openTs = parsePartOpenTimestamp(openAt);
+            if (mode === 'open') {
+                return '<span class="text-[10px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">🟢 Đang mở</span>';
+            }
+            if (mode === 'auto' && openTs > 0) {
+                if (Date.now() >= openTs) {
+                    return `<span class="text-[10px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">🟢 Đã đến giờ (${formatShortDateBadge(openAt)})</span>`;
+                }
+                return `<span class="text-[10px] font-black bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">⏳ ${formatShortDateBadge(openAt)}</span>`;
+            }
+            return '<span class="text-[10px] font-black bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full">🔒 Tạm khóa</span>';
+        }
+
+        function updateAdminSchedulePreview(n) {
+            const modeEl = document.getElementById('schedMode_' + n);
+            const openAtEl = document.getElementById('schedOpenAt_' + n);
+            const badgeEl = document.getElementById('schedPreviewBadge_' + n);
+            if (!modeEl || !openAtEl || !badgeEl) return;
+            badgeEl.innerHTML = getSchedulePreviewHtml(modeEl.value, openAtEl.value);
+        }
+
+        function onAdminScheduleDateInput(n) {
+            const modeEl = document.getElementById('schedMode_' + n);
+            const openAtEl = document.getElementById('schedOpenAt_' + n);
+            if (modeEl && openAtEl && openAtEl.value && modeEl.value === 'locked') {
+                modeEl.value = 'auto';
+            }
+            updateAdminSchedulePreview(n);
+        }
+
+        function renderAdminScheduleControls() {
+            const grid = document.getElementById('adminScheduleGrid');
+            if (!grid) return;
+            const icons = { 1: '🎄', 2: '🤫', 3: '🧝', 4: '🎁' };
+
+            grid.innerHTML = [1, 2, 3, 4].map(n => {
+                const cfg = (eventScheduleConfig && eventScheduleConfig.parts && eventScheduleConfig.parts[n])
+                    || DEFAULT_EVENT_SCHEDULE.parts[n];
+                return `
+                    <div class="bg-white rounded-xl border border-amber-200 p-3.5 shadow-sm space-y-2.5">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs sm:text-sm font-black text-red-800 flex items-center gap-1.5">
+                                <span>${icons[n]}</span> Chặng ${n} (Part ${n})
+                            </span>
+                            <span id="schedPreviewBadge_${n}">${getSchedulePreviewHtml(cfg.mode, cfg.openAt)}</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-600 mb-0.5">Tên hiển thị</label>
+                                <input type="text" id="schedTitle_${n}" value="${escapeHtml(cfg.title)}" class="w-full px-2.5 py-1.5 rounded-lg border border-gray-300 text-xs font-bold focus:outline-none focus:border-red-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-600 mb-0.5">Trạng thái mở</label>
+                                <select id="schedMode_${n}" onchange="updateAdminSchedulePreview(${n})" class="w-full px-2.5 py-1.5 rounded-lg border border-gray-300 text-xs font-bold bg-white focus:outline-none focus:border-red-500">
+                                    <option value="open" ${cfg.mode === 'open' ? 'selected' : ''}>🔓 Mở ngay lập tức</option>
+                                    <option value="auto" ${cfg.mode === 'auto' ? 'selected' : ''}>⏰ Hẹn ngày giờ tự mở</option>
+                                    <option value="locked" ${cfg.mode === 'locked' ? 'selected' : ''}>🔒 Tạm khóa (Chưa mở)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-600 mb-0.5">Ngày &amp; Giờ mở (nếu Hẹn giờ)</label>
+                                <input type="datetime-local" id="schedOpenAt_${n}" value="${escapeHtml(cfg.openAt)}" oninput="onAdminScheduleDateInput(${n})" class="w-full px-2.5 py-1.5 rounded-lg border border-gray-300 text-xs focus:outline-none focus:border-red-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-600 mb-0.5">Mô tả / Hướng dẫn chặng</label>
+                                <input type="text" id="schedNote_${n}" value="${escapeHtml(cfg.note)}" placeholder="VD: Bắt đầu chơi lúc 19h tối..." class="w-full px-2.5 py-1.5 rounded-lg border border-gray-300 text-xs focus:outline-none focus:border-red-500">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function saveAdminEventSchedule() {
+            const nextConfig = { parts: {} };
+            for (const n of [1, 2, 3, 4]) {
+                const title = (document.getElementById('schedTitle_' + n)?.value || '').trim() || DEFAULT_EVENT_SCHEDULE.parts[n].title;
+                const mode = document.getElementById('schedMode_' + n)?.value || 'locked';
+                const openAt = (document.getElementById('schedOpenAt_' + n)?.value || '').trim();
+                const note = (document.getElementById('schedNote_' + n)?.value || '').trim();
+
+                if (mode === 'auto' && !parsePartOpenTimestamp(openAt)) {
+                    alert(`Bạn đã chọn "⏰ Hẹn ngày giờ tự mở" cho Part ${n} nhưng chưa chọn ngày giờ!\n\n👉 Vui lòng chọn Ngày & Giờ mở khóa cho Part ${n} hoặc đổi sang "Mở ngay" / "Tạm khóa".`);
+                    return;
+                }
+                nextConfig.parts[n] = { title, mode, openAt, note };
+            }
+
+            const btn = document.getElementById('btnSaveScheduleConfig');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.innerHTML = '<span>⏳ Đang lưu đồng bộ...</span>';
+                btn.disabled = true;
+            }
+
+            const payload = {
+                hoten: 'EVENT_CONFIG | SCHEDULE',
+                thoigian: getFormattedNowStr(),
+                phongban: '',
+                wishlist: JSON.stringify(nextConfig),
+                blacklist: 'SYSTEM_CONFIG'
+            };
+
+            try {
+                let updated = false;
+                if (_eventConfigRawHotens.length > 0) {
+                    const patchRes = await dbPatchRow('hoten', 'EVENT_CONFIG | SCHEDULE', payload);
+                    if (patchRes && patchRes.ok) updated = true;
+                }
+                if (!updated) {
+                    await dbInsertRow(payload);
+                }
+                eventScheduleConfig = nextConfig;
+                _lastCfgSig = JSON.stringify(nextConfig);
+                applyEventScheduleUI();
+                showToast('✅ Đã lưu lịch mở khóa Part 1–4 lên toàn bộ hệ thống!', '🗓️');
+                await fetchAdminData();
+            } catch (err) {
+                console.error(err);
+                alert(describeDbError(err));
+            } finally {
+                if (btn) {
+                    btn.innerHTML = origHtml;
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        // ---------------- Phân tích & Hiển thị Danh Sách Người Đã Tim Bảng Tin ----------------
+        function parseFeedLikes(blacklistStr) {
+            const raw = String(blacklistStr || '');
+            const likesMatch = raw.match(/LIKES:(\d+)/i);
+            const parsedNum = likesMatch ? parseInt(likesMatch[1], 10) : 0;
+            const baseMatch = raw.match(/BASE:(\d+)/i);
+            let likedBy = [];
+            const jsonMatch = raw.match(/\|JSON:(\[[\s\S]*\])/i);
+            if (jsonMatch) {
+                try {
+                    const arr = JSON.parse(jsonMatch[1]);
+                    if (Array.isArray(arr)) {
+                        likedBy = arr.filter(x => x && (x.m || x.n)).map(x => ({
+                            m: normalizeMssv(x.m || ''),
+                            n: String(x.n || x.m || 'Thành viên'),
+                            t: String(x.t || '')
+                        }));
+                    }
+                } catch (e) {}
+            }
+            const legacyBase = baseMatch
+                ? parseInt(baseMatch[1], 10)
+                : (jsonMatch ? Math.max(0, parsedNum - likedBy.length) : parsedNum);
+            const likes = Math.max(legacyBase + likedBy.length, parsedNum, likedBy.length);
+            return { likes, legacyBase, likedBy };
+        }
+
+        function serializeFeedLikes(legacyBase, likedBy) {
+            const cleanList = (Array.isArray(likedBy) ? likedBy : []).map(x => ({
+                m: normalizeMssv(x.m || ''),
+                n: String(x.n || x.m || 'Thành viên'),
+                t: String(x.t || '')
+            }));
+            const base = Math.max(0, parseInt(legacyBase, 10) || 0);
+            const total = Math.max(0, base + cleanList.length);
+            return `LIKES:${total}|BASE:${base}|JSON:${JSON.stringify(cleanList)}`;
+        }
+
+        function openFeedLikersModal(idx) {
+            const post = publicFeedPosts[idx];
+            if (!post) return;
+            const modal = document.getElementById('feedLikersModal');
+            const titleEl = document.getElementById('feedLikersTitle');
+            const subEl = document.getElementById('feedLikersSubtitle');
+            const listEl = document.getElementById('feedLikersList');
+            if (!modal || !listEl) return;
+
+            const likers = Array.isArray(post.likedBy) ? post.likedBy : [];
+            const total = post.likes || likers.length;
+            if (titleEl) titleEl.textContent = `❤️ ${total} lượt thả tim`;
+            if (subEl) subEl.textContent = `Bài viết của ${post.authorName} (${post.mssv})`;
+
+            const avatarByMssv = new Map();
+            allSheetRecordsCache.forEach(u => {
+                if (u.mssv && u.phongban && u.phongban.startsWith('data:image')) {
+                    avatarByMssv.set(normalizeMssv(u.mssv), u.phongban);
+                }
+            });
+
+            if (likers.length === 0 && (post.legacyBase || 0) === 0) {
+                listEl.innerHTML = `
+                    <div class="text-center py-8 text-gray-500 text-xs space-y-1">
+                        <div class="text-3xl">🤍</div>
+                        <p class="font-bold text-gray-700">Chưa có ai thả tim bài đăng này.</p>
+                        <p>Hãy là người đầu tiên thả tim để cổ vũ nhé!</p>
+                    </div>
+                `;
+            } else {
+                const itemsHtml = likers.map(u => {
+                    const av = avatarByMssv.get(normalizeMssv(u.m))
+                        || ('https://placehold.co/64x64/e11d48/ffffff?text=' + encodeURIComponent(u.m || '❤'));
+                    const isMe = currentStudentRecord && normalizeMssv(currentStudentRecord.mssv) === normalizeMssv(u.m);
+                    return `
+                        <div class="flex items-center justify-between gap-2.5 p-2.5 rounded-xl bg-white border ${isMe ? 'border-rose-300 bg-rose-50/40' : 'border-gray-200'} shadow-xs">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <img src="${av}" class="w-9 h-9 rounded-full object-cover border border-rose-400 shrink-0">
+                                <div class="min-w-0">
+                                    <p class="text-xs font-extrabold text-gray-800 truncate">${escapeHtml(u.n)}${isMe ? ' <span class="text-rose-600">(Bạn)</span>' : ''}</p>
+                                    <div class="flex items-center gap-1.5 text-[10px] text-gray-500">
+                                        <span class="font-bold text-rose-700">${escapeHtml(u.m || '---')}</span>
+                                        ${u.t ? `<span>• ${escapeHtml(u.t)}</span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="text-base shrink-0">❤️</span>
+                        </div>
+                    `;
+                }).join('');
+                const legacyNote = (post.legacyBase || 0) > 0
+                    ? `<p class="text-[11px] text-center text-gray-500 bg-white border border-dashed border-gray-300 rounded-xl p-2 mt-2">+ ${post.legacyBase} lượt thả tim trước khi bật hiển thị danh sách tên.</p>`
+                    : '';
+                listEl.innerHTML = itemsHtml + legacyNote;
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeFeedLikersModal() {
+            const modal = document.getElementById('feedLikersModal');
+            if (modal) modal.classList.add('hidden');
         }
 
         function toggleAdminPassVisibility() {
@@ -2667,12 +3424,16 @@
             return normMssv ? `${normMssv} - ${clean}` : clean;
         }
 
-        function formatTimeForSheet(mssv, wishId = '', score = 150) {
+        function formatTimeForSheet(mssv, wishId = '', score = 150, existing = null) {
             const timeClean = getFormattedNowStr();
             const parts = [timeClean];
             if (normalizeMssv(mssv)) parts.push(normalizeMssv(mssv));
             if (wishId) parts.push(wishId);
             if (score) parts.push(`${score}PTS`);
+            const p2 = existing ? (parseInt(existing.part2Pts, 10) || 0) : 0;
+            const b2 = existing ? (parseInt(existing.part2Best, 10) || 0) : 0;
+            if (p2 > 0) parts.push(`P2:${p2}`);
+            if (b2 > 0) parts.push(`B2:${b2}`);
             return parts.join(' | ');
         }
 
@@ -2685,6 +3446,8 @@
             let cleanTime = rawThoigian;
             let extractedWishId = '';
             let extractedScore = parseInt(rawRow.diem, 10) || 0;
+            let extractedPart2Pts = 0;
+            let extractedPart2Best = 0;
 
             const bracketMatch = rawHoten.match(/^\[([^\]]+)\]\s*(.*)$/);
             if (bracketMatch) {
@@ -2707,6 +3470,10 @@
                         extractedWishId = seg;
                     } else if (/^\d+PTS$/.test(seg)) {
                         extractedScore = parseInt(seg, 10);
+                    } else if (/^P2:\d+$/.test(seg)) {
+                        extractedPart2Pts = parseInt(seg.slice(3), 10) || 0;
+                    } else if (/^B2:\d+$/.test(seg)) {
+                        extractedPart2Best = parseInt(seg.slice(3), 10) || 0;
                     } else if (/^[A-Z0-9]{3,15}$/.test(seg) && !extractedMssv) {
                         extractedMssv = seg;
                     }
@@ -2725,6 +3492,8 @@
                 thoigian: cleanTime,
                 wishId: extractedWishId,
                 diem: extractedScore,
+                part2Pts: extractedPart2Pts,
+                part2Best: extractedPart2Best,
                 _rawHoten: rawRow.hoten || '',
                 _rawThoigian: rawThoigian,
                 phongban: rawRow.phongban || rawRow.selfie || '',
@@ -2753,13 +3522,18 @@
             const checkinTempMap = new Map();
             const feedTempList = [];
             const chatTempList = [];
+            let latestConfigJson = '';
+            const configHotens = [];
 
             rawRows.forEach(raw => {
                 if (!raw) return;
                 const h = String(raw.hoten || '').trim();
                 const t = String(raw.thoigian || '').trim();
 
-                if (h.startsWith('CHECKIN_GIFT |')) {
+                if (h.startsWith('EVENT_CONFIG |')) {
+                    configHotens.push(h);
+                    if (raw.wishlist) latestConfigJson = String(raw.wishlist);
+                } else if (h.startsWith('CHECKIN_GIFT |')) {
                     const parts = h.split('|').map(s => s.trim());
                     const mssv = normalizeMssv(parts[1] || '');
                     const authorName = parts[2] || '';
@@ -2800,8 +3574,15 @@
                     const timeParts = t.split('|').map(s => s.trim());
                     const cleanTime = timeParts[0] || t;
                     if (!postId) postId = timeParts[1] || t;
-                    const likesMatch = String(raw.blacklist || '').match(/LIKES:(\d+)/i);
-                    const likes = likesMatch ? parseInt(likesMatch[1], 10) : 1;
+                    let likeInfo = parseFeedLikes(raw.blacklist);
+                    const pendingLike = window._pendingLikeOverrides && window._pendingLikeOverrides.get(postId);
+                    if (pendingLike) {
+                        if (String(raw.blacklist || '') === pendingLike.rawStr || Date.now() > pendingLike.until) {
+                            window._pendingLikeOverrides.delete(postId);
+                        } else {
+                            likeInfo = { likes: pendingLike.likes, legacyBase: pendingLike.legacyBase, likedBy: pendingLike.likedBy };
+                        }
+                    }
 
                     feedTempList.push({
                         postId,
@@ -2810,7 +3591,9 @@
                         thoigian: cleanTime,
                         image: raw.phongban || '',
                         caption: raw.wishlist || '',
-                        likes,
+                        likes: likeInfo.likes,
+                        legacyBase: likeInfo.legacyBase,
+                        likedBy: likeInfo.likedBy,
                         _rawHoten: h,
                         _rawThoigian: t
                     });
@@ -2835,9 +3618,22 @@
                 }
             });
 
+            _eventConfigRawHotens = Array.from(new Set(configHotens));
+            if (latestConfigJson) {
+                eventScheduleConfig = mergeEventScheduleConfig(latestConfigJson);
+            }
+
+            // Giữ các bài đăng/tin nhắn vừa bấm gửi (optimistic) chưa kịp đồng bộ xong từ server
+            const nowMs = Date.now();
+            const confirmedPostIds = new Set(feedTempList.map(p => p.postId));
+            _pendingOptimisticPosts = _pendingOptimisticPosts.filter(p => !confirmedPostIds.has(p.postId) && nowMs < (p._expiresAt || 0));
+
+            const confirmedChatIds = new Set(chatTempList.map(m => m.msgId));
+            _pendingOptimisticChats = _pendingOptimisticChats.filter(m => !confirmedChatIds.has(m.msgId) && nowMs < (m._expiresAt || 0));
+
             giftCheckinMap = checkinTempMap;
-            publicFeedPosts = feedTempList.reverse(); // Bài mới nhất lên đầu
-            publicChatMessages = chatTempList;        // Tin nhắn theo thứ tự thời gian
+            publicFeedPosts = [..._pendingOptimisticPosts, ...feedTempList.reverse()]; // Bài mới nhất lên đầu
+            publicChatMessages = [...chatTempList, ..._pendingOptimisticChats];        // Tin nhắn theo thứ tự thời gian
 
             const parsedList = normalRows.map(parseSheetRow).filter(p => p && (p.mssv || p.hoten || p.phongban));
             const nameToMssv = new Map();
@@ -3343,9 +4139,11 @@
                 markFeedSeen();
             }
             updateHubBadges();
+            scheduleNextAutoSync();
 
-            if (currentStudentRecord && (Date.now() - _lastDbFetchAt > 15000)) {
-                loadLeaderboardData(tab === 'chat');
+            const minStaleMs = (tab === 'chat' || tab === 'feed') ? 3500 : 12000;
+            if (currentStudentRecord && (Date.now() - _lastDbFetchAt > minStaleMs)) {
+                loadLeaderboardData(tab === 'chat', { fast: true });
             }
         }
 
@@ -3595,31 +4393,47 @@
             const msgText = input.value.trim();
             if (!msgText) return;
 
-            const btn = document.getElementById('btnSendChat');
-            const origText = btn.textContent;
-            btn.textContent = '...';
-            btn.disabled = true;
-
             const mssv = normalizeMssv(currentStudentRecord.mssv);
             const msgId = 'MSG_' + Date.now() + '_' + Math.floor(Math.random() * 900 + 100);
+            const nowStr = getFormattedNowStr();
+            const rawHoten = `CHAT_MSG | ${msgId} | ${mssv} | ${currentStudentRecord.hoten}`;
             const payload = {
-                "hoten": `CHAT_MSG | ${msgId} | ${mssv} | ${currentStudentRecord.hoten}`,
-                "thoigian": getFormattedNowStr(),
+                "hoten": rawHoten,
+                "thoigian": nowStr,
                 "phongban": "",
                 "wishlist": msgText,
                 "blacklist": "PUBLIC_CHAT"
             };
 
+            // Optimistic UI: Hiện tin nhắn ngay lập tức (<10ms) & cho phép gõ tiếp không bị khóa ô nhập
+            input.value = '';
+            input.focus();
+            const optimisticMsg = {
+                msgId,
+                mssv,
+                authorName: currentStudentRecord.hoten,
+                thoigian: nowStr,
+                message: msgText,
+                _rawHoten: rawHoten,
+                _rawThoigian: nowStr,
+                _optimistic: true,
+                _expiresAt: Date.now() + 20000
+            };
+            _pendingOptimisticChats.push(optimisticMsg);
+            publicChatMessages.push(optimisticMsg);
+            renderChatMessages(true);
+
             try {
                 await dbInsertRow(payload);
-                input.value = '';
-                await loadLeaderboardData(true);
+                optimisticMsg._optimistic = false;
+                loadLeaderboardData(false, { fast: true });
             } catch (err) {
                 console.error(err);
+                _pendingOptimisticChats = _pendingOptimisticChats.filter(m => m.msgId !== msgId);
+                publicChatMessages = publicChatMessages.filter(m => m.msgId !== msgId);
+                renderChatMessages(false);
+                if (!input.value) input.value = msgText;
                 showToast(describeDbError(err), '⚠️');
-            } finally {
-                btn.textContent = origText;
-                btn.disabled = false;
             }
         }
 
@@ -3628,6 +4442,8 @@
             if (!box) return;
             updateHubBadges();
             if (window._currentHubTab === 'chat') renderChatMemberList();
+
+            const wasNearBottom = (box.scrollHeight - box.scrollTop - box.clientHeight) < 90;
 
             if (publicChatMessages.length === 0) {
                 box.innerHTML = `
@@ -3654,14 +4470,16 @@
                 const isMe = currentStudentRecord && normalizeMssv(currentStudentRecord.mssv) === normalizeMssv(msg.mssv);
                 const avatar = avatarByMssv.get(normalizeMssv(msg.mssv))
                     || ('https://placehold.co/64x64/b91c1c/ffffff?text=' + encodeURIComponent(msg.mssv || 'U'));
+                const sendingTag = msg._optimistic ? '<span class="text-[9px] text-amber-600 font-bold">⏳ Đang gửi...</span>' : '';
 
                 if (isMe) {
                     return `
-                        <div class="flex flex-col items-end">
+                        <div class="flex flex-col items-end ${msg._optimistic ? 'opacity-85' : ''}">
                             <div class="flex items-center gap-1.5 mb-0.5">
+                                ${sendingTag}
                                 <span class="text-[10px] text-gray-400">${escapeHtml(msg.thoigian)}</span>
                                 <span class="text-[10px] font-bold text-red-700">Bạn (${escapeHtml(msg.mssv)})</span>
-                                <button onclick="deleteChatMessageByIndex(${idx})" class="text-[10px] text-gray-400 hover:text-red-600" title="Xóa tin nhắn">✕</button>
+                                ${msg._optimistic ? '' : `<button onclick="deleteChatMessageByIndex(${idx})" class="text-[10px] text-gray-400 hover:text-red-600" title="Xóa tin nhắn">✕</button>`}
                             </div>
                             <div class="bg-red-600 text-white text-xs sm:text-sm px-3.5 py-2 rounded-2xl rounded-tr-xs max-w-[85%] shadow-sm break-words">
                                 ${escapeHtml(msg.message)}
@@ -3671,7 +4489,7 @@
                 } else {
                     return `
                         <div class="flex items-start gap-2">
-                            <img src="${avatar}" class="w-8 h-8 rounded-full object-cover border border-red-400 shrink-0 mt-1">
+                            <img src="${avatar}" decoding="async" class="w-8 h-8 rounded-full object-cover border border-red-400 shrink-0 mt-1">
                             <div class="flex flex-col items-start max-w-[82%]">
                                 <div class="flex items-center gap-1.5 mb-0.5">
                                     <span class="text-[11px] font-extrabold text-gray-800">${escapeHtml(msg.authorName)}</span>
@@ -3687,7 +4505,7 @@
                 }
             }).join('');
 
-            if (scrollToBottom) {
+            if (scrollToBottom || wasNearBottom) {
                 box.scrollTop = box.scrollHeight;
             }
         }
@@ -3746,27 +4564,54 @@
 
             const mssv = normalizeMssv(currentStudentRecord.mssv);
             const postId = 'POST_' + Date.now() + '_' + Math.floor(Math.random() * 900 + 100);
+            const nowStr = getFormattedNowStr();
+            const rawHoten = `POST_FEED | ${postId} | ${mssv} | ${currentStudentRecord.hoten}`;
+            const rawThoigian = `${nowStr} | ${postId}`;
             const payload = {
-                "hoten": `POST_FEED | ${postId} | ${mssv} | ${currentStudentRecord.hoten}`,
-                "thoigian": `${getFormattedNowStr()} | ${postId}`,
+                "hoten": rawHoten,
+                "thoigian": rawThoigian,
                 "phongban": imgB64 || '',
                 "wishlist": caption,
-                "blacklist": "LIKES:1"
+                "blacklist": "LIKES:0|BASE:0|JSON:[]"
             };
+
+            // Optimistic UI: Hiện bài đăng ngay lên đầu Bảng Tin trong tích tắc
+            const optimisticPost = {
+                postId,
+                mssv,
+                authorName: currentStudentRecord.hoten,
+                thoigian: nowStr,
+                image: imgB64 || '',
+                caption,
+                likes: 0,
+                legacyBase: 0,
+                likedBy: [],
+                _rawHoten: rawHoten,
+                _rawThoigian: rawThoigian,
+                _optimistic: true,
+                _expiresAt: Date.now() + 25000
+            };
+            _pendingOptimisticPosts.unshift(optimisticPost);
+            publicFeedPosts.unshift(optimisticPost);
+            if (imgB64) _rowImageCache.set(rawHoten, imgB64);
+
+            document.getElementById('feedCaptionInput').value = '';
+            document.getElementById('feedImageBase64').value = '';
+            document.getElementById('feedImagePreview').classList.add('hidden');
+            document.getElementById('feedImageFile').value = '';
+            renderPublicFeed();
+            switchHubTab('feed');
 
             try {
                 await dbInsertRow(payload);
-
-                document.getElementById('feedCaptionInput').value = '';
-                document.getElementById('feedImageBase64').value = '';
-                document.getElementById('feedImagePreview').classList.add('hidden');
-                document.getElementById('feedImageFile').value = '';
-
-                await loadLeaderboardData();
+                optimisticPost._optimistic = false;
                 showToast('🚀 Đã đăng bài lên Bảng Tin Giáng Sinh thành công!', '📸');
-                switchEventPart(3);
+                loadLeaderboardData(false, { fast: true });
             } catch (err) {
                 console.error(err);
+                _pendingOptimisticPosts = _pendingOptimisticPosts.filter(p => p.postId !== postId);
+                publicFeedPosts = publicFeedPosts.filter(p => p.postId !== postId);
+                renderPublicFeed();
                 alert(describeDbError(err));
             } finally {
                 btn.innerHTML = origText;
@@ -3787,7 +4632,7 @@
                     <div class="bg-gray-50 border border-dashed border-gray-300 rounded-2xl p-8 text-center">
                         <div class="text-4xl mb-2">🎄</div>
                         <p class="text-sm font-bold text-gray-700">Chưa có bài đăng nào trên Bảng Tin Giáng Sinh!</p>
-                        <p class="text-xs text-gray-500 mt-1">Hãy là người đầu tiên đăng ảnh & lời nhắn mở màn mùa lễ hội năm nay nhé!</p>
+                        <p class="text-xs text-gray-500 mt-1">Hãy là người đầu tiên đăng ảnh &amp; lời nhắn mở màn mùa lễ hội năm nay nhé!</p>
                     </div>
                 `;
                 return;
@@ -3800,41 +4645,57 @@
                 }
             });
 
+            const myMssv = currentStudentRecord ? normalizeMssv(currentStudentRecord.mssv) : '';
+
             container.innerHTML = publicFeedPosts.map((post, idx) => {
                 const authorAvatar = avatarByMssv.get(normalizeMssv(post.mssv))
                     || ('https://placehold.co/80x80/b91c1c/ffffff?text=' + encodeURIComponent(post.mssv || 'Santa'));
                 const hasPostImg = post.image && post.image.startsWith('data:image');
-                const isMyPost = currentStudentRecord && normalizeMssv(currentStudentRecord.mssv) === normalizeMssv(post.mssv);
+                const isMyPost = myMssv && myMssv === normalizeMssv(post.mssv);
+                const likers = Array.isArray(post.likedBy) ? post.likedBy : [];
+                const iLiked = Boolean(myMssv && likers.some(u => normalizeMssv(u.m) === myMssv));
+                const totalLikes = post.likes || 0;
+
+                let likersSummaryText = 'Chưa có lượt tim';
+                if (likers.length === 1) {
+                    likersSummaryText = `${escapeHtml(likers[0].n)} đã tim`;
+                } else if (likers.length > 1) {
+                    likersSummaryText = `${escapeHtml(likers[0].n)} và ${likers.length - 1} người khác`;
+                } else if (totalLikes > 0) {
+                    likersSummaryText = `${totalLikes} lượt tim`;
+                }
 
                 return `
-                    <div class="bg-white rounded-2xl border border-gray-200 shadow-md overflow-hidden break-inside-avoid mb-4 hover:shadow-xl transition">
+                    <div class="bg-white rounded-2xl border border-gray-200 shadow-md overflow-hidden break-inside-avoid mb-4 hover:shadow-xl transition ${post._optimistic ? 'opacity-90 ring-2 ring-amber-300' : ''}">
                         <div class="p-3.5 flex items-center justify-between gap-2 border-b border-gray-100">
                             <div class="flex items-center gap-2.5 min-w-0">
-                                <img src="${authorAvatar}" class="w-10 h-10 rounded-full object-cover border-2 border-red-500 shrink-0">
+                                <img src="${authorAvatar}" decoding="async" class="w-10 h-10 rounded-full object-cover border-2 border-red-500 shrink-0">
                                 <div class="min-w-0">
                                     <div class="flex items-center gap-1.5 flex-wrap">
                                         <span class="font-extrabold text-gray-800 text-xs sm:text-sm truncate">${escapeHtml(post.authorName)}</span>
                                         <span class="bg-red-50 text-red-700 border border-red-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full">${escapeHtml(post.mssv || '')}</span>
                                     </div>
-                                    <p class="text-[10px] text-gray-400">${escapeHtml(post.thoigian)}</p>
+                                    <p class="text-[10px] text-gray-400">${post._optimistic ? '⏳ Đang đồng bộ...' : escapeHtml(post.thoigian)}</p>
                                 </div>
                             </div>
-                            ${isMyPost ? `<button onclick="deleteFeedPostByIndex(${idx})" class="text-xs bg-red-50 hover:bg-red-600 text-red-600 hover:text-white font-bold px-2.5 py-1 rounded-lg transition" title="Xóa bài viết">🗑️ Xóa</button>` : ''}
+                            ${isMyPost && !post._optimistic ? `<button onclick="deleteFeedPostByIndex(${idx})" class="text-xs bg-red-50 hover:bg-red-600 text-red-600 hover:text-white font-bold px-2.5 py-1 rounded-lg transition" title="Xóa bài viết">🗑️ Xóa</button>` : ''}
                         </div>
                         <div class="p-3.5">
                             <p class="text-xs sm:text-sm text-gray-800 whitespace-pre-line leading-relaxed">${escapeHtml(post.caption)}</p>
                         </div>
                         ${hasPostImg ? `
                             <div class="px-3.5 pb-3">
-                                <img src="${post.image}" onclick="openFeedImageByIndex(${idx})" class="w-full max-h-[460px] object-cover rounded-xl border border-gray-200 cursor-pointer hover:opacity-95 transition">
+                                <img src="${post.image}" loading="lazy" decoding="async" onclick="openFeedImageByIndex(${idx})" class="w-full max-h-[460px] object-cover rounded-xl border border-gray-200 cursor-pointer hover:opacity-95 transition">
                             </div>
                         ` : ''}
-                        <div class="px-3.5 py-2.5 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-                            <button onclick="likeFeedPost(${idx})" class="inline-flex items-center gap-1.5 text-xs font-extrabold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-3 py-1 rounded-full transition">
-                                <span>❤️ Thả tim</span>
-                                <span>(${post.likes || 1})</span>
+                        <div class="px-3.5 py-2.5 bg-gray-50 border-t border-gray-100 flex items-center justify-between gap-2 flex-wrap">
+                            <button type="button" onclick="likeFeedPost(${idx})" class="inline-flex items-center gap-1.5 text-xs font-extrabold ${iLiked ? 'bg-rose-600 text-white border-rose-600 shadow-sm' : 'text-rose-600 bg-rose-50 hover:bg-rose-100 border-rose-200'} border px-3 py-1 rounded-full transition">
+                                <span>${iLiked ? '💖 Đã tim' : '❤️ Thả tim'}</span>
+                                <span>(${totalLikes})</span>
                             </button>
-                            <span class="text-[11px] text-gray-400 font-medium">🎄 Secret Santa 2026</span>
+                            <button type="button" onclick="openFeedLikersModal(${idx})" class="text-[11px] font-bold ${isMyPost && totalLikes > 0 ? 'text-rose-700 bg-rose-100/80 border border-rose-200 px-2.5 py-1 rounded-full hover:bg-rose-200' : 'text-gray-600 hover:text-rose-700 underline-offset-2 hover:underline'} transition truncate max-w-full">
+                                👥 ${likersSummaryText}${totalLikes > 0 ? ' ▸' : ''}
+                            </button>
                         </div>
                     </div>
                 `;
@@ -3850,11 +4711,42 @@
         async function likeFeedPost(idx) {
             const post = publicFeedPosts[idx];
             if (!post) return;
-            post.likes = (post.likes || 1) + 1;
+            if (!currentStudentRecord || !currentStudentRecord.mssv) {
+                showToast('Vui lòng đăng nhập để thả tim bài viết!', 'ℹ️');
+                return;
+            }
+
+            const myMssv = normalizeMssv(currentStudentRecord.mssv);
+            const curList = Array.isArray(post.likedBy) ? [...post.likedBy] : [];
+            const existIdx = curList.findIndex(u => normalizeMssv(u.m) === myMssv);
+            if (existIdx >= 0) {
+                curList.splice(existIdx, 1);
+            } else {
+                curList.unshift({
+                    m: myMssv,
+                    n: currentStudentRecord.hoten || myMssv,
+                    t: getFormattedNowStr()
+                });
+            }
+
+            const legacyBase = post.legacyBase || 0;
+            const serialized = serializeFeedLikes(legacyBase, curList);
+            post.likedBy = curList;
+            post.likes = legacyBase + curList.length;
+
+            if (!window._pendingLikeOverrides) window._pendingLikeOverrides = new Map();
+            window._pendingLikeOverrides.set(post.postId, {
+                likes: post.likes,
+                legacyBase,
+                likedBy: curList,
+                rawStr: serialized,
+                until: Date.now() + 8000
+            });
+
             renderPublicFeed();
 
             try {
-                await dbPatchRow('hoten', post._rawHoten, { blacklist: `LIKES:${post.likes}` });
+                await dbPatchRow('hoten', post._rawHoten, { blacklist: serialized });
             } catch (e) {
                 console.warn('Like sync failed:', e);
             }
@@ -3965,7 +4857,7 @@
                 const payload = {
                     "mssv": mssvVal,
                     "hoten": formatHotenForSheet(mssvVal, nameVal),
-                    "thoigian": formatTimeForSheet(mssvVal, uniqueWishId, scoreVal),
+                    "thoigian": formatTimeForSheet(mssvVal, uniqueWishId, scoreVal, existing),
                     "phongban": selfieVal,
                     "wishlist": wishVal,
                     "blacklist": blackVal
@@ -3987,15 +4879,27 @@
         }
 
         function enterPart1Screen(record, preloadedList = null) {
-            renderPart1UserInfo(record, preloadedList || allSheetRecordsCache);
+            const initialList = preloadedList || (allSheetRecordsCache.length > 0 ? allSheetRecordsCache : null);
+            renderPart1UserInfo(record, initialList || allSheetRecordsCache);
             showPage('pageEvent');
+            applyEventScheduleUI();
+            ensureScheduleTicker();
+            scheduleNextAutoSync();
             switchEventPart(1);
-            if (preloadedList) {
-                renderLeaderboard(preloadedList);
-                renderChristmasTreePyramid(preloadedList);
+            if (initialList) {
+                renderLeaderboard(initialList);
+                renderChristmasTreePyramid(initialList);
                 renderUserGiftCheckinState();
                 renderPublicFeed();
                 renderChatMessages(true);
+            }
+            if (preloadedList) {
+                const sigs = buildSyncSignatures(preloadedList);
+                _lastUsersSig = sigs.usersSig;
+                _lastCheckinSig = sigs.checkinSig;
+                _lastFeedSig = sigs.feedSig;
+                _lastChatSig = sigs.chatSig;
+                _lastCfgSig = sigs.cfgSig;
             } else {
                 loadLeaderboardData(true);
             }
@@ -4045,7 +4949,7 @@
             const payload = {
                 "mssv": mssvVal,
                 "hoten": formatHotenForSheet(mssvVal, nameVal),
-                "thoigian": formatTimeForSheet(mssvVal, wishData.wishId, scoreVal),
+                "thoigian": formatTimeForSheet(mssvVal, wishData.wishId, scoreVal, currentStudentRecord),
                 "phongban": selfieVal,
                 "wishlist": wishVal,
                 "blacklist": blackVal
@@ -4080,8 +4984,93 @@
             showToast('Đã đăng xuất khỏi tài khoản.', '👋');
         }
 
+        let _autoSyncTimer = null;
+        let _scheduleTickerInterval = null;
+        let _lastScheduleUnlockKey = '';
+
+        function getCurrentScheduleUnlockKey() {
+            return [1, 2, 3, 4].map(p => getPartUnlockState(p).unlocked ? '1' : '0').join('');
+        }
+
+        function ensureScheduleTicker() {
+            if (_scheduleTickerInterval) return;
+            _lastScheduleUnlockKey = getCurrentScheduleUnlockKey();
+            _scheduleTickerInterval = setInterval(() => {
+                const pageEvent = document.getElementById('pageEvent');
+                if (!document.hidden && pageEvent && !pageEvent.classList.contains('hidden')) {
+                    const nextKey = getCurrentScheduleUnlockKey();
+                    if (nextKey !== _lastScheduleUnlockKey) {
+                        _lastScheduleUnlockKey = nextKey;
+                        applyEventScheduleUI();
+                    } else if (typeof updatePartCountdowns === 'function') {
+                        updatePartCountdowns();
+                    }
+                }
+            }, 1000);
+        }
+
+        function getRecommendedSyncIntervalMs() {
+            const pageEvent = document.getElementById('pageEvent');
+            if (!currentStudentRecord || !pageEvent || pageEvent.classList.contains('hidden')) {
+                return 45000;
+            }
+            if (window._currentHubTab === 'chat') return 5000;
+            if (window._currentHubTab === 'feed') return 12000;
+            return 30000;
+        }
+
+        function scheduleNextAutoSync() {
+            if (_autoSyncTimer) {
+                clearTimeout(_autoSyncTimer);
+                _autoSyncTimer = null;
+            }
+            const pageEvent = document.getElementById('pageEvent');
+            if (!currentStudentRecord || !pageEvent || pageEvent.classList.contains('hidden')) {
+                return;
+            }
+            const delay = getRecommendedSyncIntervalMs();
+            _autoSyncTimer = setTimeout(async () => {
+                _autoSyncTimer = null;
+                const evEl = document.getElementById('pageEvent');
+                if (!document.hidden && currentStudentRecord && evEl && !evEl.classList.contains('hidden')) {
+                    await loadLeaderboardData(false, { fast: _hasFullFetchedOnce });
+                } else {
+                    scheduleNextAutoSync();
+                }
+            }, delay);
+        }
+
+        function buildSyncSignatures(uniqueList) {
+            const usersSig = (uniqueList || []).map(r => {
+                const pb = String(r.phongban || '');
+                return [r.mssv, r.hoten, pb.length, pb.slice(0, 16), pb.slice(-16), r.wishlist, r.blacklist, r.diadiem, r.nguoitang, r.thoigian].join('|');
+            }).join(';');
+            const checkinSig = Array.from(giftCheckinMap.entries())
+                .sort((a, b) => a[0].localeCompare(b[0]))
+                .map(([k, v]) => {
+                    const pb = String((v && v.phongban) || '');
+                    return [k, v && v.wishlist, v && v.diadiem, v && v.thoigian, pb.length, pb.slice(-16)].join('|');
+                }).join(';');
+            const feedSig = (publicFeedPosts || []).map(p => {
+                const likers = (p.likedBy || []).map(x => x && x.m ? x.m : '').join(',');
+                return [p.id || p.hoten || '', p.mssv, p.thoigian, p.caption, p.likes || 0, likers, p.isOptimistic ? 1 : 0, (p.image || '').length].join('|');
+            }).join(';');
+            const chatSig = (publicChatMessages || []).map(c => {
+                return [c.hoten || '', c.mssv, c.thoigian, c.message, c.isOptimistic ? 1 : 0].join('|');
+            }).join(';');
+            const cfgSig = JSON.stringify(eventScheduleConfig);
+            return { usersSig, checkinSig, feedSig, chatSig, cfgSig };
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             refreshDbEngineBadge();
+            try {
+                const cachedRows = getLocalCachedRows();
+                if (cachedRows && cachedRows.length > 0) {
+                    deduplicateRecords(cachedRows);
+                    _lastCfgSig = JSON.stringify(eventScheduleConfig);
+                }
+            } catch (e) {}
             try {
                 const saved = localStorage.getItem(STORAGE_KEY_USER);
                 if (saved) {
@@ -4093,18 +5082,19 @@
                 }
             } catch (e) {}
 
-            // Tự động đồng bộ mỗi 60 giây khi tab đang mở (tránh spam vượt giới hạn miễn phí)
-            setInterval(() => {
-                if (!document.hidden && currentStudentRecord && !document.getElementById('pageEvent').classList.contains('hidden')) {
-                    loadLeaderboardData(false);
-                }
-            }, 60000);
+            // Tự động đồng bộ thích ứng (5s khi đang Chat, 12s khi ở Bảng Tin, 30s ở các tab khác)
+            scheduleNextAutoSync();
 
-            // Tự động đồng bộ ngay khi quay lại tab sau > 15 giây
+            // Tự động đồng bộ ngay khi quay lại tab sau > 8 giây
             document.addEventListener('visibilitychange', () => {
                 if (!document.hidden && currentStudentRecord && !document.getElementById('pageEvent').classList.contains('hidden')) {
-                    if (Date.now() - _lastDbFetchAt > 15000) {
-                        loadLeaderboardData(false);
+                    if (Date.now() - _lastDbFetchAt > 8000) {
+                        loadLeaderboardData(false, { fast: _hasFullFetchedOnce });
+                    } else {
+                        scheduleNextAutoSync();
+                    }
+                    if (typeof updatePartCountdowns === 'function') {
+                        updatePartCountdowns();
                     }
                 }
             });
@@ -4113,32 +5103,59 @@
         // =========================================================================
         // 11. BẢNG XẾP HẠNG ĐIỂM SỰ KIỆN
         // =========================================================================
-        async function loadLeaderboardData(scrollChat = false) {
+        async function loadLeaderboardData(scrollChat = false, options = {}) {
             if (_isLoadingBoardData) return;
             _isLoadingBoardData = true;
             try {
                 const prevChatCount = publicChatMessages.length;
-                const rawData = await dbFetchRows();
+                const useFast = (options && typeof options.fast === 'boolean') ? options.fast : _hasFullFetchedOnce;
+                const rawData = await dbFetchRows({ fast: useFast });
                 const uniqueList = deduplicateRecords(rawData);
+                const sigs = buildSyncSignatures(uniqueList);
+                const usersChanged = sigs.usersSig !== _lastUsersSig;
+                const checkinChanged = sigs.checkinSig !== _lastCheckinSig;
+                const feedChanged = sigs.feedSig !== _lastFeedSig;
+                const chatChanged = sigs.chatSig !== _lastChatSig;
+                const cfgChanged = sigs.cfgSig !== _lastCfgSig;
 
                 if (currentStudentRecord && currentStudentRecord.mssv) {
                     const freshMe = uniqueList.find(r => normalizeMssv(r.mssv) === normalizeMssv(currentStudentRecord.mssv));
                     if (freshMe) {
+                        const meChanged = usersChanged || JSON.stringify(freshMe) !== JSON.stringify(currentStudentRecord);
                         currentStudentRecord = freshMe;
                         try { localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(freshMe)); } catch (e) {}
-                        renderPart1UserInfo(freshMe, uniqueList);
+                        if (meChanged) renderPart1UserInfo(freshMe, uniqueList);
                     }
                 }
-                renderLeaderboard(uniqueList);
-                renderChristmasTreePyramid(uniqueList);
-                renderUserGiftCheckinState();
-                renderPublicFeed();
-                renderChatMessages(scrollChat || publicChatMessages.length > prevChatCount);
+                if (cfgChanged || usersChanged) {
+                    applyEventScheduleUI();
+                    _lastScheduleUnlockKey = getCurrentScheduleUnlockKey();
+                }
+                if (usersChanged) {
+                    renderLeaderboard(uniqueList);
+                    renderChristmasTreePyramid(uniqueList);
+                }
+                if (checkinChanged || usersChanged) {
+                    renderUserGiftCheckinState();
+                }
+                if (feedChanged) {
+                    renderPublicFeed();
+                }
+                if (chatChanged || scrollChat) {
+                    renderChatMessages(scrollChat || publicChatMessages.length > prevChatCount);
+                }
+
+                _lastUsersSig = sigs.usersSig;
+                _lastCheckinSig = sigs.checkinSig;
+                _lastFeedSig = sigs.feedSig;
+                _lastChatSig = sigs.chatSig;
+                _lastCfgSig = sigs.cfgSig;
             } catch (err) {
                 console.warn('Lỗi đồng bộ dữ liệu:', err.message);
                 const cached = getLocalCachedRows();
                 if (allSheetRecordsCache.length === 0 && cached.length > 0) {
                     const fallbackList = deduplicateRecords(cached);
+                    applyEventScheduleUI();
                     renderLeaderboard(fallbackList);
                     renderChristmasTreePyramid(fallbackList);
                     renderUserGiftCheckinState();
@@ -4147,6 +5164,9 @@
                 }
             } finally {
                 _isLoadingBoardData = false;
+                if (currentStudentRecord && !document.getElementById('pageEvent').classList.contains('hidden')) {
+                    scheduleNextAutoSync();
+                }
             }
         }
 
@@ -4336,6 +5356,7 @@
                 errEl.classList.add('hidden');
                 document.getElementById('adminPassInput').value = '';
                 showPage('pageAdmin');
+                renderAdminScheduleControls();
                 showToast('Đã mở khóa Bảng Điều Khiển Ban Tổ Chức!', '🛡️');
                 fetchAdminData();
             } else {
@@ -4358,11 +5379,12 @@
             mobileBox.innerHTML = `<div class="p-6 text-center text-gray-500 bg-white rounded-xl">⏳ Đang tải danh sách...</div>`;
 
             try {
-                const data = await dbFetchRows();
+                const data = await dbFetchRows({ fast: false });
                 adminAllRecords = deduplicateRecords(Array.isArray(data) ? data : []);
                 updateAdminStats();
                 renderAdminTable();
                 renderAdminModerationPanels();
+                renderAdminScheduleControls();
             } catch (err) {
                 console.error('Lỗi tải dữ liệu Admin:', err);
                 const errMsg = describeDbError(err);
@@ -4372,6 +5394,7 @@
                     updateAdminStats();
                     renderAdminTable();
                     renderAdminModerationPanels();
+                    renderAdminScheduleControls();
                     showToast(`⚠️ ${errMsg}`, '⚠️');
                 } else {
                     tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-red-600 font-semibold">❌ ${escapeHtml(errMsg)}</td></tr>`;
@@ -4428,6 +5451,7 @@
                                             <span class="font-extrabold text-xs sm:text-sm text-gray-800">${escapeHtml(post.authorName)}</span>
                                             <span class="bg-red-100 text-red-700 font-extrabold text-[10px] px-2 py-0.5 rounded-full">${escapeHtml(post.mssv)}</span>
                                             <span class="text-[10px] text-gray-400">${escapeHtml(post.thoigian)}</span>
+                                            <button type="button" onclick="openFeedLikersModal(${idx})" class="bg-pink-100 hover:bg-pink-200 text-pink-700 font-extrabold text-[10px] px-2 py-0.5 rounded-full transition" title="Xem ai đã tim bài này">❤️ ${post.likes || 0}</button>
                                         </div>
                                         <p class="text-xs text-gray-700 mt-1 whitespace-pre-line break-words">${escapeHtml(post.caption)}</p>
                                     </div>
@@ -4654,7 +5678,7 @@
                 const userPayload = {
                     "mssv": mssv,
                     "hoten": formatHotenForSheet(mssv, row.hoten),
-                    "thoigian": formatTimeForSheet(mssv, wishData.wishId, newScore),
+                    "thoigian": formatTimeForSheet(mssv, wishData.wishId, newScore, row),
                     "phongban": row.phongban || '',
                     "wishlist": row.wishlist || '',
                     "blacklist": row.blacklist || ''
@@ -4684,7 +5708,7 @@
             const payload = {
                 "mssv": norm,
                 "hoten": formatHotenForSheet(norm, row.hoten),
-                "thoigian": formatTimeForSheet(norm, wishData.wishId, scoreVal),
+                "thoigian": formatTimeForSheet(norm, wishData.wishId, scoreVal, row),
                 "phongban": row.phongban || '',
                 "wishlist": row.wishlist || '',
                 "blacklist": row.blacklist || ''
@@ -4719,7 +5743,7 @@
             const payload = {
                 "mssv": row.mssv || '',
                 "hoten": formatHotenForSheet(row.mssv, row.hoten),
-                "thoigian": formatTimeForSheet(row.mssv, wishData.wishId, newPts),
+                "thoigian": formatTimeForSheet(row.mssv, wishData.wishId, newPts, row),
                 "phongban": row.phongban || '',
                 "wishlist": row.wishlist || '',
                 "blacklist": row.blacklist || ''
