@@ -1577,16 +1577,24 @@
         // =========================================================================
         // CẤU HÌNH HỆ THỐNG & ĐỒNG BỘ DỮ LIỆU ĐA THIẾT BỊ (CLOUD / SQL SERVER)
         // =========================================================================
-        const DEFAULT_SHEETDB_API = 'https://sheetdb.io/api/v1/fnqbi32e6xcc0';
+        const LEGACY_BROKEN_APIS = [
+            'https://sheetdb.io/api/v1/fnqbi32e6xcc0',
+            'https://script.google.com/macros/s/AKfycby5PVpT4nTQ8w-kswGsZ6N3K-i_VZz12T2XadSARtH50wf3ejseYF33RDuNVZiIWzUN/exec'
+        ];
+        const DEFAULT_SHEETDB_API = 'https://script.google.com/macros/s/AKfycbxYTqY1XPXz0fZsc2BA2KAyZV7OGYWyjLZRbAvSOL6BdCQJ9fvm4BuoPzuXJo_0ASog/exec';
         const DEFAULT_SQLSERVER_API = 'http://localhost:8080/api/v1/secret-santa';
         const STORAGE_KEY_API_URL = 'secret_santa_2026_api_url';
         const STORAGE_KEY_CACHED_ROWS = 'secret_santa_cached_rows';
         const STORAGE_KEY_USER = 'secret_santa_2026_logged_user';
         const ADMIN_PASSWORD_DEFAULT = '1234';
 
-        // Dọn dẹp IndexedDB thử nghiệm cũ để không gây lệch dữ liệu giữa PC và Điện thoại
+        // Dọn dẹp IndexedDB thử nghiệm cũ & link API cũ đã lỗi/hết hạn mức nếu còn sót trong localStorage
         try {
             if (window.indexedDB) window.indexedDB.deleteDatabase('SecretSanta2026_SQL_Engine');
+            const savedApiNorm = (localStorage.getItem(STORAGE_KEY_API_URL) || '').replace(/\/+$/, '');
+            if (LEGACY_BROKEN_APIS.includes(savedApiNorm)) {
+                localStorage.removeItem(STORAGE_KEY_API_URL);
+            }
         } catch (e) {}
 
         function getDefaultApiUrl() {
