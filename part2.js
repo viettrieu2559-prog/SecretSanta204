@@ -646,7 +646,7 @@ function spawnWhitePoodle() {
   poodleEl.style.left = "70%";
   poodleEl.style.top = "78%";
   poodleEl.innerHTML = `
-    <div class="poodle-tag">🐩 Bông (Nhấn để cưng nựng!)</div>
+    <div class="poodle-tag">🐩 Gôn Đi (Nhấn để cưng nựng!)</div>
     ${WHITE_POODLE_SVG}
   `;
 
@@ -658,7 +658,7 @@ function spawnWhitePoodle() {
     sfx.bark();
     state.poodleBoostUntil = performance.now() + 9000;
     state.score += 10;
-    floatText(e.clientX, e.clientY, "🐩 Gâu gâu! +10 Bông đi bắt gián ngay!", "#ff80ab");
+    floatText(e.clientX, e.clientY, "🐩 Gâu gâu! +10 Gôn Đi đi bắt gián ngay!", "#ff80ab");
     sparkleAtPct(parseFloat(poodleEl.style.left), parseFloat(poodleEl.style.top), 5);
     updatePoodleBehavior();
     updateHUD();
@@ -694,7 +694,7 @@ function updatePoodleBehavior() {
     const ty = parseFloat(nearest.style.top);
     poodleEl.classList.add("hunting");
     poodleEl.classList.toggle("flip", tx > curX);
-    if (tag) tag.textContent = boosted ? "🐩⚡ Bông đang săn gián!" : "🐩 Bông đang rượt gián!";
+    if (tag) tag.textContent = boosted ? "🐩⚡ Gôn Đi đang săn gián!" : "🐩 Gôn Đi đang rượt gián!";
     $("#poodle-state").textContent = "Đang bắt gián 🪳";
 
     poodleEl.style.left = tx + "%";
@@ -714,7 +714,7 @@ function updatePoodleBehavior() {
     poodleEl.classList.toggle("flip", nx > curX);
     poodleEl.style.left = nx + "%";
     poodleEl.style.top = ny + "%";
-    if (tag) tag.textContent = boosted ? "🐩💕 Bông rất vui!" : "🐩 Bông (Nhấn để cưng nựng!)";
+    if (tag) tag.textContent = boosted ? "🐩💕 Gôn Đi rất vui!" : "🐩 Gôn Đi (Nhấn để cưng nựng!)";
     $("#poodle-state").textContent = boosted ? "Đang trực chiến ⚡" : "Đang dạo 🐾";
   }
 }
@@ -739,10 +739,10 @@ function killPest(p, byPoodle = false, clientX = null, clientY = null) {
 
   if (byPoodle) {
     sfx.bark();
-    floatText(fxX, fxY, `🐩💨 +${pts} Bông vồ gọn gián!`, "#ff80ab");
+    floatText(fxX, fxY, `🐩💨 +${pts} Gôn Đi vồ gọn gián!`, "#ff80ab");
   } else {
     sfx.squish();
-    floatText(fxX, fxY, `👟 +${pts} Diệt gọn gián!`, "#00e676");
+    floatText(fxX, fxY, `👟 +${pts} Gôn Đi diệt gọn gián!`, "#00e676");
   }
   bumpCombo();
   sparkleAtPct(xPct, yPct, 3);
