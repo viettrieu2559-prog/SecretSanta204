@@ -1523,47 +1523,47 @@
                 </div>
             </div>
 
-            <!-- =============================================================== -->
-            <!-- CẤU HÌNH CƠ SỞ DỮ LIỆU: SQL SERVER / SHEETDB & ĐỒNG BỘ DỮ LIỆU  -->
+                        <!-- =============================================================== -->
+            <!-- CẤU HÌNH CƠ SỞ DỮ LIỆU: SQL SERVER (SSMS) & CLOUD SYNC ĐA THIẾT BỊ -->
             <!-- =============================================================== -->
             <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white rounded-2xl p-4 sm:p-6 border-2 border-sky-400/60 shadow-xl space-y-4">
                 <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-3">
                     <div>
                         <span class="inline-block bg-sky-400 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider mb-1">
-                            🗄️ Quản Trị Database Dung Lượng Lớn
+                            🗄️ Quản Trị Cơ Sở Dữ Liệu • SQL Server (SSMS) &amp; Cloud Sync
                         </span>
                         <h3 class="text-base sm:text-xl font-black text-sky-300 flex items-center gap-2">
-                            <span>⚡ Kết Nối SQL Server / SheetDB API</span>
+                            <span>⚡ Kết Nối Database Đồng Bộ &amp; Xuất SQL Server</span>
                         </h3>
                         <p class="text-xs text-slate-300 mt-0.5">
-                            Chạy file <code>run_sqlserver_backend.bat</code> trong thư mục dự án để lưu trữ không giới hạn dung lượng ảnh HD, Bảng Tin &amp; Chat vào Microsoft SQL Server!
+                            Dán link <strong>Google Apps Script</strong> (20,000 req/ngày, đồng bộ PC + Điện thoại), <strong>SheetDB</strong>, hoặc kết nối trực tiếp <strong>SQL Server Local (port 8080)</strong> / xuất file <code>.SQL</code> cho SSMS!
                         </p>
                     </div>
-                    <span id="dbEngineStatusBadge" class="text-xs bg-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow">
+                    <span id="dbEngineStatusBadge" class="text-xs bg-emerald-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow">
                         Đang kiểm tra kết nối...
                     </span>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
                     <div class="lg:col-span-6">
-                        <label class="block text-[11px] font-bold text-sky-200 mb-1">Địa chỉ API Database đang sử dụng (SQL Server hoặc SheetDB):</label>
-                        <input type="text" id="adminApiUrlInput" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/90 border border-slate-600 text-white text-xs sm:text-sm font-mono focus:outline-none focus:border-sky-400" placeholder="http://localhost:8080/api/v1/secret-santa">
+                        <label class="block text-[11px] font-bold text-sky-200 mb-1">Địa chỉ API Database (Google Apps Script / SheetDB / SQL Server API):</label>
+                        <input type="text" id="adminApiUrlInput" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/90 border border-slate-600 text-white text-xs sm:text-sm font-mono focus:outline-none focus:border-sky-400" placeholder="https://script.google.com/macros/s/.../exec hoặc http://localhost:8080/api/v1/secret-santa">
                     </div>
                     <div class="lg:col-span-6 flex flex-wrap items-center gap-2 pt-1 lg:pt-5">
-                        <button type="button" onclick="switchDatabaseMode('sqlserver')" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-black px-3.5 py-2.5 rounded-xl text-xs transition shadow">
-                            🗄️ Dùng SQL Server (Local/Tunnel)
+                        <button type="button" onclick="saveCustomApiUrl()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-3 py-2.5 rounded-xl text-xs transition shadow flex items-center gap-1">
+                            💾 Lưu &amp; Kiểm Tra
                         </button>
-                        <button type="button" onclick="switchDatabaseMode('sheetdb')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs transition shadow">
-                            📊 Dùng SheetDB
+                        <button type="button" onclick="useLocalSqlServerApi()" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-black px-3 py-2.5 rounded-xl text-xs transition shadow flex items-center gap-1" title="Kết nối SQL Server chạy qua run_sqlserver_backend.bat">
+                            🗄️ SQL Server (8080)
                         </button>
-                        <button type="button" onclick="saveCustomApiUrl()" class="bg-white/15 hover:bg-white/25 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs border border-white/20 transition">
-                            💾 Lưu URL
+                        <button type="button" onclick="migrateSheetDbToSqlServer()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-3 py-2.5 rounded-xl text-xs transition shadow flex items-center gap-1" title="Đẩy toàn bộ dữ liệu hiện có sang SQL Server (SSMS)">
+                            📥 Đồng bộ sang SQL
                         </button>
-                        <button type="button" onclick="migrateSheetDbToSqlServer()" class="bg-amber-400 hover:bg-amber-300 text-red-950 font-black px-3.5 py-2.5 rounded-xl text-xs transition shadow">
-                            📥 Đồng bộ sang SQL Server
+                        <button type="button" onclick="resetToDefaultApiUrl()" class="bg-white/15 hover:bg-white/25 text-white font-bold px-3 py-2.5 rounded-xl text-xs border border-white/20 transition">
+                            🔄 Mặc định
                         </button>
-                        <button type="button" onclick="exportSqlServerScript()" class="bg-purple-500 hover:bg-purple-400 text-white font-black px-3.5 py-2.5 rounded-xl text-xs transition shadow">
-                            📄 Xuất File .SQL Cho App SQL Server (SSMS)
+                        <button type="button" onclick="exportSqlServerScript()" class="bg-purple-600 hover:bg-purple-500 text-white font-black px-3 py-2.5 rounded-xl text-xs transition shadow flex items-center gap-1">
+                            📄 Xuất File .SQL (SSMS)
                         </button>
                     </div>
                 </div>
@@ -1575,384 +1575,411 @@
 
     <script>
         // =========================================================================
-        // CẤU HÌNH HỆ THỐNG & HYBRID SQL ENGINE (SQL SERVER + INDEXEDDB + SHEETDB)
-        // Đảm bảo chạy mượt 100%, không bao giờ báo lỗi mất kết nối hay giới hạn dung lượng!
+        // CẤU HÌNH HỆ THỐNG & ĐỒNG BỘ DỮ LIỆU ĐA THIẾT BỊ (CLOUD / SQL SERVER)
         // =========================================================================
         const DEFAULT_SHEETDB_API = 'https://sheetdb.io/api/v1/fnqbi32e6xcc0';
         const DEFAULT_SQLSERVER_API = 'http://localhost:8080/api/v1/secret-santa';
         const STORAGE_KEY_API_URL = 'secret_santa_2026_api_url';
-        let SHEETDB_API = localStorage.getItem(STORAGE_KEY_API_URL) || DEFAULT_SQLSERVER_API;
-
-        const ADMIN_PASSWORD_DEFAULT = '1234';
+        const STORAGE_KEY_CACHED_ROWS = 'secret_santa_cached_rows';
         const STORAGE_KEY_USER = 'secret_santa_2026_logged_user';
+        const ADMIN_PASSWORD_DEFAULT = '1234';
 
-        // -------------------------------------------------------------------------
-        // KHO DỮ LIỆU SQL INDEXED-DB TÍCH HỢP SẴN TRONG TRÌNH DUYỆT (DUNG LƯỢNG HÀNG TRĂM MB)
-        // Tự động đồng bộ 2 chiều với ứng dụng Microsoft SQL Server (localhost:8080)
-        // -------------------------------------------------------------------------
-        const _nativeFetch = window.fetch.bind(window);
-        const IDB_NAME = 'SecretSanta2026_SQL_Engine';
-        const IDB_STORE = 'SecretSantaRows';
-        let _sqlServerOnline = false;
+        // Dọn dẹp IndexedDB thử nghiệm cũ để không gây lệch dữ liệu giữa PC và Điện thoại
+        try {
+            if (window.indexedDB) window.indexedDB.deleteDatabase('SecretSanta2026_SQL_Engine');
+        } catch (e) {}
 
-        const INITIAL_SEED_ROWS = [
-            { id: 1, thoigian: '16:20:13 12-11-2026 | TH07941 | W01 | 150PTS', hoten: 'TH07941 - Triệu Lân Việt', phongban: '', wishlist: '123', blacklist: '123' },
-            { id: 2, thoigian: '14:23:57 12-11-2026 | TH00001 | W02 | 150PTS', hoten: 'TH00001 - Nguyễn Tiến Thành', phongban: '', wishlist: 'Canon r5, rf 70-200', blacklist: 'Đồ dễ vỡ' },
-            { id: 3, thoigian: '16:28:55 12-11-2026 | TH00002 | W03 | 150PTS', hoten: 'TH00002 - Nguyễn Tiến Long', phongban: '', wishlist: 'Gấu bông Noel', blacklist: 'Mùi bưởi' }
-        ];
-
-        function openLocalSqlDb() {
-            return new Promise((resolve, reject) => {
-                const req = indexedDB.open(IDB_NAME, 1);
-                req.onupgradeneeded = (e) => {
-                    const db = e.target.result;
-                    if (!db.objectStoreNames.contains(IDB_STORE)) {
-                        db.createObjectStore(IDB_STORE, { keyPath: 'id', autoIncrement: true });
-                    }
-                };
-                req.onsuccess = () => resolve(req.result);
-                req.onerror = () => reject(req.error);
-            });
-        }
-
-        async function idbGetAllRows() {
-            try {
-                const db = await openLocalSqlDb();
-                return await new Promise((resolve, reject) => {
-                    const tx = db.transaction(IDB_STORE, 'readonly');
-                    const store = tx.objectStore(IDB_STORE);
-                    const req = store.getAll();
-                    req.onsuccess = () => resolve(req.result || []);
-                    req.onerror = () => reject(req.error);
-                });
-            } catch (e) {
-                return [...INITIAL_SEED_ROWS];
+        function getDefaultApiUrl() {
+            const origin = (window.location && window.location.origin) ? window.location.origin : '';
+            if (origin === 'http://localhost:8080' || origin === 'http://127.0.0.1:8080') {
+                return origin + '/api/v1/secret-santa';
             }
+            return DEFAULT_SHEETDB_API;
         }
 
-        async function idbReplaceAllRows(rows) {
+        let SHEETDB_API = (localStorage.getItem(STORAGE_KEY_API_URL) || getDefaultApiUrl()).replace(/\/+$/, '');
+        let _lastDbFetchAt = 0;
+        let _lastDbError = '';
+        let _isLoadingBoardData = false;
+
+        function isGoogleAppsScript(url = SHEETDB_API) {
+            return String(url || '').includes('script.google.com');
+        }
+
+        function isSqlServerApi(url = SHEETDB_API) {
+            const u = String(url || '').toLowerCase();
+            return u.includes('/api/v1/secret-santa') || u.includes('localhost:8080') || u.includes('127.0.0.1:8080');
+        }
+
+        function getLocalCachedRows() {
             try {
-                const db = await openLocalSqlDb();
-                await new Promise((resolve, reject) => {
-                    const tx = db.transaction(IDB_STORE, 'readwrite');
-                    const store = tx.objectStore(IDB_STORE);
-                    store.clear();
-                    (rows || []).forEach(r => {
-                        const copy = {
-                            thoigian: String(r.thoigian || ''),
-                            hoten: String(r.hoten || ''),
-                            phongban: String(r.phongban || ''),
-                            wishlist: String(r.wishlist || ''),
-                            blacklist: String(r.blacklist || '')
-                        };
-                        store.add(copy);
-                    });
-                    tx.oncomplete = () => resolve();
-                    tx.onerror = () => reject(tx.error);
-                });
+                const s = localStorage.getItem(STORAGE_KEY_CACHED_ROWS);
+                if (s) {
+                    const parsed = JSON.parse(s);
+                    if (Array.isArray(parsed)) return parsed;
+                }
+            } catch (e) {}
+            return [];
+        }
+
+        function saveLocalCachedRows(rows) {
+            try {
+                if (Array.isArray(rows)) {
+                    localStorage.setItem(STORAGE_KEY_CACHED_ROWS, JSON.stringify(rows));
+                }
             } catch (e) {}
         }
 
-        async function idbEnsureSeeded() {
-            const rows = await idbGetAllRows();
-            if (!rows || rows.length === 0) {
-                await idbReplaceAllRows(INITIAL_SEED_ROWS);
-                return [...INITIAL_SEED_ROWS];
+        function describeDbError(err, targetUrl = SHEETDB_API) {
+            const msg = String((err && err.message) || err || '');
+            if (msg.includes('QUOTA_429') || msg.includes('429')) {
+                return 'Máy chủ SheetDB hiện đã hết lượt miễn phí (Lỗi 429). Vui lòng mở Admin (mật khẩu 1234) để dán link Google Apps Script / SheetDB mới, hoặc bật run_sqlserver_backend.bat rồi nhấn "SQL Server (8080)"!';
             }
-            return rows;
+            if (isSqlServerApi(targetUrl) && window.location.protocol === 'https:' && String(targetUrl).startsWith('http://')) {
+                return 'Trang HTTPS (GitHub Pages) không thể gọi trực tiếp http://localhost:8080. Hãy mở web tại http://localhost:8080/index.html hoặc dùng link Google Apps Script HTTPS!';
+            }
+            if (isSqlServerApi(targetUrl)) {
+                return 'Không thể kết nối tới SQL Server API tại http://localhost:8080!\n\n👉 Bạn cần mở / chạy file "run_sqlserver_backend.bat" trong thư mục dự án (để cửa sổ PowerShell cổng 8080 chạy nền) rồi thử lại!';
+            }
+            return 'Không thể kết nối tới máy chủ dữ liệu. Vui lòng kiểm tra kết nối mạng hoặc đường dẫn API trong Admin!';
         }
 
-        async function executeLocalSqlApi(urlStr, options = {}) {
-            const method = String(options.method || 'GET').toUpperCase();
-            let rows = await idbEnsureSeeded();
-
-            // Giải mã đường dẫn /hoten/{val} hoặc /thoigian/{val}
-            let matchCol = '';
-            let matchVal = '';
-            const afterApi = urlStr.split('/api/v1/secret-santa')[1] || urlStr.split('fnqbi32e6xcc0')[1] || '';
-            const cleanAfter = afterApi.replace(/^\/+/, '');
-            if (cleanAfter) {
-                const segs = cleanAfter.split('/');
-                matchCol = (segs[0] || '').toLowerCase();
-                matchVal = decodeURIComponent(segs.slice(1).join('/'));
-            }
-
-            if (method === 'GET') {
-                return new Response(JSON.stringify(rows), { status: 200, headers: { 'Content-Type': 'application/json' } });
-            }
-
-            if (method === 'POST') {
-                let bodyObj = {};
-                try { bodyObj = JSON.parse(options.body || '{}'); } catch (e) {}
-                let items = [];
-                if (bodyObj && bodyObj.data !== undefined) {
-                    items = Array.isArray(bodyObj.data) ? bodyObj.data : [bodyObj.data];
-                } else if (Array.isArray(bodyObj)) {
-                    items = bodyObj;
-                } else {
-                    items = [bodyObj];
-                }
-                const db = await openLocalSqlDb();
-                await new Promise((resolve, reject) => {
-                    const tx = db.transaction(IDB_STORE, 'readwrite');
-                    const store = tx.objectStore(IDB_STORE);
-                    items.forEach(it => {
-                        store.add({
-                            thoigian: String(it.thoigian || ''),
-                            hoten: String(it.hoten || ''),
-                            phongban: String(it.phongban || ''),
-                            wishlist: String(it.wishlist || ''),
-                            blacklist: String(it.blacklist || '')
-                        });
-                    });
-                    tx.oncomplete = () => resolve();
-                    tx.onerror = () => reject(tx.error);
-                });
-                return new Response(JSON.stringify({ created: items.length }), { status: 201, headers: { 'Content-Type': 'application/json' } });
-            }
-
-            if (method === 'PATCH' || method === 'PUT') {
-                let bodyObj = {};
-                try { bodyObj = JSON.parse(options.body || '{}'); } catch (e) {}
-                const patchData = (bodyObj && bodyObj.data) ? bodyObj.data : bodyObj;
-                let updatedCount = 0;
-                const updatedRows = rows.map(r => {
-                    if (matchCol && String(r[matchCol] || '') === matchVal) {
-                        updatedCount++;
-                        return { ...r, ...patchData };
-                    }
-                    return r;
-                });
-                await idbReplaceAllRows(updatedRows);
-                return new Response(JSON.stringify({ updated: updatedCount }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-            }
-
-            if (method === 'DELETE') {
-                const remaining = rows.filter(r => !(matchCol && String(r[matchCol] || '') === matchVal));
-                const deletedCount = rows.length - remaining.length;
-                await idbReplaceAllRows(remaining);
-                return new Response(JSON.stringify({ deleted: deletedCount }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-            }
-
-            return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-        }
-
-        // Bọc window.fetch để tự động định tuyến thông minh:
-        // 1. Gọi SQL Server (localhost:8080) nếu đang bật -> Đồng bộ vào IndexedDB
-        // 2. Nếu chưa bật localhost:8080 hoặc SheetDB hết hạn mức -> Xử lý tức thì trên IndexedDB SQL (0ms, không bao giờ lỗi!)
-        window.fetch = async function(input, init = {}) {
-            const urlStr = typeof input === 'string' ? input : (input && input.url ? input.url : '');
-            const isDbCall = urlStr.includes('/api/v1/secret-santa') || urlStr.includes('sheetdb.io/api/v1/');
-            if (!isDbCall || urlStr.endsWith('/status')) {
-                return _nativeFetch(input, init);
-            }
-
-            const method = String((init && init.method) || 'GET').toUpperCase();
-            // Tách phần đuôi sau base URL (VD: /hoten/...)
-            let suffix = '';
-            if (urlStr.includes('/api/v1/secret-santa')) {
-                suffix = urlStr.split('/api/v1/secret-santa')[1] || '';
-            } else if (urlStr.includes('fnqbi32e6xcc0')) {
-                suffix = urlStr.split('fnqbi32e6xcc0')[1] || '';
-            }
-
-            // 1. Ưu tiên thử gọi trực tiếp SQL Server Backend trên máy tính (http://localhost:8080/api/v1/secret-santa)
-            try {
-                const ctrl = new AbortController();
-                const timer = setTimeout(() => ctrl.abort(), 1800);
-                const sqlUrl = DEFAULT_SQLSERVER_API + suffix;
-                const sqlRes = await _nativeFetch(sqlUrl, { ...init, signal: ctrl.signal });
-                clearTimeout(timer);
-                if (sqlRes.ok) {
-                    _sqlServerOnline = true;
-                    const cloned = sqlRes.clone();
-                    if (method === 'GET') {
-                        cloned.json().then(data => {
-                            if (Array.isArray(data) && data.length > 0) idbReplaceAllRows(data);
-                        }).catch(() => {});
-                    } else {
-                        // Đồng bộ cả vào IndexedDB
-                        executeLocalSqlApi(sqlUrl, init).catch(() => {});
-                    }
-                    refreshDbEngineBadge('Đã kết nối SQL Server (localhost:8080)');
-                    return sqlRes;
-                }
-            } catch (e) {
-                _sqlServerOnline = false;
-            }
-
-            // 2. Nếu người dùng chọn chế độ SheetDB, thử gọi SheetDB nhưng nếu lỗi (400/402/429) thì tự động lưu vào SQL IndexedDB
-            if (!isSqlServerMode()) {
-                try {
-                    const ctrl2 = new AbortController();
-                    const timer2 = setTimeout(() => ctrl2.abort(), 2500);
-                    const sheetRes = await _nativeFetch(DEFAULT_SHEETDB_API + suffix, { ...init, signal: ctrl2.signal });
-                    clearTimeout(timer2);
-                    if (sheetRes.ok) {
-                        const cloned2 = sheetRes.clone();
-                        if (method === 'GET') {
-                            cloned2.json().then(data => {
-                                if (Array.isArray(data) && data.length > 0) idbReplaceAllRows(data);
-                            }).catch(() => {});
-                        } else {
-                            executeLocalSqlApi(urlStr, init).catch(() => {});
-                        }
-                        return sheetRes;
-                    }
-                } catch (e) {}
-            }
-
-            // 3. Thực thi mượt mà ngay trên SQL IndexedDB (Không giới hạn dung lượng, tốc độ 0ms, không bao giờ lỗi)
-            refreshDbEngineBadge(_sqlServerOnline ? 'SQL Server (localhost:8080)' : 'SQL Engine Tích Hợp (Sẵn sàng đồng bộ SSMS)');
-            return executeLocalSqlApi(urlStr, init);
-        };
-
-        function isSqlServerMode() {
-            return !String(SHEETDB_API || '').includes('sheetdb.io');
-        }
-
-        function refreshDbEngineBadge(extraInfo = '') {
+        function refreshDbEngineBadge(customStatusText = '') {
             const badge = document.getElementById('dbEngineStatusBadge');
             const input = document.getElementById('adminApiUrlInput');
             if (input && document.activeElement !== input) input.value = SHEETDB_API;
             if (!badge) return;
-            if (isSqlServerMode()) {
-                badge.textContent = `🗄️ ${extraInfo || 'SQL Server Engine (Không giới hạn dung lượng)'}`;
+
+            if (customStatusText) {
+                badge.textContent = customStatusText;
+                badge.className = 'text-xs bg-rose-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow';
+                return;
+            }
+            if (_lastDbError === 'QUOTA_429') {
+                badge.textContent = '⚠️ SheetDB hết lượt (HTTP 429) • Đổi sang Apps Script / SQL!';
+                badge.className = 'text-xs bg-rose-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow';
+            } else if (_lastDbError) {
+                badge.textContent = '⚠️ Lỗi kết nối Database • Kiểm tra API URL';
+                badge.className = 'text-xs bg-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow';
+            } else if (isSqlServerApi()) {
+                badge.textContent = '🗄️ Microsoft SQL Server API (SSMS Ready)';
                 badge.className = 'text-xs bg-sky-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow';
+            } else if (isGoogleAppsScript()) {
+                badge.textContent = '🟢 Google Apps Script (20,000 req/ngày • Đồng bộ đa thiết bị)';
+                badge.className = 'text-xs bg-emerald-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow';
+            } else if (SHEETDB_API.includes('sheetdb.io')) {
+                badge.textContent = '📊 SheetDB Cloud API (Đồng bộ đa thiết bị)';
+                badge.className = 'text-xs bg-emerald-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow';
             } else {
-                badge.textContent = `📊 Đang dùng: Google Sheets (SheetDB)`;
+                badge.textContent = '⚡ Custom Database API';
                 badge.className = 'text-xs bg-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow';
             }
         }
 
-        async function autoDetectSqlServerBackend() {
-            await idbEnsureSeeded();
-            refreshDbEngineBadge();
+        // =========================================================================
+        // CÁC HÀM TRUY XUẤT CƠ SỞ DỮ LIỆU ĐỒNG BỘ 100% (KHÔNG GHI ẢO LỆCH MÁY)
+        // =========================================================================
+        async function dbFetchRows() {
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), 10000);
             try {
-                const ctrl = new AbortController();
-                const timer = setTimeout(() => ctrl.abort(), 1200);
-                const res = await _nativeFetch(DEFAULT_SQLSERVER_API + '/status', { signal: ctrl.signal });
+                // Chỉ gắn query chống cache cho Apps Script / SQL Server Local (SheetDB dùng query param làm filter cột)
+                const fetchUrl = (isGoogleAppsScript() || isSqlServerApi())
+                    ? `${SHEETDB_API}${SHEETDB_API.includes('?') ? '&' : '?'}_t=${Date.now()}`
+                    : SHEETDB_API;
+
+                const res = await fetch(fetchUrl, {
+                    method: 'GET',
+                    cache: 'no-store',
+                    signal: ctrl.signal
+                });
                 clearTimeout(timer);
-                if (res.ok) {
-                    const info = await res.json();
-                    if (info && info.ok) {
-                        _sqlServerOnline = true;
-                        SHEETDB_API = DEFAULT_SQLSERVER_API;
-                        // Nếu SQL Server mới khởi tạo ít dữ liệu hơn IndexedDB local thì tự động đẩy dữ liệu lên SQL Server!
-                        const localRows = await idbGetAllRows();
-                        if (localRows.length > (info.totalRows || 0)) {
-                            await _nativeFetch(DEFAULT_SQLSERVER_API, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ data: localRows })
-                            });
-                        }
-                        refreshDbEngineBadge(`SQL Server (${info.server} • Đang kết nối trực tiếp)`);
-                        return;
-                    }
+
+                if (res.status === 429) {
+                    _lastDbError = 'QUOTA_429';
+                    refreshDbEngineBadge();
+                    throw new Error('QUOTA_429');
                 }
-            } catch (e) {}
-            refreshDbEngineBadge('SQL Engine Tích Hợp (Mở run_sqlserver_backend.bat để đồng bộ SSMS)');
+                if (!res.ok) {
+                    _lastDbError = `HTTP_${res.status}`;
+                    refreshDbEngineBadge();
+                    throw new Error(`HTTP_${res.status}`);
+                }
+
+                const data = await res.json();
+                if (data && !Array.isArray(data) && data.error) {
+                    _lastDbError = String(data.error);
+                    refreshDbEngineBadge();
+                    throw new Error(String(data.error));
+                }
+
+                const rows = Array.isArray(data) ? data : [];
+                _lastDbFetchAt = Date.now();
+                _lastDbError = '';
+                saveLocalCachedRows(rows);
+                refreshDbEngineBadge();
+                return rows;
+            } catch (err) {
+                clearTimeout(timer);
+                if (err.message !== 'QUOTA_429' && !String(err.message || '').startsWith('HTTP_')) {
+                    _lastDbError = 'NETWORK';
+                    refreshDbEngineBadge();
+                }
+                throw err;
+            }
         }
 
-        async function switchDatabaseMode(mode) {
-            if (mode === 'sqlserver') {
-                SHEETDB_API = DEFAULT_SQLSERVER_API;
-                localStorage.setItem(STORAGE_KEY_API_URL, SHEETDB_API);
-                await autoDetectSqlServerBackend();
-                showToast('🗄️ Đã kích hoạt chế độ SQL Server (Không giới hạn dung lượng ảnh HD)!', '⚡');
+        async function dbInsertRow(payload) {
+            let res;
+            if (isGoogleAppsScript()) {
+                res = await fetch(SHEETDB_API, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'INSERT', data: [payload] })
+                });
             } else {
-                SHEETDB_API = DEFAULT_SHEETDB_API;
-                localStorage.setItem(STORAGE_KEY_API_URL, SHEETDB_API);
+                res = await fetch(SHEETDB_API, {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: [payload] })
+                });
+            }
+
+            if (res.status === 429) {
+                _lastDbError = 'QUOTA_429';
                 refreshDbEngineBadge();
-                showToast('📊 Đã chuyển sang chế độ SheetDB (Tự động dự phòng bằng SQL Engine)!', '📊');
+                throw new Error('QUOTA_429');
             }
-            if (!document.getElementById('pageAdmin').classList.contains('hidden')) {
-                await fetchAdminData();
+            if (!res.ok) {
+                throw new Error(`HTTP_${res.status}`);
+            }
+
+            let respJson = null;
+            try { respJson = await res.json(); } catch (e) {}
+            if (respJson && respJson.error) {
+                throw new Error(String(respJson.error));
+            }
+            return respJson || { ok: true };
+        }
+
+        async function dbPatchRow(colName, colVal, patchData) {
+            let res;
+            if (isGoogleAppsScript()) {
+                res = await fetch(SHEETDB_API, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'PATCH', column: colName, value: colVal, data: patchData })
+                });
             } else {
-                await loadLeaderboardData(false);
+                res = await fetch(`${SHEETDB_API}/${colName}/${encodeURIComponent(colVal)}`, {
+                    method: 'PATCH',
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: patchData })
+                });
             }
+
+            if (res.status === 404) {
+                return { ok: false, updated: 0 };
+            }
+            if (res.status === 429) {
+                _lastDbError = 'QUOTA_429';
+                refreshDbEngineBadge();
+                throw new Error('QUOTA_429');
+            }
+            if (!res.ok) {
+                throw new Error(`HTTP_${res.status}`);
+            }
+
+            let respJson = {};
+            try { respJson = await res.json(); } catch (e) {}
+            if (respJson && respJson.error) {
+                throw new Error(String(respJson.error));
+            }
+            const updated = typeof respJson.updated === 'number' ? respJson.updated : 1;
+            return { ok: updated > 0, updated };
+        }
+
+        async function dbDeleteRow(colName, colVal) {
+            let res;
+            if (isGoogleAppsScript()) {
+                res = await fetch(SHEETDB_API, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'DELETE', column: colName, value: colVal })
+                });
+            } else {
+                res = await fetch(`${SHEETDB_API}/${colName}/${encodeURIComponent(colVal)}`, {
+                    method: 'DELETE',
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+                });
+            }
+
+            if (res.status === 404) {
+                return { ok: true, deleted: 0 };
+            }
+            if (res.status === 429) {
+                _lastDbError = 'QUOTA_429';
+                refreshDbEngineBadge();
+                throw new Error('QUOTA_429');
+            }
+            if (!res.ok) {
+                throw new Error(`HTTP_${res.status}`);
+            }
+
+            let respJson = {};
+            try { respJson = await res.json(); } catch (e) {}
+            if (respJson && respJson.error) {
+                throw new Error(String(respJson.error));
+            }
+            return respJson || { ok: true };
+        }
+
+        async function useLocalSqlServerApi() {
+            const input = document.getElementById('adminApiUrlInput');
+            if (input) input.value = DEFAULT_SQLSERVER_API;
+            await saveCustomApiUrl();
         }
 
         async function saveCustomApiUrl() {
             const input = document.getElementById('adminApiUrlInput');
             const val = (input ? input.value : '').trim();
-            if (!val) return;
-            SHEETDB_API = val.replace(/\/+$/, '');
-            localStorage.setItem(STORAGE_KEY_API_URL, SHEETDB_API);
-            refreshDbEngineBadge('Custom API URL');
-            showToast('💾 Đã lưu địa chỉ Database API mới!', '✅');
-            await fetchAdminData();
-        }
+            if (!val) {
+                showToast('Vui lòng nhập đường link API mới!', '⚠️');
+                return;
+            }
+            const prevApi = SHEETDB_API;
+            const prevErr = _lastDbError;
+            const candidateUrl = val.replace(/\/+$/, '');
+            SHEETDB_API = candidateUrl;
+            showToast('⏳ Đang kiểm tra kết nối tới Database...', '🔍');
 
-        async function migrateSheetDbToSqlServer() {
             try {
-                showToast('⏳ Đang đồng bộ toàn bộ dữ liệu sang SQL Server...', '📥');
-                let rows = await idbGetAllRows();
-                try {
-                    const sheetRes = await _nativeFetch(DEFAULT_SHEETDB_API);
-                    if (sheetRes.ok) {
-                        const sheetRows = await sheetRes.json();
-                        if (Array.isArray(sheetRows) && sheetRows.length > rows.length) {
-                            rows = sheetRows;
-                            await idbReplaceAllRows(rows);
-                        }
-                    }
-                } catch (e) {}
-
-                const postRes = await _nativeFetch(DEFAULT_SQLSERVER_API, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: rows })
-                });
-                if (!postRes.ok) throw new Error('HTTP ' + postRes.status);
-                SHEETDB_API = DEFAULT_SQLSERVER_API;
-                localStorage.setItem(STORAGE_KEY_API_URL, SHEETDB_API);
-                refreshDbEngineBadge(`SQL Server (Đã đồng bộ ${rows.length} bản ghi)`);
-                showToast(`🎉 Đã đẩy thành công ${rows.length} bản ghi vào SQL Server (SSMS)!`, '🗄️');
+                const testRows = await dbFetchRows();
+                localStorage.setItem(STORAGE_KEY_API_URL, candidateUrl);
+                showToast(`🎉 Kết nối thành công! Tải được ${testRows.length} bản ghi đồng bộ!`, '✅');
                 await fetchAdminData();
             } catch (err) {
-                exportSqlServerScript();
-                showToast('📄 Đã xuất file .SQL! Bạn có thể mở file này trong SQL Server (SSMS) và nhấn F5!', '🗄️');
+                SHEETDB_API = prevApi;
+                _lastDbError = prevErr;
+                refreshDbEngineBadge();
+                if (input) input.value = candidateUrl;
+                alert(describeDbError(err, candidateUrl));
             }
         }
 
-        async function exportSqlServerScript() {
-            const rows = await idbGetAllRows();
+        async function migrateSheetDbToSqlServer() {
+            showToast('⏳ Đang chuẩn bị đồng bộ dữ liệu sang SQL Server...', '📥');
+
+            // 1. Lấy dữ liệu nguồn từ Cloud (Google Apps Script / SheetDB) hoặc bộ nhớ đệm
+            let sourceRows = [];
+            const cloudUrl = !isSqlServerApi() ? SHEETDB_API : DEFAULT_SHEETDB_API;
+            try {
+                const res = await fetch(cloudUrl, { method: 'GET', cache: 'no-store' });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        sourceRows = data;
+                        saveLocalCachedRows(data);
+                    }
+                }
+            } catch (e) {}
+
+            if (sourceRows.length === 0) {
+                sourceRows = getLocalCachedRows();
+            }
+
+            // 2. Kiểm tra Backend SQL Server cổng 8080 có đang chạy không
+            try {
+                const statusRes = await fetch(DEFAULT_SQLSERVER_API + '/status', { method: 'GET', cache: 'no-store' });
+                if (!statusRes.ok) throw new Error('SQL_OFFLINE');
+
+                const sqlRes = await fetch(DEFAULT_SQLSERVER_API, { method: 'GET', cache: 'no-store' });
+                const existingSqlRows = sqlRes.ok ? await sqlRes.json() : [];
+                const existingKeys = new Set(
+                    (Array.isArray(existingSqlRows) ? existingSqlRows : []).map(r => String(r.hoten || '').trim().toUpperCase())
+                );
+
+                const missingRows = sourceRows.filter(r => {
+                    const key = String(r.hoten || '').trim().toUpperCase();
+                    return key && !existingKeys.has(key);
+                });
+
+                if (missingRows.length > 0) {
+                    const postRes = await fetch(DEFAULT_SQLSERVER_API, {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data: missingRows })
+                    });
+                    if (!postRes.ok) throw new Error('HTTP_' + postRes.status);
+                }
+
+                SHEETDB_API = DEFAULT_SQLSERVER_API;
+                localStorage.setItem(STORAGE_KEY_API_URL, SHEETDB_API);
+                _lastDbError = '';
+                refreshDbEngineBadge();
+                showToast(`🎉 Đã đồng bộ xong sang SQL Server (${missingRows.length} bản ghi mới)!`, '🗄️');
+                await fetchAdminData();
+            } catch (err) {
+                alert('Chưa kết nối được SQL Server Local (http://localhost:8080)!\n\n👉 Để đồng bộ trực tiếp vào SQL Server, hãy chạy file "run_sqlserver_backend.bat" trước.\n📄 Hệ thống sẽ tải ngay file .SQL để bạn có thể mở bằng SQL Server (SSMS) nhấn F5 nạp dữ liệu!');
+                if (sourceRows.length > 0) {
+                    exportSqlServerScript();
+                }
+            }
+        }
+
+        function resetToDefaultApiUrl() {
+            localStorage.removeItem(STORAGE_KEY_API_URL);
+            SHEETDB_API = getDefaultApiUrl().replace(/\/+$/, '');
+            _lastDbError = '';
+            refreshDbEngineBadge();
+            showToast('🔄 Đã khôi phục địa chỉ API mặc định!', '✅');
+            fetchAdminData();
+        }
+
+        function exportSqlServerScript() {
+            const rawRows = getLocalCachedRows();
+            let students = adminAllRecords && adminAllRecords.length > 0 ? adminAllRecords : [];
+            if (students.length === 0 && rawRows.length > 0) {
+                students = deduplicateRecords(rawRows);
+            }
+            if (students.length === 0 && rawRows.length === 0) {
+                alert('Chưa có dữ liệu sự kiện để xuất file .SQL!');
+                return;
+            }
+
             const escSql = (s) => "N'" + String(s ?? '').replace(/'/g, "''") + "'";
             let sql = `-- =============================================================================\r\n`;
-            sql += `-- FILE DỮ LIỆU SQL SERVER (SSMS) - TRẠM BƯU TÁ SECRET SANTA 2026\r\n`;
-            sql += `-- Cách dùng: Mở file này trong SQL Server Management Studio (SSMS) -> Nhấn F5 (Execute)\r\n`;
+            sql += `-- FILE CƠ SỞ DỮ LIỆU MICROSOFT SQL SERVER (SSMS) - SECRET SANTA 2026\r\n`;
+            sql += `-- Cách dùng: Mở file này trong SQL Server Management Studio (SSMS) -> Nhấn F5\r\n`;
             sql += `-- =============================================================================\r\n\r\n`;
-            sql += `IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'SecretSanta2026') CREATE DATABASE [SecretSanta2026];\r\nGO\r\nUSE [SecretSanta2026];\r\nGO\r\n\r\n`;
-            sql += `IF OBJECT_ID(N'dbo.SinhVien', N'U') IS NULL CREATE TABLE dbo.SinhVien (MSSV NVARCHAR(50) PRIMARY KEY, HoTen NVARCHAR(255), DiemBXH INT, Wishlist NVARCHAR(MAX), Blacklist NVARCHAR(MAX), ThoiGianCapNhat NVARCHAR(100), AnhSelfieBase64 NVARCHAR(MAX));\r\n`;
-            sql += `IF OBJECT_ID(N'dbo.CheckinQua', N'U') IS NULL CREATE TABLE dbo.CheckinQua (MSSV NVARCHAR(50) PRIMARY KEY, HoTen NVARCHAR(255), GhiChuQua NVARCHAR(MAX), TrangThaiDuyet NVARCHAR(50), ThoiGianCheckin NVARCHAR(100), AnhQuaBase64 NVARCHAR(MAX));\r\n`;
-            sql += `IF OBJECT_ID(N'dbo.BangTin', N'U') IS NULL CREATE TABLE dbo.BangTin (PostId NVARCHAR(120) PRIMARY KEY, MSSV NVARCHAR(50), HoTen NVARCHAR(255), Caption NVARCHAR(MAX), LuotThich INT, ThoiGianDang NVARCHAR(100), AnhBaiDangBase64 NVARCHAR(MAX));\r\n`;
-            sql += `IF OBJECT_ID(N'dbo.KenhChat', N'U') IS NULL CREATE TABLE dbo.KenhChat (MsgId NVARCHAR(120) PRIMARY KEY, MSSV NVARCHAR(50), HoTen NVARCHAR(255), NoiDungChat NVARCHAR(MAX), ThoiGianNhan NVARCHAR(100));\r\n`;
-            sql += `IF OBJECT_ID(N'dbo.SecretSantaRows', N'U') IS NULL CREATE TABLE dbo.SecretSantaRows (id INT IDENTITY(1,1) PRIMARY KEY, thoigian NVARCHAR(255), hoten NVARCHAR(500), phongban NVARCHAR(MAX), wishlist NVARCHAR(MAX), blacklist NVARCHAR(MAX), created_at DATETIME2 DEFAULT SYSDATETIME());\r\nGO\r\n\r\n`;
-            sql += `TRUNCATE TABLE dbo.SecretSantaRows;\r\nTRUNCATE TABLE dbo.SinhVien;\r\nTRUNCATE TABLE dbo.CheckinQua;\r\nTRUNCATE TABLE dbo.BangTin;\r\nTRUNCATE TABLE dbo.KenhChat;\r\nGO\r\n\r\n`;
+            sql += `IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'SecretSanta2026')\r\nBEGIN\r\n    CREATE DATABASE [SecretSanta2026];\r\nEND\r\nGO\r\nUSE [SecretSanta2026];\r\nGO\r\n\r\n`;
+            sql += `IF OBJECT_ID(N'dbo.SinhVien', N'U') IS NULL\r\nCREATE TABLE dbo.SinhVien (MSSV NVARCHAR(50) NOT NULL PRIMARY KEY, HoTen NVARCHAR(255) NOT NULL, DiemBXH INT NOT NULL DEFAULT 150, MaThiepChuc NVARCHAR(50) NULL, Wishlist NVARCHAR(MAX) NULL, Blacklist NVARCHAR(MAX) NULL, AnhSelfieBase64 NVARCHAR(MAX) NULL, ThoiGianCapNhat NVARCHAR(100) NULL, UpdatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME());\r\n`;
+            sql += `IF OBJECT_ID(N'dbo.CheckinQua', N'U') IS NULL\r\nCREATE TABLE dbo.CheckinQua (MSSV NVARCHAR(50) NOT NULL PRIMARY KEY, HoTen NVARCHAR(255) NULL, GhiChuQua NVARCHAR(MAX) NULL, TrangThaiDuyet NVARCHAR(50) NOT NULL DEFAULT N'PENDING', AnhQuaBase64 NVARCHAR(MAX) NULL, ThoiGianCheckin NVARCHAR(100) NULL, UpdatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME());\r\n`;
+            sql += `IF OBJECT_ID(N'dbo.BangTin', N'U') IS NULL\r\nCREATE TABLE dbo.BangTin (PostId NVARCHAR(120) NOT NULL PRIMARY KEY, MSSV NVARCHAR(50) NULL, HoTen NVARCHAR(255) NULL, Caption NVARCHAR(MAX) NULL, LuotThich INT NOT NULL DEFAULT 1, AnhBaiDangBase64 NVARCHAR(MAX) NULL, ThoiGianDang NVARCHAR(100) NULL, CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME());\r\n`;
+            sql += `IF OBJECT_ID(N'dbo.KenhChat', N'U') IS NULL\r\nCREATE TABLE dbo.KenhChat (MsgId NVARCHAR(120) NOT NULL PRIMARY KEY, MSSV NVARCHAR(50) NULL, HoTen NVARCHAR(255) NULL, NoiDungChat NVARCHAR(MAX) NULL, ThoiGianNhan NVARCHAR(100) NULL, CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME());\r\n`;
+            sql += `IF OBJECT_ID(N'dbo.SecretSantaRows', N'U') IS NULL\r\nCREATE TABLE dbo.SecretSantaRows (id INT IDENTITY(1,1) PRIMARY KEY, thoigian NVARCHAR(255) NOT NULL DEFAULT N'', hoten NVARCHAR(500) NOT NULL DEFAULT N'', phongban NVARCHAR(MAX) NULL, wishlist NVARCHAR(MAX) NULL, blacklist NVARCHAR(MAX) NULL, created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME());\r\nGO\r\n\r\n`;
+            sql += `TRUNCATE TABLE dbo.SecretSantaRows;\r\nDELETE FROM dbo.SinhVien;\r\nDELETE FROM dbo.CheckinQua;\r\nDELETE FROM dbo.BangTin;\r\nDELETE FROM dbo.KenhChat;\r\nGO\r\n\r\n`;
 
-            rows.forEach(r => {
+            rawRows.forEach(r => {
                 sql += `INSERT INTO dbo.SecretSantaRows (thoigian, hoten, phongban, wishlist, blacklist) VALUES (${escSql(r.thoigian)}, ${escSql(r.hoten)}, ${escSql(r.phongban)}, ${escSql(r.wishlist)}, ${escSql(r.blacklist)});\r\n`;
             });
 
-            adminAllRecords.forEach(u => {
-                sql += `MERGE dbo.SinhVien AS t USING (SELECT ${escSql(u.mssv || u.hoten)} AS MSSV) AS s ON t.MSSV = s.MSSV WHEN NOT MATCHED THEN INSERT (MSSV, HoTen, DiemBXH, Wishlist, Blacklist, ThoiGianCapNhat, AnhSelfieBase64) VALUES (${escSql(u.mssv || u.hoten)}, ${escSql(u.hoten)}, ${getScoreFromRow(u)}, ${escSql(u.wishlist)}, ${escSql(u.blacklist)}, ${escSql(u.thoigian)}, ${escSql(u.phongban)});\r\n`;
+            students.forEach(u => {
+                const key = u.mssv || u.hoten;
+                const wishData = buildUniqueWishData(u, students);
+                sql += `MERGE dbo.SinhVien AS t USING (SELECT ${escSql(key)} AS MSSV) AS s ON t.MSSV = s.MSSV WHEN MATCHED THEN UPDATE SET HoTen=${escSql(u.hoten)}, DiemBXH=${getScoreFromRow(u)}, MaThiepChuc=${escSql(u.wishId || wishData.wishId)}, Wishlist=${escSql(u.wishlist)}, Blacklist=${escSql(u.blacklist)}, ThoiGianCapNhat=${escSql(u.thoigian)}, AnhSelfieBase64=${escSql(u.phongban)}, UpdatedAt=SYSDATETIME() WHEN NOT MATCHED THEN INSERT (MSSV, HoTen, DiemBXH, MaThiepChuc, Wishlist, Blacklist, AnhSelfieBase64, ThoiGianCapNhat) VALUES (${escSql(key)}, ${escSql(u.hoten)}, ${getScoreFromRow(u)}, ${escSql(u.wishId || wishData.wishId)}, ${escSql(u.wishlist)}, ${escSql(u.blacklist)}, ${escSql(u.phongban)}, ${escSql(u.thoigian)});\r\n`;
             });
 
             giftCheckinMap.forEach((ck, mssv) => {
-                sql += `MERGE dbo.CheckinQua AS t USING (SELECT ${escSql(mssv)} AS MSSV) AS s ON t.MSSV = s.MSSV WHEN NOT MATCHED THEN INSERT (MSSV, HoTen, GhiChuQua, TrangThaiDuyet, ThoiGianCheckin, AnhQuaBase64) VALUES (${escSql(mssv)}, ${escSql(ck.hoten)}, ${escSql(ck.note)}, ${escSql(ck.status)}, ${escSql(ck.thoigian)}, ${escSql(ck.giftImage)});\r\n`;
+                sql += `MERGE dbo.CheckinQua AS t USING (SELECT ${escSql(mssv)} AS MSSV) AS s ON t.MSSV = s.MSSV WHEN MATCHED THEN UPDATE SET HoTen=${escSql(ck.hoten)}, GhiChuQua=${escSql(ck.note)}, TrangThaiDuyet=${escSql(ck.status)}, AnhQuaBase64=${escSql(ck.giftImage)}, ThoiGianCheckin=${escSql(ck.thoigian)}, UpdatedAt=SYSDATETIME() WHEN NOT MATCHED THEN INSERT (MSSV, HoTen, GhiChuQua, TrangThaiDuyet, ThoiGianCheckin, AnhQuaBase64) VALUES (${escSql(mssv)}, ${escSql(ck.hoten)}, ${escSql(ck.note)}, ${escSql(ck.status)}, ${escSql(ck.thoigian)}, ${escSql(ck.giftImage)});\r\n`;
             });
 
             publicFeedPosts.forEach(p => {
-                sql += `MERGE dbo.BangTin AS t USING (SELECT ${escSql(p.postId)} AS PostId) AS s ON t.PostId = s.PostId WHEN NOT MATCHED THEN INSERT (PostId, MSSV, HoTen, Caption, LuotThich, ThoiGianDang, AnhBaiDangBase64) VALUES (${escSql(p.postId)}, ${escSql(p.mssv)}, ${escSql(p.authorName)}, ${escSql(p.caption)}, ${p.likes || 1}, ${escSql(p.thoigian)}, ${escSql(p.image)});\r\n`;
+                sql += `MERGE dbo.BangTin AS t USING (SELECT ${escSql(p.postId)} AS PostId) AS s ON t.PostId = s.PostId WHEN MATCHED THEN UPDATE SET MSSV=${escSql(p.mssv)}, HoTen=${escSql(p.authorName)}, Caption=${escSql(p.caption)}, LuotThich=${p.likes || 1}, AnhBaiDangBase64=${escSql(p.image)}, ThoiGianDang=${escSql(p.thoigian)} WHEN NOT MATCHED THEN INSERT (PostId, MSSV, HoTen, Caption, LuotThich, ThoiGianDang, AnhBaiDangBase64) VALUES (${escSql(p.postId)}, ${escSql(p.mssv)}, ${escSql(p.authorName)}, ${escSql(p.caption)}, ${p.likes || 1}, ${escSql(p.thoigian)}, ${escSql(p.image)});\r\n`;
             });
 
             publicChatMessages.forEach(m => {
-                sql += `MERGE dbo.KenhChat AS t USING (SELECT ${escSql(m.msgId)} AS MsgId) AS s ON t.MsgId = s.MsgId WHEN NOT MATCHED THEN INSERT (MsgId, MSSV, HoTen, NoiDungChat, ThoiGianNhan) VALUES (${escSql(m.msgId)}, ${escSql(m.mssv)}, ${escSql(m.authorName)}, ${escSql(m.message)}, ${escSql(m.thoigian)});\r\n`;
+                sql += `MERGE dbo.KenhChat AS t USING (SELECT ${escSql(m.msgId)} AS MsgId) AS s ON t.MsgId = s.MsgId WHEN MATCHED THEN UPDATE SET MSSV=${escSql(m.mssv)}, HoTen=${escSql(m.authorName)}, NoiDungChat=${escSql(m.message)}, ThoiGianNhan=${escSql(m.thoigian)} WHEN NOT MATCHED THEN INSERT (MsgId, MSSV, HoTen, NoiDungChat, ThoiGianNhan) VALUES (${escSql(m.msgId)}, ${escSql(m.mssv)}, ${escSql(m.authorName)}, ${escSql(m.message)}, ${escSql(m.thoigian)});\r\n`;
             });
 
-            sql += `GO\r\nSELECT * FROM dbo.SinhVien;\r\nSELECT * FROM dbo.CheckinQua;\r\nSELECT * FROM dbo.BangTin;\r\nSELECT * FROM dbo.KenhChat;\r\n`;
+            sql += `GO\r\nSELECT * FROM dbo.SinhVien ORDER BY DiemBXH DESC;\r\nSELECT * FROM dbo.CheckinQua;\r\nSELECT * FROM dbo.BangTin;\r\nSELECT * FROM dbo.KenhChat;\r\n`;
 
             const blob = new Blob(['\uFEFF' + sql], { type: 'application/sql;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
@@ -1963,7 +1990,7 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast('📄 Đã tải xuống file SecretSanta2026_SSMS_Database.sql (Mở bằng SSMS & nhấn F5)!', '🗄️');
+            showToast('📄 Đã tải xuống SecretSanta2026_SSMS_Database.sql (Mở trong SSMS & nhấn F5)!', '🗄️');
         }
 
         let currentStudentRecord = null;
@@ -2852,54 +2879,27 @@
         }
 
         async function saveOrUpdateStudentToSheet(payload, existingRecord = null) {
-            let savedSuccessfully = false;
+            let saved = false;
 
             if (existingRecord && existingRecord._rawHoten) {
-                try {
-                    const resName = await fetch(`${SHEETDB_API}/hoten/${encodeURIComponent(existingRecord._rawHoten)}`, {
-                        method: 'PATCH',
-                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ data: payload })
-                    });
-                    if (resName.ok) {
-                        const jsonName = await resName.json();
-                        if (jsonName && jsonName.updated > 0) savedSuccessfully = true;
-                    }
-                } catch (e) {}
+                const resHoten = await dbPatchRow('hoten', existingRecord._rawHoten, payload);
+                if (resHoten && resHoten.ok) saved = true;
             }
 
-            if (!savedSuccessfully && existingRecord && existingRecord._rawThoigian && !existingRecord._rawThoigian.includes('/')) {
-                try {
-                    const resTime = await fetch(`${SHEETDB_API}/thoigian/${encodeURIComponent(existingRecord._rawThoigian)}`, {
-                        method: 'PATCH',
-                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ data: payload })
-                    });
-                    if (resTime.ok) {
-                        const jsonTime = await resTime.json();
-                        if (jsonTime && jsonTime.updated > 0) savedSuccessfully = true;
-                    }
-                } catch (e) {}
+            if (!saved && existingRecord && existingRecord._rawThoigian && !existingRecord._rawThoigian.includes('/')) {
+                const resTime = await dbPatchRow('thoigian', existingRecord._rawThoigian, payload);
+                if (resTime && resTime.ok) saved = true;
             }
 
-            if (!savedSuccessfully) {
-                const postRes = await fetch(SHEETDB_API, {
-                    method: 'POST',
-                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: [payload] })
-                });
-                if (!postRes.ok) {
-                    throw new Error('SheetDB POST failed with status ' + postRes.status);
-                }
-                await postRes.json();
+            if (!saved) {
+                await dbInsertRow(payload);
+            }
 
-                if (existingRecord && existingRecord._rawHoten && existingRecord._rawHoten !== payload.hoten) {
-                    try {
-                        await fetch(`${SHEETDB_API}/hoten/${encodeURIComponent(existingRecord._rawHoten)}`, {
-                            method: 'DELETE',
-                            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
-                        });
-                    } catch (e) {}
+            if (existingRecord && existingRecord._allRawHotens && existingRecord._allRawHotens.length > 1) {
+                for (const rh of existingRecord._allRawHotens) {
+                    if (rh && rh !== payload.hoten) {
+                        try { await dbDeleteRow('hoten', rh); } catch (e) {}
+                    }
                 }
             }
 
@@ -2953,8 +2953,8 @@
         // 6. NÉN ẢNH ĐỘ NÉT CAO HD (WEBP / JPEG) TRONG NGƯỠNG 46,500 KÝ TỰ CỦA GOOGLE SHEETS
         // =========================================================================
         function encodeCanvasToHDBase64(canvas, maxChars = 46500) {
-            const effectiveMaxChars = isSqlServerMode() ? Math.max(maxChars, 450000) : maxChars;
-            let quality = isSqlServerMode() ? 0.94 : 0.86;
+            const limit = isSqlServerApi() ? Math.max(maxChars, 180000) : maxChars;
+            let quality = isSqlServerApi() ? 0.92 : 0.86;
             // Ưu tiên định dạng WebP để giữ độ nét gấp đôi JPEG trong cùng dung lượng ký tự
             let b64 = canvas.toDataURL('image/webp', quality);
             const useWebp = b64.startsWith('data:image/webp');
@@ -2963,16 +2963,29 @@
                 b64 = canvas.toDataURL('image/jpeg', quality);
             }
 
-            while (b64.length > effectiveMaxChars && quality > 0.32) {
+            while (b64.length > limit && quality > 0.32) {
                 quality -= 0.06;
                 b64 = canvas.toDataURL(mime, quality);
+            }
+
+            let workCanvas = canvas;
+            while (b64.length > limit && workCanvas.width > 180 && workCanvas.height > 180) {
+                const downCanvas = document.createElement('canvas');
+                downCanvas.width = Math.round(workCanvas.width * 0.8);
+                downCanvas.height = Math.round(workCanvas.height * 0.8);
+                const dctx = downCanvas.getContext('2d');
+                dctx.imageSmoothingEnabled = true;
+                dctx.imageSmoothingQuality = 'high';
+                dctx.drawImage(workCanvas, 0, 0, downCanvas.width, downCanvas.height);
+                workCanvas = downCanvas;
+                b64 = workCanvas.toDataURL(mime, 0.72);
             }
             return b64;
         }
 
         function compressImageFileToBase64(file, maxSide = 540, callback) {
             if (!file) return;
-            const targetSide = isSqlServerMode() ? Math.max(maxSide, 780) : maxSide;
+            const targetSide = isSqlServerApi() ? Math.max(maxSide, 780) : maxSide;
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
@@ -3322,6 +3335,10 @@
                 markFeedSeen();
             }
             updateHubBadges();
+
+            if (currentStudentRecord && (Date.now() - _lastDbFetchAt > 15000)) {
+                loadLeaderboardData(tab === 'chat');
+            }
         }
 
         function openChatFromAnywhere() {
@@ -3531,26 +3548,13 @@
             };
 
             try {
-                let updatedOk = false;
+                let updatedCk = false;
                 if (existingCheckin && existingCheckin._rawHoten) {
-                    const resPatch = await fetch(`${SHEETDB_API}/hoten/${encodeURIComponent(existingCheckin._rawHoten)}`, {
-                        method: 'PATCH',
-                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ data: payload })
-                    });
-                    if (resPatch.ok) {
-                        const j = await resPatch.json();
-                        if (j && j.updated > 0) updatedOk = true;
-                    }
+                    const patchRes = await dbPatchRow('hoten', existingCheckin._rawHoten, payload);
+                    if (patchRes && patchRes.ok) updatedCk = true;
                 }
-
-                if (!updatedOk) {
-                    const resPost = await fetch(SHEETDB_API, {
-                        method: 'POST',
-                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ data: [payload] })
-                    });
-                    if (!resPost.ok) throw new Error('POST Checkin failed');
+                if (!updatedCk) {
+                    await dbInsertRow(payload);
                 }
 
                 await loadLeaderboardData();
@@ -3558,7 +3562,7 @@
                 showToast('🎁 Đã gửi ảnh Check-in Quà bảo mật cho Ban Tổ Chức! Vui lòng chờ BTC xác nhận nhé!', '✅');
             } catch (err) {
                 console.error(err);
-                alert('Không thể gửi ảnh Check-in Quà. Vui lòng thử lại!');
+                alert(describeDbError(err));
             } finally {
                 btn.disabled = false;
                 renderUserGiftCheckinState();
@@ -3599,18 +3603,12 @@
             };
 
             try {
-                const res = await fetch(SHEETDB_API, {
-                    method: 'POST',
-                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: [payload] })
-                });
-                if (!res.ok) throw new Error('Send chat failed');
-
+                await dbInsertRow(payload);
                 input.value = '';
                 await loadLeaderboardData(true);
             } catch (err) {
                 console.error(err);
-                showToast('Không thể gửi tin nhắn lúc này. Hãy thử lại nhé!', '⚠️');
+                showToast(describeDbError(err), '⚠️');
             } finally {
                 btn.textContent = origText;
                 btn.disabled = false;
@@ -3696,10 +3694,7 @@
         async function deleteChatByRawHoten(rawHoten) {
             if (!rawHoten) return;
             try {
-                await fetch(`${SHEETDB_API}/hoten/${encodeURIComponent(rawHoten)}`, {
-                    method: 'DELETE',
-                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
-                });
+                await dbDeleteRow('hoten', rawHoten);
                 showToast('🗑️ Đã xóa tin nhắn!', '✅');
                 if (!document.getElementById('pageAdmin').classList.contains('hidden')) {
                     await fetchAdminData();
@@ -3752,12 +3747,7 @@
             };
 
             try {
-                const res = await fetch(SHEETDB_API, {
-                    method: 'POST',
-                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: [payload] })
-                });
-                if (!res.ok) throw new Error('Feed POST error');
+                await dbInsertRow(payload);
 
                 document.getElementById('feedCaptionInput').value = '';
                 document.getElementById('feedImageBase64').value = '';
@@ -3766,9 +3756,10 @@
 
                 await loadLeaderboardData();
                 showToast('🚀 Đã đăng bài lên Bảng Tin Giáng Sinh thành công!', '📸');
+                switchEventPart(3);
             } catch (err) {
                 console.error(err);
-                alert('Không thể đăng bài lúc này. Vui lòng thử lại!');
+                alert(describeDbError(err));
             } finally {
                 btn.innerHTML = origText;
                 btn.disabled = false;
@@ -3855,12 +3846,10 @@
             renderPublicFeed();
 
             try {
-                await fetch(`${SHEETDB_API}/hoten/${encodeURIComponent(post._rawHoten)}`, {
-                    method: 'PATCH',
-                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: { blacklist: `LIKES:${post.likes}` } })
-                });
-            } catch (e) {}
+                await dbPatchRow('hoten', post._rawHoten, { blacklist: `LIKES:${post.likes}` });
+            } catch (e) {
+                console.warn('Like sync failed:', e);
+            }
         }
 
         async function deleteFeedPostByIndex(idx) {
@@ -3870,16 +3859,9 @@
 
             showToast('⏳ Đang xóa bài đăng khỏi Bảng Tin...', '🗑️');
             try {
-                // Xóa theo cột hoten (chứa POST_ID duy nhất) và cả thoigian để tương thích bài cũ
-                await fetch(`${SHEETDB_API}/hoten/${encodeURIComponent(post._rawHoten)}`, {
-                    method: 'DELETE',
-                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
-                });
+                await dbDeleteRow('hoten', post._rawHoten);
                 if (post._rawThoigian && !post._rawThoigian.includes('/')) {
-                    await fetch(`${SHEETDB_API}/thoigian/${encodeURIComponent(post._rawThoigian)}`, {
-                        method: 'DELETE',
-                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
-                    });
+                    await dbDeleteRow('thoigian', post._rawThoigian);
                 }
 
                 showToast('✅ Đã xóa bài đăng khỏi Bảng Tin!', '🗑️');
@@ -3889,7 +3871,7 @@
                     await loadLeaderboardData();
                 }
             } catch (e) {
-                alert('Không thể xóa bài viết. Vui lòng thử lại!');
+                alert(describeDbError(e));
             }
         }
 
@@ -3900,7 +3882,7 @@
             e.preventDefault();
             const mssvVal = normalizeMssv(document.getElementById('loginMssvInput').value);
             if (!mssvVal) {
-                showToast('Vui lòng nhập Mã số sinh viên (VD: TH12345)!', '⚠️');
+                showToast('Vui lòng nhập Mã số sinh viên (VD: TH07941)!', '⚠️');
                 return;
             }
 
@@ -3910,8 +3892,7 @@
             btn.disabled = true;
 
             try {
-                const res = await fetch(SHEETDB_API);
-                const rawData = res.ok ? await res.json() : [];
+                let rawData = await dbFetchRows();
                 const uniqueList = deduplicateRecords(rawData);
 
                 const found = uniqueList.find(r => normalizeMssv(r.mssv) === mssvVal);
@@ -3920,6 +3901,7 @@
                     try { localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(found)); } catch (e) {}
                     enterPart1Screen(found, uniqueList);
                     showMyPrivateWishModal();
+                    showToast(`Chào mừng ${found.hoten || found.mssv} quay trở lại!`, '🎄');
                 } else {
                     switchAuthTab('register');
                     document.getElementById('regMssvInput').value = mssvVal;
@@ -3928,8 +3910,8 @@
                     showToast(`MSSV ${mssvVal} chưa có tài khoản. Hãy đăng ký mới nhé!`, '✨');
                 }
             } catch (err) {
-                console.error(err);
-                alert('Không thể kết nối tới máy chủ dữ liệu. Vui lòng kiểm tra kết nối mạng!');
+                console.error('Login error:', err);
+                alert(describeDbError(err));
             } finally {
                 btn.innerHTML = origText;
                 btn.disabled = false;
@@ -3959,8 +3941,7 @@
             btn.disabled = true;
 
             try {
-                const checkRes = await fetch(SHEETDB_API);
-                const rawRows = checkRes.ok ? await checkRes.json() : [];
+                const rawRows = await dbFetchRows();
                 const uniqueList = deduplicateRecords(rawRows);
 
                 const existing = uniqueList.find(r =>
@@ -3987,9 +3968,10 @@
 
                 enterPart1Screen(savedRecord);
                 showMyPrivateWishModal();
+                showToast(`🎉 Đăng ký & đồng bộ thành công cho ${savedRecord.hoten}!`, '🎄');
             } catch (err) {
                 console.error(err);
-                alert('Có lỗi xảy ra khi lưu dữ liệu lên Google Sheets. Vui lòng thử lại!');
+                alert(describeDbError(err));
             } finally {
                 btn.innerHTML = origText;
                 btn.disabled = false;
@@ -4065,11 +4047,11 @@
                 const updated = await saveOrUpdateStudentToSheet(payload, currentStudentRecord);
                 currentStudentRecord = updated;
                 renderPart1UserInfo(currentStudentRecord);
-                loadLeaderboardData();
-                showToast('✅ Đã lưu cập nhật hồ sơ & Wishlist/Blacklist lên Google Sheets!', '🎁');
+                await loadLeaderboardData();
+                showToast('✅ Đã lưu cập nhật hồ sơ & Wishlist/Blacklist!', '🎁');
             } catch (err) {
                 console.error(err);
-                alert('Không thể lưu thay đổi. Vui lòng thử lại!');
+                alert(describeDbError(err));
             } finally {
                 btn.innerHTML = origText;
                 btn.disabled = false;
@@ -4090,8 +4072,8 @@
             showToast('Đã đăng xuất khỏi tài khoản.', '👋');
         }
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            await autoDetectSqlServerBackend();
+        window.addEventListener('DOMContentLoaded', () => {
+            refreshDbEngineBadge();
             try {
                 const saved = localStorage.getItem(STORAGE_KEY_USER);
                 if (saved) {
@@ -4103,29 +4085,39 @@
                 }
             } catch (e) {}
 
-            // Tự động đồng bộ tin nhắn Chat & Bảng Tin mới mỗi 10 giây khi đang mở trang Sự Kiện
+            // Tự động đồng bộ mỗi 60 giây khi tab đang mở (tránh spam vượt giới hạn miễn phí)
             setInterval(() => {
-                if (currentStudentRecord && !document.getElementById('pageEvent').classList.contains('hidden')) {
+                if (!document.hidden && currentStudentRecord && !document.getElementById('pageEvent').classList.contains('hidden')) {
                     loadLeaderboardData(false);
                 }
-            }, 10000);
+            }, 60000);
+
+            // Tự động đồng bộ ngay khi quay lại tab sau > 15 giây
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden && currentStudentRecord && !document.getElementById('pageEvent').classList.contains('hidden')) {
+                    if (Date.now() - _lastDbFetchAt > 15000) {
+                        loadLeaderboardData(false);
+                    }
+                }
+            });
         });
 
         // =========================================================================
         // 11. BẢNG XẾP HẠNG ĐIỂM SỰ KIỆN
         // =========================================================================
         async function loadLeaderboardData(scrollChat = false) {
+            if (_isLoadingBoardData) return;
+            _isLoadingBoardData = true;
             try {
                 const prevChatCount = publicChatMessages.length;
-                const res = await fetch(SHEETDB_API);
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                const rawData = await res.json();
+                const rawData = await dbFetchRows();
                 const uniqueList = deduplicateRecords(rawData);
 
                 if (currentStudentRecord && currentStudentRecord.mssv) {
                     const freshMe = uniqueList.find(r => normalizeMssv(r.mssv) === normalizeMssv(currentStudentRecord.mssv));
                     if (freshMe) {
                         currentStudentRecord = freshMe;
+                        try { localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(freshMe)); } catch (e) {}
                         renderPart1UserInfo(freshMe, uniqueList);
                     }
                 }
@@ -4135,7 +4127,18 @@
                 renderPublicFeed();
                 renderChatMessages(scrollChat || publicChatMessages.length > prevChatCount);
             } catch (err) {
-                console.error('Lỗi tải dữ liệu:', err);
+                console.warn('Lỗi đồng bộ dữ liệu:', err.message);
+                const cached = getLocalCachedRows();
+                if (allSheetRecordsCache.length === 0 && cached.length > 0) {
+                    const fallbackList = deduplicateRecords(cached);
+                    renderLeaderboard(fallbackList);
+                    renderChristmasTreePyramid(fallbackList);
+                    renderUserGiftCheckinState();
+                    renderPublicFeed();
+                    renderChatMessages(false);
+                }
+            } finally {
+                _isLoadingBoardData = false;
             }
         }
 
@@ -4342,21 +4345,30 @@
         async function fetchAdminData() {
             const tbody = document.getElementById('adminTableBody');
             const mobileBox = document.getElementById('adminMobileCards');
-            tbody.innerHTML = `<tr><td colspan="9" class="p-10 text-center text-gray-500 font-medium">⏳ Đang tải danh sách từ Google Sheets...</td></tr>`;
+            refreshDbEngineBadge();
+            tbody.innerHTML = `<tr><td colspan="9" class="p-10 text-center text-gray-500 font-medium">⏳ Đang tải danh sách từ Database...</td></tr>`;
             mobileBox.innerHTML = `<div class="p-6 text-center text-gray-500 bg-white rounded-xl">⏳ Đang tải danh sách...</div>`;
 
             try {
-                const res = await fetch(SHEETDB_API);
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                const data = await res.json();
+                const data = await dbFetchRows();
                 adminAllRecords = deduplicateRecords(Array.isArray(data) ? data : []);
                 updateAdminStats();
                 renderAdminTable();
                 renderAdminModerationPanels();
             } catch (err) {
                 console.error('Lỗi tải dữ liệu Admin:', err);
-                tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-red-600 font-semibold">❌ Không thể tải dữ liệu từ SheetDB!</td></tr>`;
-                mobileBox.innerHTML = `<div class="p-6 text-center text-red-600 bg-white rounded-xl font-bold">❌ Không thể tải dữ liệu!</div>`;
+                const errMsg = describeDbError(err);
+                const cached = getLocalCachedRows();
+                if (cached.length > 0) {
+                    adminAllRecords = deduplicateRecords(cached);
+                    updateAdminStats();
+                    renderAdminTable();
+                    renderAdminModerationPanels();
+                    showToast(`⚠️ ${errMsg}`, '⚠️');
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-red-600 font-semibold">❌ ${escapeHtml(errMsg)}</td></tr>`;
+                    mobileBox.innerHTML = `<div class="p-6 text-center text-red-600 bg-white rounded-xl font-bold">❌ ${escapeHtml(errMsg)}</div>`;
+                }
             }
         }
 
@@ -4627,11 +4639,7 @@
                     "wishlist": ck.note,
                     "blacklist": "APPROVED"
                 };
-                await fetch(`${SHEETDB_API}/hoten/${encodeURIComponent(ck._rawHoten)}`, {
-                    method: 'PATCH',
-                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: ckPayload })
-                });
+                await dbPatchRow('hoten', ck._rawHoten, ckPayload);
 
                 const newScore = getScoreFromRow(row) + 100;
                 const wishData = buildUniqueWishData(row, adminAllRecords);
@@ -4737,10 +4745,7 @@
                     : (row._rawHoten ? [row._rawHoten] : []);
 
                 for (const rh of rawHotens) {
-                    await fetch(`${SHEETDB_API}/hoten/${encodeURIComponent(rh)}`, {
-                        method: 'DELETE',
-                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
-                    });
+                    await dbDeleteRow('hoten', rh);
                 }
 
                 const rawTimes = row._allRawTimes && row._allRawTimes.length > 0
@@ -4749,10 +4754,7 @@
 
                 for (const rt of rawTimes) {
                     if (!rt.includes('/')) {
-                        await fetch(`${SHEETDB_API}/thoigian/${encodeURIComponent(rt)}`, {
-                            method: 'DELETE',
-                            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
-                        });
+                        await dbDeleteRow('thoigian', rt);
                     }
                 }
 
