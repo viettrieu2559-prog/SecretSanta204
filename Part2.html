@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dọn Phòng Họp 204 — Đại Chiến Tổng Vệ Sinh</title>
+  <link rel="stylesheet" href="part2.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- TOP HUD -->
+    <header id="hud">
+      <div class="hud-brand">
+        <span class="room-badge">PHÒNG 204</span>
+        <span class="sub-badge" id="level-name">Ca 1/4</span>
+      </div>
+
+      <div class="hud-stats">
+        <div class="stat-pill" id="time-box" title="Thời gian còn lại">
+          <span class="stat-icon">⏱️</span>
+          <span class="stat-val" id="time">60</span><small>s</small>
+        </div>
+
+        <div class="stat-pill" title="Điểm số">
+          <span class="stat-icon">⭐</span>
+          <span class="stat-val" id="score">0</span>
+        </div>
+
+        <div class="stat-pill combo-pill" id="combo-box" title="Chuỗi làm đúng liên tiếp">
+          <span class="stat-icon">🔥</span>
+          <span class="stat-val" id="combo">x0</span>
+        </div>
+
+        <div class="stat-pill lives-pill" id="lives-box" title="Uy tín với Quản lý (Mất hết là bị đuổi việc!)">
+          <span id="lives">❤️❤️❤️</span>
+        </div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-bar-bg">
+          <div id="progress-bar"></div>
+          <span id="progress-text">Tiến độ: 0/0 (0%)</span>
+        </div>
+      </div>
+
+      <div class="hud-actions">
+        <button class="icon-btn pause-btn" id="btn-pause" title="Tạm dừng trò chơi (Phím P)">⏸️ <small>Tạm dừng</small></button>
+        <button class="icon-btn" id="btn-hint" title="Gợi ý vị trí lỗi ẩn (-15 điểm)">💡 <small>Gợi ý</small></button>
+        <button class="icon-btn" id="btn-mute" title="Bật/Tắt âm thanh">🔊</button>
+        <button class="icon-btn" id="btn-restart" title="Chơi lại màn này">🔄</button>
+        <button class="icon-btn" id="btn-exit-hub" title="Lưu & quay về Trạm Secret Santa" style="display:none">🏠 <small>Về Trạm</small></button>
+      </div>
+    </header>
+
+    <!-- TASK CHECKLIST BAR -->
+    <section id="task-bar">
+      <div class="task-chip" id="task-sort">📦 Phân loại đồ: <b id="cnt-sort">0</b></div>
+      <div class="task-chip" id="task-wipe">🧽 Lau sàn & bảng: <b id="cnt-wipe">0</b></div>
+      <div class="task-chip" id="task-fix">🔧 Chỉnh nội thất: <b id="cnt-fix">0</b></div>
+      <div class="task-chip warn-chip" id="task-pest">🪳 Diệt gián: <b id="cnt-pest">0</b></div>
+      <div class="task-chip poodle-chip" id="task-poodle" title="Nhấp vào bé Poodle trắng trong phòng để cưng nựng, bé sẽ đi bắt gián giúp bạn!">🐩 Poodle Bông: <b id="poodle-state">Đang dạo</b></div>
+    </section>
+
+    <!-- MAIN ROOM 204 VIEWPORT -->
+    <main id="room-wrap">
+      <div id="room">
+        <img src="room204.jpg" alt="Sơ đồ Phòng 204" class="room-bg" draggable="false" />
+        <!-- Lớp chứa các điểm tương tác cố định trên sơ đồ Phòng 204 -->
+        <div id="hotspots-layer"></div>
+        <!-- Lớp chứa vết bẩn cần chà (sàn gạch vàng + bảng trắng) -->
+        <div id="stains-layer"></div>
+        <!-- Lớp chứa đồ vật bừa bộn + côn trùng + bé Poodle trắng -->
+        <div id="items-layer"></div>
+        <!-- Lớp hiệu ứng hạt / tia sáng -->
+        <div id="fx-layer"></div>
+      </div>
+    </main>
+
+    <!-- BOTTOM SORTING BINS -->
+    <section id="bins-wrap">
+      <div id="bins"></div>
+    </section>
+  </div>
+
+  <!-- CON TRỎ CÔNG CỤ -->
+  <div id="sponge">🧽</div>
+
+  <!-- MODAL OVERLAY -->
+  <div id="overlay" class="overlay">
+    <div class="modal-card" id="card"></div>
+  </div>
+
+  <script src="part2.js"></script>
+</body>
+</html>
