@@ -644,6 +644,63 @@
         <iframe id="part2GameFrame" src="about:blank" title="Mini-Game Dọn Phòng Họp 204" class="flex-1 w-full h-full border-0 bg-slate-950" allow="autoplay"></iframe>
     </div>
 
+    <!-- MODAL CHÚC MỪNG ĐIỂM DANH HẰNG NGÀY (DAILY CHECK-IN 1-100 PTS) -->
+    <div id="dailyCheckinRewardModal" class="hidden fixed inset-0 bg-black/75 z-[192] flex items-center justify-center p-4" onclick="closeDailyCheckinModal()">
+        <div class="bg-gradient-to-b from-amber-50 via-white to-red-50 border-4 border-amber-400 rounded-3xl max-w-md w-full p-6 text-center shadow-2xl space-y-4 greeting-card-anim" onclick="event.stopPropagation()">
+            <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-amber-400 to-red-600 text-white flex items-center justify-center text-4xl shadow-lg animate-bounce">
+                📅
+            </div>
+            <span id="dailyModalDateBadge" class="inline-block bg-red-100 text-red-700 font-black text-[11px] px-3 py-1 rounded-full uppercase tracking-wider">
+                Điểm Danh Hằng Ngày
+            </span>
+            <h3 id="dailyModalTitle" class="text-xl sm:text-2xl font-black text-red-800 leading-snug">
+                Bạn nhận được +50 điểm điểm danh hôm nay!
+            </h3>
+            <p id="dailyModalDesc" class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                Điểm thưởng ngẫu nhiên (1 – 100 điểm) đã được cộng trực tiếp vào quỹ Điểm Tích Lũy của bạn để đổi Vật Phẩm Noel!
+            </p>
+            <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-2xl p-3.5 shadow-inner">
+                <p class="text-[11px] uppercase font-bold text-emerald-100">Tổng điểm tích lũy hiện tại</p>
+                <p class="text-2xl font-black text-amber-300 mt-0.5"><span id="dailyModalTotalPts">150</span> PTS</p>
+            </div>
+            <div class="flex gap-2 justify-center pt-1">
+                <button type="button" onclick="closeDailyCheckinModal(); switchEventPart(1); switchHubTab('shop');" class="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow transition">
+                    🎁 Vào Cửa Hàng Đổi Quà
+                </button>
+                <button type="button" onclick="closeDailyCheckinModal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-extrabold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL KẾT QUẢ MỞ HỘP QUÀ BÍ ẨN TỪ BTC (COLLECTION MILESTONE) -->
+    <div id="mysteryBoxResultModal" class="hidden fixed inset-0 bg-black/80 z-[194] flex items-center justify-center p-4" onclick="closeMysteryBoxResultModal()">
+        <div class="bg-gradient-to-b from-slate-900 via-red-950 to-slate-900 text-white border-4 border-amber-400 rounded-3xl max-w-md w-full p-6 text-center shadow-2xl space-y-4 greeting-card-anim" onclick="event.stopPropagation()">
+            <div id="mysteryModalIcon" class="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-br from-amber-300 via-amber-500 to-red-600 text-slate-950 flex items-center justify-center text-5xl shadow-2xl animate-bounce">
+                🎁
+            </div>
+            <span class="inline-block bg-amber-400 text-red-950 font-black text-[11px] px-3.5 py-1 rounded-full uppercase tracking-wider shadow">
+                🌟 Phần Thưởng Độc Quyền Từ BTC Phòng 204
+            </span>
+            <h3 id="mysteryModalGiftName" class="text-xl sm:text-2xl font-black text-amber-300 leading-snug">
+                Hộp Quà Bí Ẩn BTC
+            </h3>
+            <p id="mysteryModalGiftDesc" class="text-xs sm:text-sm text-amber-100/90 leading-relaxed"></p>
+            <div class="bg-white/10 border-2 border-dashed border-amber-300 rounded-2xl p-3.5 space-y-1">
+                <p class="text-[10px] uppercase tracking-wider text-amber-200 font-bold">Mã xác nhận nhận quà tại Phòng 204</p>
+                <p id="mysteryModalGiftCode" class="text-lg sm:text-xl font-black text-emerald-300 tracking-widest font-mono">BTC204-XXXX</p>
+                <p id="mysteryModalGiftTime" class="text-[11px] text-gray-300"></p>
+            </div>
+            <p class="text-[11px] text-amber-200/80 italic">
+                💡 Hãy chụp màn hình hoặc đưa mã này trong mục "Lịch sử đổi quà" cho Ban Tổ Chức tại buổi Offline Phòng 204 nhé!
+            </p>
+            <button type="button" onclick="closeMysteryBoxResultModal()" class="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-105 text-red-950 font-black text-sm py-3 rounded-xl shadow-lg transition">
+                🎉 Tuyệt vời! Lưu vào Lịch Sử Quà
+            </button>
+        </div>
+    </div>
+
     <!-- TRÌNH PHÁT NHẠC GIÁNG SINH -->
     <div class="fixed bottom-3 right-3 z-[100] flex flex-col items-end gap-2">
         <div id="musicOptions" class="hidden bg-slate-900/95 backdrop-blur-md border border-amber-400/40 rounded-2xl p-3.5 shadow-2xl mb-1 w-[calc(100vw-1.5rem)] max-w-[280px] text-white space-y-2.5">
@@ -898,7 +955,10 @@
                         </p>
                     </div>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button type="button" id="btnHeaderDailyCheckin" onclick="checkAndTriggerDailyCheckin(true)" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:brightness-105 text-white font-extrabold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 whitespace-nowrap shadow-sm">
+                        <span>📅</span> <span id="headerDailyCheckinLabel">Điểm danh (+1~100 PTS)</span>
+                    </button>
                     <button onclick="openMyChristmasWishModal()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 whitespace-nowrap shadow-sm">
                         <span>🔒</span> <span>Lời Chúc Bí Mật Của Bạn</span>
                     </button>
@@ -965,9 +1025,9 @@
                     <div id="part1UnlockedWrapper" class="space-y-5">
 
                     <!-- =========================================================== -->
-                    <!-- THANH TAB RIÊNG: TRANG CHÍNH / CÂY THÔNG / BẢNG TIN / CHAT   -->
+                    <!-- THANH TAB RIÊNG: TRANG CHÍNH / CÂY THÔNG / BẢNG TIN / CHAT / ĐỔI QUÀ -->
                     <!-- =========================================================== -->
-                    <div id="hubSubNav" class="hub-subnav sticky top-2 z-30 grid grid-cols-4 gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-2xl">
+                    <div id="hubSubNav" class="hub-subnav sticky top-2 z-30 grid grid-cols-5 gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-2xl">
                         <button type="button" id="hubTabHome" onclick="switchHubTab('home')" class="hub-tab active">
                             <span class="hub-tab-icon">🏠</span><span class="hub-tab-label">Trang Chính</span>
                         </button>
@@ -983,6 +1043,10 @@
                             <span class="hub-tab-icon">💬</span><span class="hub-tab-label">Kênh Chat</span>
                             <span id="hubChatBadge" class="hub-tab-badge hidden">0</span>
                         </button>
+                        <button type="button" id="hubTabShop" onclick="switchHubTab('shop')" class="hub-tab">
+                            <span class="hub-tab-icon">🎁</span><span class="hub-tab-label">Đổi Quà</span>
+                            <span id="hubShopBadge" class="hub-tab-badge" style="background:#d97706">0/5</span>
+                        </button>
                     </div>
 
                     <!-- =========================================================== -->
@@ -990,8 +1054,8 @@
                     <!-- =========================================================== -->
                     <div id="hubPanelHome" class="hub-panel space-y-6">
 
-                        <!-- 3 THẺ LỐI TẮT NỔI BẬT TỚI CÂY THÔNG / BẢNG TIN / KÊNH CHAT -->
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <!-- 4 THẺ LỐI TẮT NỔI BẬT TỚI CÂY THÔNG / BẢNG TIN / KÊNH CHAT / ĐỔI QUÀ -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                             <button type="button" onclick="switchHubTab('tree')" class="hub-shortcut text-left bg-gradient-to-br from-emerald-700 via-emerald-800 to-slate-900">
                                 <div class="flex items-center justify-between">
                                     <span class="text-3xl">🎄</span>
@@ -1017,6 +1081,15 @@
                                 <p class="font-black text-base mt-2">Kênh Chat Chung</p>
                                 <p id="homeChatStat" class="text-xs text-amber-100">0 tin nhắn</p>
                                 <p id="homeChatPreview" class="text-[11px] text-white/80 italic truncate mt-1">Chưa có tin nhắn nào...</p>
+                            </button>
+                            <button type="button" onclick="switchHubTab('shop')" class="hub-shortcut text-left bg-gradient-to-br from-purple-700 via-indigo-800 to-slate-900">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-3xl">🎁</span>
+                                    <span class="text-[10px] font-black bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full">ĐỔI QUÀ →</span>
+                                </div>
+                                <p class="font-black text-base mt-2">Cửa Hàng &amp; Túi Đồ Noel</p>
+                                <p id="homeShopStat" class="text-xs text-purple-200">Đã sưu tập: 0/5 vật phẩm</p>
+                                <p class="text-[11px] text-amber-200/90 truncate mt-1">Đủ 5 món mở Hộp Quà Bí Ẩn BTC!</p>
                             </button>
                         </div>
 
@@ -1337,6 +1410,127 @@
                         </div>
                     </div>
 
+                    <!-- =========================================================== -->
+                    <!-- TAB 5: CỬA HÀNG ĐỔI QUÀ & TÚI ĐỒ NOEL (REWARD SHOP & INVENTORY) -->
+                    <!-- =========================================================== -->
+                    <div id="hubPanelShop" class="hub-panel hidden space-y-6">
+                        <!-- BANNER TỔNG QUAN ĐIỂM TÍCH LŨY & NHIỆM VỤ KIẾM ĐIỂM HẰNG NGÀY -->
+                        <div class="bg-gradient-to-br from-red-900 via-red-800 to-slate-900 text-white rounded-3xl p-4 sm:p-6 border-2 border-amber-400 shadow-2xl space-y-4">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div class="space-y-1">
+                                    <span class="inline-block bg-amber-400 text-red-950 font-black text-[11px] px-3 py-0.5 rounded-full uppercase tracking-wider">
+                                        🎁 Trung Tâm Đổi Thưởng &amp; Tích Lũy Secret Santa 2026
+                                    </span>
+                                    <h3 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+                                        <span>🛒 Cửa Hàng Vật Phẩm Noel &amp; Kho Báu Phòng 204</span>
+                                    </h3>
+                                    <p class="text-xs sm:text-sm text-amber-100/90">
+                                        Điểm danh mỗi ngày (1–100 PTS) &amp; chơi Minigame (50–100 PTS/lượt) để tích điểm đổi trọn bộ 5 Vật Phẩm Noel, mở khóa <strong>Hộp Quà Bí Ẩn Từ BTC</strong>!
+                                    </p>
+                                </div>
+                                <div class="bg-black/35 border-2 border-amber-300/70 rounded-2xl px-5 py-3 text-center shrink-0">
+                                    <p class="text-[11px] uppercase tracking-wider text-amber-200 font-bold">Điểm tích lũy hiện có</p>
+                                    <p class="text-2xl sm:text-3xl font-black text-amber-300 mt-0.5"><span id="shopMyPointsText">150</span> <span class="text-sm font-extrabold">PTS</span></p>
+                                </div>
+                            </div>
+
+                            <!-- 2 LUỒNG KIẾM ĐIỂM CHÍNH: LUỒNG A (ĐIỂM DANH) & LUỒNG B (MINIGAME) -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-3.5 flex items-center justify-between gap-3">
+                                    <div class="space-y-0.5">
+                                        <p class="text-xs sm:text-sm font-black text-amber-300 flex items-center gap-1.5">
+                                            <span>📅</span> <span>Luồng A: Điểm Danh Hằng Ngày</span>
+                                        </p>
+                                        <p id="shopDailyStatusText" class="text-[11px] text-emerald-100">Nhận ngẫu nhiên từ 1 đến 100 điểm mỗi ngày đăng nhập!</p>
+                                    </div>
+                                    <button type="button" id="btnShopDailyCheckin" onclick="checkAndTriggerDailyCheckin(true)" class="bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 font-black text-xs px-3.5 py-2.5 rounded-xl shadow hover:brightness-105 transition whitespace-nowrap shrink-0">
+                                        🎲 Điểm Danh Ngay
+                                    </button>
+                                </div>
+                                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-3.5 flex items-center justify-between gap-3">
+                                    <div class="space-y-0.5">
+                                        <p class="text-xs sm:text-sm font-black text-sky-300 flex items-center gap-1.5">
+                                            <span>🧹</span> <span>Luồng B: Chơi Minigame Nhận Điểm</span>
+                                        </p>
+                                        <p id="shopMinigamePlaysText" class="text-[11px] text-sky-100">Thưởng ngẫu nhiên 50 – 100 PTS / lượt thắng (Tối đa 5 lượt/ngày)</p>
+                                    </div>
+                                    <button type="button" onclick="switchEventPart(2)" class="bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-xs px-3.5 py-2.5 rounded-xl shadow hover:brightness-105 transition whitespace-nowrap shrink-0">
+                                        🎮 Tới Minigame →
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KHU VỰC 1: TÚI ĐỒ CỦA BẠN & CỬA HÀNG ĐỔI VẬT PHẨM NOEL -->
+                        <div class="bg-white rounded-3xl p-4 sm:p-6 border-2 border-amber-200 shadow-lg space-y-5">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 pb-3">
+                                <div>
+                                    <h4 class="text-base sm:text-lg font-black text-gray-800 flex items-center gap-2">
+                                        <span>🎒</span> <span>1. Cửa Hàng Đổi Vật Phẩm Noel &amp; Túi Đồ Cá Nhân</span>
+                                    </h4>
+                                    <p class="text-xs text-gray-500 mt-0.5">Dùng điểm tích lũy (<code class="text-red-700 font-bold">diem_tich_luoi</code>) để quy đổi 5 bảo vật Giáng Sinh vào Túi đồ của bạn.</p>
+                                </div>
+                                <span id="shopOwnedCountBadge" class="inline-flex items-center self-start sm:self-auto bg-amber-100 text-amber-900 border border-amber-300 font-black text-xs px-3 py-1 rounded-full">
+                                    Túi đồ: 0/5 vật phẩm
+                                </span>
+                            </div>
+
+                            <!-- Khung Túi Đồ Hiện Tại (vat_pham_so_huu) -->
+                            <div class="bg-gradient-to-r from-amber-50/80 via-orange-50/50 to-red-50/80 border border-amber-200 rounded-2xl p-3.5">
+                                <p class="text-xs font-extrabold text-amber-900 mb-2.5 flex items-center gap-1.5">
+                                    <span>✨</span> <span>Túi Đồ Đang Sở Hữu (<code class="text-[11px]">vat_pham_so_huu</code>):</span>
+                                </p>
+                                <div id="noelInventorySlots" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5"></div>
+                            </div>
+
+                            <!-- Danh sách 5 vật phẩm Noel trong cửa hàng -->
+                            <div id="noelShopItemsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
+                        </div>
+
+                        <!-- KHU VỰC 2: SƯ ĐOÀN SƯU TẬP & NHẬN QUÀ BÍ ẨN TỪ BTC (COLLECTION MILESTONE) -->
+                        <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white rounded-3xl p-4 sm:p-6 border-2 border-amber-400 shadow-2xl space-y-5">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div class="space-y-1.5">
+                                    <span class="inline-block bg-amber-400 text-slate-950 font-black text-[10px] px-3 py-0.5 rounded-full uppercase tracking-wider">
+                                        🏆 Collection Milestone • Sư Đoàn Sưu Tập
+                                    </span>
+                                    <h4 class="text-lg sm:text-xl font-black text-amber-300 flex items-center gap-2">
+                                        <span>🎁 2. Sư Đoàn Sưu Tập &amp; Mở Hộp Quà Bí Ẩn Từ BTC</span>
+                                    </h4>
+                                    <p class="text-xs sm:text-sm text-indigo-100 leading-relaxed">
+                                        Khi sở hữu đủ trọn bộ <strong>5 Vật Phẩm Noel</strong> (🎅 Mũ Santa, 🧦 Tất Giáng Sinh, 🔔 Chuông Bạc, 🦌 Sừng Tuần Lộc, 🎄 Cây Thông 204), nút mở Hộp Quà Bí Ẩn từ Ban Tổ Chức sẽ sáng lên!
+                                    </p>
+                                </div>
+                                <div class="text-center shrink-0">
+                                    <button type="button" id="btnOpenBtcMysteryBox" onclick="claimBtcMysteryBox()" disabled class="w-full md:w-auto px-6 py-3.5 rounded-2xl font-black text-xs sm:text-sm bg-slate-700 text-slate-300 border-2 border-slate-500 cursor-not-allowed transition flex items-center justify-center gap-2 shadow-lg">
+                                        <span>🔒</span> <span>Mở Hộp Quà Bí Ẩn Từ BTC (0/5)</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Thanh tiến độ 5/5 món -->
+                            <div class="bg-white/10 border border-white/15 rounded-2xl p-3.5 space-y-2">
+                                <div class="flex items-center justify-between text-xs font-extrabold">
+                                    <span id="btcCollectionProgressText" class="text-amber-200">Tiến độ bộ sưu tập: 0/5 vật phẩm Noel</span>
+                                    <span id="btcCollectionStatusLabel" class="text-indigo-200">Chưa đủ bộ</span>
+                                </div>
+                                <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden p-0.5">
+                                    <div id="btcCollectionProgressBar" class="h-full bg-gradient-to-r from-amber-400 via-emerald-400 to-teal-300 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Lịch sử đổi quà ngẫu nhiên từ BTC (lich_su_doi_qua) -->
+                            <div class="bg-black/30 border border-white/15 rounded-2xl p-4 space-y-2.5">
+                                <p class="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                                    <span>📜</span> <span>Lịch Sử Nhận Quà Bí Ẩn Từ BTC (<code class="text-[11px]">lich_su_doi_qua</code>):</span>
+                                </p>
+                                <div id="btcGiftHistoryList" class="space-y-2 text-xs text-indigo-100">
+                                    <p class="text-indigo-300/70 italic">Chưa có lịch sử mở Hộp Quà Bí Ẩn nào. Hãy sưu tập đủ 5 vật phẩm Noel để mở hộp quà đầu tiên nhé!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     </div>
                 </div>
 
@@ -1353,7 +1547,7 @@
                         </span>
                         <h3 id="part2TitleEl" class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 2: Dọn Phòng Họp 204 — Đại Chiến Tổng Vệ Sinh</h3>
                         <p id="part2DescEl" class="text-gray-600 text-xs sm:text-base leading-relaxed">
-                            Tại Chặng 2, hãy phối hợp cùng bé Poodle trắng <strong>Bông 🐩</strong> tổng vệ sinh Phòng 204 qua 4 Ca trực để tích lũy tới <strong>+300 PTS</strong> vào Bảng Xếp Hạng Secret Santa và quy đổi <strong>Ấn Phẩm Giáng Sinh</strong>!
+                            Tại Chặng 2, hãy phối hợp cùng bé Poodle trắng <strong>Gôn Đi 🐩</strong> tổng vệ sinh Phòng 204! Mỗi lượt hoàn thành Ca trực nhận ngẫu nhiên <strong>+50 đến +100 PTS</strong> (tối đa 5 lượt thưởng/ngày) để đổi trọn bộ <strong>5 Vật Phẩm Noel</strong>!
                         </p>
                         <div id="part2CountdownBanner" class="hidden max-w-lg mx-auto bg-slate-900 text-white rounded-2xl p-4 border-2 border-amber-400 shadow-lg space-y-1"></div>
                         <div id="part2UnlockedBar" class="hidden max-w-xl mx-auto bg-gradient-to-r from-emerald-600 to-green-700 text-white rounded-2xl p-4 border-2 border-lime-300 shadow-lg space-y-1.5">
@@ -1374,16 +1568,14 @@
                             <div class="sm:col-span-3 space-y-2.5 text-left">
                                 <div class="flex items-center justify-between gap-2 flex-wrap">
                                     <h4 class="text-base sm:text-lg font-black text-amber-300">🧹 Đại Chiến Dọn Phòng 204</h4>
-                                    <span id="part2RewardProgressBadge" class="text-[11px] bg-emerald-500/25 text-emerald-200 border border-emerald-400/50 font-extrabold px-2.5 py-0.5 rounded-full">🎁 Đã nhận: 0/300 PTS</span>
+                                    <span id="part2RewardProgressBadge" class="text-[11px] bg-emerald-500/25 text-emerald-200 border border-emerald-400/50 font-extrabold px-2.5 py-0.5 rounded-full">🎲 Lượt thưởng hôm nay: 0/5</span>
                                 </div>
                                 <p class="text-xs text-teal-100 leading-relaxed">
                                     Kéo thả rác vào đúng thùng, chà sạch vết bẩn trên sàn/bảng trắng, chỉnh 3 bảng khẩu hiệu, tắt TV, dựng bình hoa &amp; cùng bé Poodle Bông tiêu diệt lũ gián tinh quái!
                                 </p>
                                 <div class="flex flex-wrap gap-1.5 text-[10px] font-bold">
-                                    <span class="bg-white/10 border border-white/15 px-2 py-1 rounded-lg text-amber-200">Ca 1: +75 PTS</span>
-                                    <span class="bg-white/10 border border-white/15 px-2 py-1 rounded-lg text-amber-200">Ca 2: +150 PTS</span>
-                                    <span class="bg-white/10 border border-white/15 px-2 py-1 rounded-lg text-amber-200">Ca 3: +225 PTS</span>
-                                    <span class="bg-emerald-500/25 border border-emerald-300/40 px-2 py-1 rounded-lg text-emerald-200">Ca 4: Trọn 300 PTS</span>
+                                    <span class="bg-emerald-500/25 border border-emerald-300/40 px-2 py-1 rounded-lg text-emerald-200">🎲 Thưởng thắng: 50 – 100 PTS / lượt</span>
+                                    <span class="bg-white/10 border border-white/15 px-2 py-1 rounded-lg text-amber-200">⚡ Giới hạn: 5 lượt nhận điểm / ngày</span>
                                     <span id="part2GameBestBadge" class="bg-sky-500/25 border border-sky-300/40 px-2 py-1 rounded-lg text-sky-200">🏆 Kỷ lục game: 0đ</span>
                                 </div>
                                 <div class="pt-1 flex flex-col sm:flex-row sm:items-center gap-2">
@@ -1396,38 +1588,43 @@
                         </div>
                     </div>
 
-                    <div class="bg-gradient-to-br from-amber-50 via-white to-red-50 border-2 border-amber-300 rounded-2xl p-4 sm:p-6 shadow-md">
-                        <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
+                    <div class="bg-gradient-to-br from-amber-50 via-white to-red-50 border-2 border-amber-300 rounded-2xl p-4 sm:p-6 shadow-md space-y-4">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
                             <h4 class="text-sm sm:text-base font-extrabold text-red-800 flex items-center gap-1.5">
-                                <span>🎒</span> Trạm Đổi Ấn Phẩm &amp; Quà Bí Mật BTC
+                                <span>🎒</span> Cửa Hàng 5 Vật Phẩm Noel &amp; Hộp Quà Bí Ẩn BTC
                             </h4>
-                            <span id="part2ShopStatusBadge" class="text-[11px] bg-gray-200 text-gray-700 font-bold px-2.5 py-0.5 rounded-full">🔒 Sắp ra mắt</span>
+                            <span id="part2ShopStatusBadge" class="text-[11px] bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-300">🟢 Đang mở đổi vật phẩm</span>
                         </div>
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                             <div class="bg-white p-3 rounded-xl border border-dashed border-amber-400">
-                                <div class="text-3xl mb-1">🦌</div>
-                                <p class="text-xs font-extrabold text-gray-800">Ấn Phẩm 1</p>
-                                <p class="text-[10px] text-amber-700 font-semibold">Huy Hiệu Tuần Lộc</p>
-                                <span id="part2Item1Status" class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">300 PTS</span>
+                                <div class="text-3xl mb-1">🎅</div>
+                                <p class="text-xs font-extrabold text-gray-800">Mũ Santa &amp; Tất</p>
+                                <p class="text-[10px] text-amber-700 font-semibold">1,000 – 1,500 PTS</p>
+                                <span id="part2Item1Status" class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">1,000 PTS</span>
                             </div>
                             <div class="bg-white p-3 rounded-xl border border-dashed border-amber-400">
                                 <div class="text-3xl mb-1">🔔</div>
-                                <p class="text-xs font-extrabold text-gray-800">Ấn Phẩm 2</p>
-                                <p class="text-[10px] text-amber-700 font-semibold">Chuông Bạc Yêu Tinh</p>
-                                <span id="part2Item2Status" class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">500 PTS</span>
+                                <p class="text-xs font-extrabold text-gray-800">Chuông &amp; Sừng</p>
+                                <p class="text-[10px] text-amber-700 font-semibold">2,000 – 3,000 PTS</p>
+                                <span id="part2Item2Status" class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">2,000 PTS</span>
                             </div>
                             <div class="bg-white p-3 rounded-xl border border-dashed border-amber-400">
-                                <div class="text-3xl mb-1">🌟</div>
-                                <p class="text-xs font-extrabold text-gray-800">Ấn Phẩm 3</p>
-                                <p class="text-[10px] text-amber-700 font-semibold">Ngôi Sao Bắc Cực</p>
-                                <span id="part2Item3Status" class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">700 PTS</span>
+                                <div class="text-3xl mb-1">🎄</div>
+                                <p class="text-xs font-extrabold text-gray-800">Cây Thông 204</p>
+                                <p class="text-[10px] text-amber-700 font-semibold">Vật phẩm cấp cao</p>
+                                <span id="part2Item3Status" class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">5,000 PTS</span>
                             </div>
                             <div class="bg-gradient-to-b from-red-600 to-red-800 text-white p-3 rounded-xl border-2 border-amber-300 shadow">
                                 <div class="text-3xl mb-1">🎁</div>
-                                <p class="text-xs font-extrabold">Quà Bí Mật BTC</p>
-                                <p class="text-[10px] text-amber-200">Đủ 3 Ấn Phẩm</p>
-                                <span id="part2SecretStatus" class="inline-block mt-1.5 text-[10px] bg-amber-400 text-red-950 font-black px-2 py-0.5 rounded">Sắp mở</span>
+                                <p class="text-xs font-extrabold">Hộp Quà Bí Ẩn BTC</p>
+                                <p class="text-[10px] text-amber-200">Đủ trọn bộ 5 món</p>
+                                <span id="part2SecretStatus" class="inline-block mt-1.5 text-[10px] bg-amber-400 text-red-950 font-black px-2 py-0.5 rounded">0/5 món</span>
                             </div>
+                        </div>
+                        <div class="text-center pt-1">
+                            <button type="button" onclick="switchEventPart(1); switchHubTab('shop');" class="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:brightness-105 text-white font-black text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-md transition inline-flex items-center gap-2">
+                                <span>🛒</span> <span>Mở Trang Cửa Hàng Đổi Quà &amp; Túi Đồ Noel →</span>
+                            </button>
                         </div>
                     </div>
 
@@ -2894,30 +3091,36 @@
                 }
             }
             const tiers = [
-                { id: 'part2Item1Status', need: 300 },
-                { id: 'part2Item2Status', need: 500 },
-                { id: 'part2Item3Status', need: 700 }
+                { id: 'part2Item1Status', need: 1000 },
+                { id: 'part2Item2Status', need: 2000 },
+                { id: 'part2Item3Status', need: 5000 }
             ];
             tiers.forEach(t => {
                 const el = document.getElementById(t.id);
                 if (!el) return;
                 if (!p2.unlocked) {
-                    el.textContent = `${t.need} PTS`;
+                    el.textContent = `${t.need.toLocaleString('vi-VN')} PTS`;
                     el.className = 'inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded';
                 } else if (myScore >= t.need) {
-                    el.textContent = `✅ Đủ điểm (${t.need} PTS)`;
+                    el.textContent = `✅ Đủ điểm (${t.need.toLocaleString('vi-VN')} PTS)`;
                     el.className = 'inline-block mt-1.5 text-[10px] bg-emerald-600 text-white font-black px-2 py-0.5 rounded';
                 } else {
-                    el.textContent = `Cần thêm ${t.need - myScore} PTS`;
+                    el.textContent = `Cần thêm ${(t.need - myScore).toLocaleString('vi-VN')} PTS`;
                     el.className = 'inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded';
                 }
             });
+            const ownedItems = (currentStudentRecord && Array.isArray(currentStudentRecord.vat_pham_so_huu))
+                ? currentStudentRecord.vat_pham_so_huu
+                : [];
+            const ownedCount = NOEL_REWARD_SHOP_ITEMS.filter(it => ownedItems.includes(it.id)).length;
             const secEl = document.getElementById('part2SecretStatus');
             if (secEl) {
-                secEl.textContent = p2.unlocked ? (myScore >= 700 ? '🎁 Sẵn sàng đổi' : 'Đang tích điểm') : 'Sắp mở';
+                secEl.textContent = ownedCount >= NOEL_REWARD_SHOP_ITEMS.length
+                    ? '🎁 Đủ 5/5 • Mở Ngay!'
+                    : `Đã có ${ownedCount}/5 món`;
             }
 
-            const p2Earned = Math.min(300, Math.max(0, Number(currentStudentRecord && currentStudentRecord.part2Pts) || 0));
+            const playsToday = getTodayMinigamePlays(currentStudentRecord);
             const p2Best = Math.max(0, Number(currentStudentRecord && currentStudentRecord.part2Best) || 0);
             const p2ProgEl = document.getElementById('part2RewardProgressBadge');
             const p2BestEl = document.getElementById('part2GameBestBadge');
@@ -2926,18 +3129,18 @@
             const p2ModalScore = document.getElementById('part2ModalScorePill');
             const p2ModalReward = document.getElementById('part2ModalRewardPill');
 
-            if (p2ProgEl) p2ProgEl.textContent = `🎁 Đã nhận: ${p2Earned}/300 PTS`;
+            if (p2ProgEl) p2ProgEl.textContent = `🎲 Lượt thưởng hôm nay: ${playsToday}/${MAX_DAILY_MINIGAME_REWARDS}`;
             if (p2BestEl) p2BestEl.textContent = `🏆 Kỷ lục game: ${p2Best.toLocaleString('vi-VN')}đ`;
-            if (p2ModalScore) p2ModalScore.textContent = `⭐ BXH: ${myScore} PTS`;
-            if (p2ModalReward) p2ModalReward.textContent = `🎁 Part 2: ${p2Earned}/300 PTS`;
+            if (p2ModalScore) p2ModalScore.textContent = `⭐ Điểm tích lũy: ${myScore.toLocaleString('vi-VN')} PTS`;
+            if (p2ModalReward) p2ModalReward.textContent = `🎲 Lượt hôm nay: ${playsToday}/${MAX_DAILY_MINIGAME_REWARDS}`;
 
             if (p2LaunchBtn) {
                 p2LaunchBtn.disabled = !p2.unlocked;
                 if (p2.unlocked) {
                     p2LaunchBtn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 shadow-lg hover:brightness-105 transition inline-flex items-center justify-center gap-2 cursor-pointer';
-                    p2LaunchBtn.innerHTML = p2Earned >= 300
-                        ? '<span>🏆</span> <span>Chơi Lại Để Phá Kỷ Lục Phòng 204</span>'
-                        : '<span>🚀</span> <span>Chơi Mini-Game Dọn Phòng 204</span>';
+                    p2LaunchBtn.innerHTML = playsToday >= MAX_DAILY_MINIGAME_REWARDS
+                        ? '<span>🏆</span> <span>Chơi Tiếp Để Phá Kỷ Lục Phòng 204</span>'
+                        : '<span>🚀</span> <span>Chơi Mini-Game (+50~100 PTS)</span>';
                 } else {
                     p2LaunchBtn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm bg-slate-700/80 text-slate-300 border border-slate-500/50 cursor-not-allowed inline-flex items-center justify-center gap-2 opacity-80';
                     p2LaunchBtn.innerHTML = '<span>🔒</span> <span>Chờ Mở Khóa Part 2</span>';
@@ -2945,15 +3148,467 @@
             }
             if (p2LockNote) {
                 p2LockNote.textContent = p2.unlocked
-                    ? (p2Earned >= 300 ? '✅ Bạn đã nhận tối đa +300 PTS từ Part 2!' : `Hoàn thành các Ca còn lại để nhận thêm +${300 - p2Earned} PTS`)
+                    ? (playsToday >= MAX_DAILY_MINIGAME_REWARDS
+                        ? `✅ Đã nhận đủ ${MAX_DAILY_MINIGAME_REWARDS}/${MAX_DAILY_MINIGAME_REWARDS} lượt điểm thưởng hôm nay!`
+                        : `Còn ${MAX_DAILY_MINIGAME_REWARDS - playsToday} lượt nhận thưởng ngẫu nhiên (50–100 PTS) hôm nay`)
                     : (p2.mode === 'auto' && p2.openTs > 0 ? `Mở lúc ${formatVietnamDateTime(p2.openAt)}` : 'Admin chưa mở khóa chặng này.');
             }
 
+            renderRewardShopAndInventory();
             updatePartCountdowns();
         }
 
+        // =========================================================================
+        // HỆ THỐNG ĐỔI THƯỞNG & TÍCH LŨY (DAILY CHECK-IN, MINIGAME 50-100 PTS, SHOP 5 MÓN & QUÀ BÍ ẨN BTC)
+        // =========================================================================
+        const MAX_DAILY_MINIGAME_REWARDS = 5;
+
+        const NOEL_REWARD_SHOP_ITEMS = [
+            { id: 'mu_noel', name: 'Mũ Santa Thần Kỳ', icon: '🎅', price: 1000, desc: 'Chiếc mũ đỏ phép thuật của Ông Già Noel mang lại may mắn suốt mùa lễ hội.' },
+            { id: 'tat_giang_sinh', name: 'Tất Giáng Sinh May Mắn', icon: '🧦', price: 1500, desc: 'Chiếc tất len ấm áp luôn đầy ắp kẹo ngọt và những điều bất ngờ đêm Giáng Sinh.' },
+            { id: 'chuong_bac', name: 'Chuông Bạc Vang Vọng', icon: '🔔', price: 2000, desc: 'Tiếng chuông ngân vang dẫn lối đoàn tuần lộc vượt qua màn tuyết trắng.' },
+            { id: 'sung_tuan_loc', name: 'Sừng Tuần Lộc Tốc Độ', icon: '🦌', price: 3000, desc: 'Cặp sừng lấp lánh của tuần lộc Rudolph giúp tăng tốc hành trình phát quà.' },
+            { id: 'cay_thong', name: 'Cây Thông Noel 204', icon: '🎄', price: 5000, desc: 'Biểu tượng rực rỡ nhất của đại gia đình Phòng 204 mùa Giáng Sinh 2026!' }
+        ];
+
+        const BTC_MYSTERY_GIFTS = [
+            { id: 'voucher_204', name: 'Voucher Đồ Uống / Trà Sữa Phòng 204', icon: '🧋', desc: '1 phần đồ uống tự chọn do Ban Tổ Chức tài trợ trong buổi Offline Phòng 204!' },
+            { id: 'blindbox_noel', name: 'Hộp Quà Hiện Vật Blindbox Giáng Sinh', icon: '🎁', desc: '1 món quà hiện vật bí ẩn đặc biệt từ Ban Tổ Chức trao tặng tại đêm hội mở quà!' },
+            { id: 'vip_pass_204', name: 'Đặc Quyền VIP Secret Santa Phòng 204', icon: '👑', desc: 'Đặc quyền ưu tiên khui quà & nhận 1 phụ kiện Giáng Sinh giới hạn từ BTC!' },
+            { id: 'sweet_box_204', name: 'Combo Socola & Thiệp Đặc Biệt BTC', icon: '🍫', desc: 'Set quà ngọt ngào kèm thiệp chúc viết tay độc quyền từ Ban Tổ Chức Phòng 204!' },
+            { id: 'lucky_star_204', name: 'Ngôi Sao May Mắn Phòng 204 (Quà Đặc Biệt)', icon: '🌟', desc: 'Phần quà hiện vật giá trị dành riêng cho nhà sưu tập hoàn thành trọn bộ 5 vật phẩm Noel!' }
+        ];
+
+        function getVietnamTodayDateStr() {
+            const vnNow = new Date(Date.now() + 7 * 3600 * 1000);
+            const y = vnNow.getUTCFullYear();
+            const m = String(vnNow.getUTCMonth() + 1).padStart(2, '0');
+            const d = String(vnNow.getUTCDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function getTodayMinigamePlays(record) {
+            if (!record) return 0;
+            const todayStr = getVietnamTodayDateStr();
+            if (String(record.ngay_choi_game_cuoi || '') !== todayStr) return 0;
+            return Math.min(MAX_DAILY_MINIGAME_REWARDS, Math.max(0, parseInt(record.luot_choi_hom_nay, 10) || 0));
+        }
+
+        let _isProcessingDailyCheckin = false;
+        let _isRedeemingShopItem = false;
         let _isSavingPart2Progress = false;
         let _queuedPart2Progress = null;
+
+        // LUỒNG A: NHẬN ĐIỂM THƯỞNG HẰNG NGÀY (DAILY CHECK-IN 1 - 100 ĐIỂM)
+        async function checkAndTriggerDailyCheckin(manualClick = false) {
+            if (!currentStudentRecord || !currentStudentRecord.mssv) return;
+            const mssvVal = normalizeMssv(currentStudentRecord.mssv);
+            const todayStr = getVietnamTodayDateStr();
+            const localKey = `ss26_daily_checkin_${mssvVal}`;
+            const alreadyToday = (String(currentStudentRecord.ngay_diem_danh_cuoi || '') === todayStr)
+                || (localStorage.getItem(localKey) === todayStr);
+
+            if (alreadyToday) {
+                if (manualClick) {
+                    const lastPts = parseInt(currentStudentRecord.lastDailyPts, 10) || 0;
+                    showToast(`✅ Hôm nay (${todayStr}) bạn đã điểm danh nhận thưởng${lastPts > 0 ? ` (+${lastPts} PTS)` : ''} rồi! Hẹn gặp lại vào ngày mai nhé.`, '📅');
+                }
+                renderRewardShopAndInventory();
+                return;
+            }
+
+            if (_isProcessingDailyCheckin) return;
+            _isProcessingDailyCheckin = true;
+
+            try {
+                const randomBonus = Math.floor(Math.random() * 100) + 1; // Random từ 1 đến 100 điểm
+                const prevScore = getScoreFromRow(currentStudentRecord);
+                const newTotalScore = prevScore + randomBonus;
+
+                try { localStorage.setItem(localKey, todayStr); } catch (e) {}
+
+                const nextMeta = {
+                    ...currentStudentRecord,
+                    diem: newTotalScore,
+                    diem_tich_luoi: newTotalScore,
+                    ngay_diem_danh_cuoi: todayStr,
+                    lastDailyPts: randomBonus
+                };
+
+                const wishData = buildUniqueWishData(currentStudentRecord, allSheetRecordsCache);
+                const payload = {
+                    "mssv": mssvVal,
+                    "hoten": formatHotenForSheet(mssvVal, currentStudentRecord.hoten),
+                    "thoigian": formatTimeForSheet(mssvVal, wishData.wishId, newTotalScore, nextMeta),
+                    "phongban": currentStudentRecord.phongban || '',
+                    "wishlist": currentStudentRecord.wishlist || '',
+                    "blacklist": currentStudentRecord.blacklist || ''
+                };
+
+                const updated = await saveOrUpdateStudentToSheet(payload, currentStudentRecord);
+                currentStudentRecord = updated;
+                renderPart1UserInfo(updated, allSheetRecordsCache);
+                applyEventScheduleUI();
+
+                // Hiển thị Popup chúc mừng điểm danh hằng ngày
+                const modal = document.getElementById('dailyCheckinRewardModal');
+                const titleEl = document.getElementById('dailyModalTitle');
+                const totalEl = document.getElementById('dailyModalTotalPts');
+                const dateBadge = document.getElementById('dailyModalDateBadge');
+                if (dateBadge) dateBadge.textContent = `📅 Điểm Danh Ngày ${todayStr}`;
+                if (titleEl) titleEl.textContent = `Bạn nhận được ${randomBonus} điểm điểm danh hôm nay!`;
+                if (totalEl) totalEl.textContent = newTotalScore.toLocaleString('vi-VN');
+                if (modal) modal.classList.remove('hidden');
+
+                if (window._spawnCanvasBurst) {
+                    window._spawnCanvasBurst(window.innerWidth / 2, window.innerHeight / 3, 40);
+                }
+                loadLeaderboardData(false, { fast: _hasFullFetchedOnce });
+            } catch (err) {
+                console.warn('Lỗi điểm danh hằng ngày:', err.message);
+                if (manualClick) showToast('⚠️ Không thể kết nối máy chủ để điểm danh. Vui lòng thử lại!', '⚠️');
+            } finally {
+                _isProcessingDailyCheckin = false;
+            }
+        }
+
+        function closeDailyCheckinModal() {
+            const modal = document.getElementById('dailyCheckinRewardModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        // LUỒNG C: TRANG ĐỔI QUÀ RIÊNG (CỬA HÀNG 5 VẬT PHẨM NOEL, TÚI ĐỒ & QUÀ BÍ ẨN BTC)
+        function renderRewardShopAndInventory() {
+            const rec = currentStudentRecord;
+            const myScore = rec ? getScoreFromRow(rec) : 150;
+            const todayStr = getVietnamTodayDateStr();
+            const isCheckedInToday = rec && (String(rec.ngay_diem_danh_cuoi || '') === todayStr || localStorage.getItem(`ss26_daily_checkin_${normalizeMssv(rec.mssv)}`) === todayStr);
+            const lastDailyPts = rec ? (parseInt(rec.lastDailyPts, 10) || 0) : 0;
+            const playsToday = getTodayMinigamePlays(rec);
+            const ownedList = (rec && Array.isArray(rec.vat_pham_so_huu)) ? rec.vat_pham_so_huu : [];
+            const historyList = (rec && Array.isArray(rec.lich_su_doi_qua)) ? rec.lich_su_doi_qua : [];
+            const ownedCount = NOEL_REWARD_SHOP_ITEMS.filter(it => ownedList.includes(it.id)).length;
+            const totalItems = NOEL_REWARD_SHOP_ITEMS.length;
+
+            // Header Daily Check-in button
+            const hdrBtn = document.getElementById('btnHeaderDailyCheckin');
+            const hdrLbl = document.getElementById('headerDailyCheckinLabel');
+            if (hdrBtn && hdrLbl) {
+                if (isCheckedInToday) {
+                    hdrBtn.className = 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 whitespace-nowrap shadow-sm';
+                    hdrLbl.textContent = `Đã điểm danh hôm nay${lastDailyPts > 0 ? ` (+${lastDailyPts} PTS)` : ''}`;
+                } else {
+                    hdrBtn.className = 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:brightness-105 text-white font-extrabold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 whitespace-nowrap shadow-sm animate-pulse';
+                    hdrLbl.textContent = 'Điểm danh hôm nay (+1~100 PTS)';
+                }
+            }
+
+            // Tab badge & Home shortcut
+            const shopTabBadge = document.getElementById('hubShopBadge');
+            if (shopTabBadge) {
+                shopTabBadge.textContent = `${ownedCount}/${totalItems}`;
+                shopTabBadge.style.background = ownedCount >= totalItems ? '#16a34a' : '#d97706';
+            }
+            const homeShopStat = document.getElementById('homeShopStat');
+            if (homeShopStat) {
+                homeShopStat.textContent = `Túi đồ: ${ownedCount}/${totalItems} vật phẩm • ${myScore.toLocaleString('vi-VN')} PTS`;
+            }
+
+            // Shop top points & Luồng A / Luồng B status
+            const shopPtsEl = document.getElementById('shopMyPointsText');
+            if (shopPtsEl) shopPtsEl.textContent = myScore.toLocaleString('vi-VN');
+
+            const shopDailyStatus = document.getElementById('shopDailyStatusText');
+            const btnShopDaily = document.getElementById('btnShopDailyCheckin');
+            if (shopDailyStatus && btnShopDaily) {
+                if (isCheckedInToday) {
+                    shopDailyStatus.textContent = `✅ Đã điểm danh ngày ${todayStr}${lastDailyPts > 0 ? ` (Nhận +${lastDailyPts} PTS)` : ''}. Quay lại vào ngày mai nhé!`;
+                    btnShopDaily.textContent = '✅ Đã Nhận Hôm Nay';
+                    btnShopDaily.className = 'bg-white/15 text-emerald-200 border border-emerald-400/40 font-bold text-xs px-3.5 py-2.5 rounded-xl whitespace-nowrap shrink-0';
+                } else {
+                    shopDailyStatus.textContent = '🎁 Hôm nay bạn chưa điểm danh! Bấm để nhận ngẫu nhiên từ 1 đến 100 PTS.';
+                    btnShopDaily.textContent = '🎲 Điểm Danh Ngay';
+                    btnShopDaily.className = 'bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 font-black text-xs px-3.5 py-2.5 rounded-xl shadow hover:brightness-105 transition whitespace-nowrap shrink-0';
+                }
+            }
+
+            const shopGameText = document.getElementById('shopMinigamePlaysText');
+            if (shopGameText) {
+                shopGameText.textContent = `Hôm nay đã nhận: ${playsToday}/${MAX_DAILY_MINIGAME_REWARDS} lượt (Mỗi lượt thắng cộng ngẫu nhiên 50 – 100 PTS)`;
+            }
+
+            const ownedBadge = document.getElementById('shopOwnedCountBadge');
+            if (ownedBadge) ownedBadge.textContent = `Túi đồ: ${ownedCount}/${totalItems} vật phẩm`;
+
+            // Render 5 ô Túi Đồ (vat_pham_so_huu)
+            const invSlotsEl = document.getElementById('noelInventorySlots');
+            if (invSlotsEl) {
+                invSlotsEl.innerHTML = NOEL_REWARD_SHOP_ITEMS.map(item => {
+                    const hasIt = ownedList.includes(item.id);
+                    return `
+                        <div class="rounded-2xl p-3 text-center border-2 transition ${hasIt ? 'bg-gradient-to-b from-amber-100 via-white to-emerald-50 border-emerald-500 shadow-md' : 'bg-white/60 border-dashed border-gray-300 opacity-65'}">
+                            <div class="text-3xl mb-1 ${hasIt ? '' : 'grayscale'}">${item.icon}</div>
+                            <p class="text-xs font-extrabold text-gray-800 truncate">${escapeHtml(item.name)}</p>
+                            <span class="inline-block mt-1 text-[10px] font-black px-2 py-0.5 rounded-full ${hasIt ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-600'}">
+                                ${hasIt ? '✓ Đã sở hữu' : 'Chưa có'}
+                            </span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Render 5 thẻ Cửa Hàng Đổi Vật Phẩm Noel
+            const shopGridEl = document.getElementById('noelShopItemsGrid');
+            if (shopGridEl) {
+                shopGridEl.innerHTML = NOEL_REWARD_SHOP_ITEMS.map(item => {
+                    const hasIt = ownedList.includes(item.id);
+                    const canAfford = myScore >= item.price;
+                    const missing = Math.max(0, item.price - myScore);
+                    let btnHtml = '';
+                    if (hasIt) {
+                        btnHtml = `<button type="button" disabled class="w-full py-2.5 px-3 rounded-xl bg-emerald-100 text-emerald-800 border border-emerald-300 font-black text-xs cursor-default">✅ Đã Có Trong Túi Đồ</button>`;
+                    } else if (canAfford) {
+                        btnHtml = `<button type="button" onclick="redeemNoelItem('${item.id}')" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 hover:brightness-105 text-white font-black text-xs shadow-md transition">🛒 Đổi Vật Phẩm (-${item.price.toLocaleString('vi-VN')} PTS)</button>`;
+                    } else {
+                        btnHtml = `<button type="button" onclick="redeemNoelItem('${item.id}')" class="w-full py-2.5 px-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 border border-gray-300 font-bold text-xs transition">🔒 Thiếu ${missing.toLocaleString('vi-VN')} PTS</button>`;
+                    }
+
+                    return `
+                        <div class="bg-gradient-to-b from-white to-amber-50/40 rounded-2xl p-4 border-2 ${hasIt ? 'border-emerald-400' : 'border-amber-200'} shadow-sm flex flex-col justify-between gap-3">
+                            <div class="flex items-start gap-3">
+                                <div class="w-14 h-14 rounded-2xl bg-amber-100/80 border border-amber-300 flex items-center justify-center text-3xl shrink-0 shadow-inner">
+                                    ${item.icon}
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-center justify-between gap-1 flex-wrap">
+                                        <h5 class="text-sm font-black text-gray-800">${escapeHtml(item.name)}</h5>
+                                        <span class="bg-amber-400 text-red-950 font-black text-[11px] px-2.5 py-0.5 rounded-full whitespace-nowrap">💎 ${item.price.toLocaleString('vi-VN')} PTS</span>
+                                    </div>
+                                    <p class="text-[11px] text-gray-600 mt-1 leading-relaxed">${escapeHtml(item.desc)}</p>
+                                </div>
+                            </div>
+                            ${btnHtml}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Render Khu vực 2: Sư Đoàn Sưu Tập & Nhận Quà Bí Ẩn Từ BTC
+            const pct = Math.round((ownedCount / totalItems) * 100);
+            const progText = document.getElementById('btcCollectionProgressText');
+            const progLabel = document.getElementById('btcCollectionStatusLabel');
+            const progBar = document.getElementById('btcCollectionProgressBar');
+            const mysteryBtn = document.getElementById('btnOpenBtcMysteryBox');
+
+            if (progText) progText.textContent = `Tiến độ bộ sưu tập: ${ownedCount}/${totalItems} vật phẩm Noel (${pct}%)`;
+            if (progBar) progBar.style.width = `${pct}%`;
+
+            if (ownedCount >= totalItems) {
+                if (progLabel) {
+                    progLabel.textContent = '🟢 ĐÃ ĐỦ TRỌN BỘ 5 MÓN — SẴN SÀNG MỞ QUÀ!';
+                    progLabel.className = 'text-emerald-300 font-black';
+                }
+                if (mysteryBtn) {
+                    mysteryBtn.disabled = false;
+                    mysteryBtn.className = 'w-full md:w-auto px-6 py-3.5 rounded-2xl font-black text-xs sm:text-sm bg-gradient-to-r from-amber-400 via-yellow-300 to-emerald-400 text-slate-950 border-2 border-white cursor-pointer hover:brightness-105 transition flex items-center justify-center gap-2 shadow-2xl animate-bounce';
+                    mysteryBtn.innerHTML = '<span>🎁</span> <span>Mở Hộp Quà Bí Ẩn Từ BTC Ngay!</span>';
+                }
+            } else {
+                if (progLabel) {
+                    progLabel.textContent = `Cần sưu tập thêm ${totalItems - ownedCount} vật phẩm nữa`;
+                    progLabel.className = 'text-indigo-200';
+                }
+                if (mysteryBtn) {
+                    mysteryBtn.disabled = true;
+                    mysteryBtn.className = 'w-full md:w-auto px-6 py-3.5 rounded-2xl font-black text-xs sm:text-sm bg-slate-700 text-slate-300 border-2 border-slate-500 cursor-not-allowed transition flex items-center justify-center gap-2 shadow-lg';
+                    mysteryBtn.innerHTML = `<span>🔒</span> <span>Mở Hộp Quà Bí Ẩn Từ BTC (${ownedCount}/${totalItems})</span>`;
+                }
+            }
+
+            // Render Lịch sử đổi quà ngẫu nhiên từ BTC (lich_su_doi_qua)
+            const histEl = document.getElementById('btcGiftHistoryList');
+            if (histEl) {
+                if (historyList.length === 0) {
+                    histEl.innerHTML = `<p class="text-indigo-300/75 italic">Chưa có lịch sử mở Hộp Quà Bí Ẩn nào. Hãy sưu tập đủ 5 vật phẩm Noel để mở hộp quà đầu tiên nhé!</p>`;
+                } else {
+                    histEl.innerHTML = historyList.map((g, i) => `
+                        <div class="bg-white/10 border border-amber-300/40 rounded-xl p-3 flex items-center justify-between gap-3 flex-wrap">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <span class="text-2xl shrink-0">${escapeHtml(g.icon || '🎁')}</span>
+                                <div class="min-w-0">
+                                    <p class="font-black text-amber-300 text-xs sm:text-sm truncate">#${i + 1} • ${escapeHtml(g.name || 'Quà Bí Ẩn BTC')}</p>
+                                    <p class="text-[11px] text-indigo-200">${escapeHtml(g.time || '')}</p>
+                                </div>
+                            </div>
+                            <span class="bg-emerald-400/20 border border-emerald-300/50 text-emerald-200 font-mono font-black text-xs px-3 py-1 rounded-lg shrink-0">
+                                Mã: ${escapeHtml(g.code || 'BTC204')}
+                            </span>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        async function redeemNoelItem(itemId) {
+            if (!currentStudentRecord || !currentStudentRecord.mssv) return;
+            const item = NOEL_REWARD_SHOP_ITEMS.find(it => it.id === itemId);
+            if (!item) return;
+
+            const ownedList = Array.isArray(currentStudentRecord.vat_pham_so_huu)
+                ? [...currentStudentRecord.vat_pham_so_huu]
+                : [];
+            if (ownedList.includes(item.id)) {
+                showToast(`Bạn đã sở hữu "${item.name}" trong Túi đồ rồi!`, item.icon);
+                return;
+            }
+
+            const currentPts = getScoreFromRow(currentStudentRecord);
+            if (currentPts < item.price) {
+                const needMore = item.price - currentPts;
+                showToast(`🔒 Bạn còn thiếu ${needMore.toLocaleString('vi-VN')} PTS để đổi "${item.name}"! Hãy điểm danh hằng ngày hoặc chơi Minigame nhé.`, '💡');
+                return;
+            }
+
+            if (_isRedeemingShopItem) return;
+            if (!confirm(`Bạn muốn dùng ${item.price.toLocaleString('vi-VN')} điểm tích lũy để đổi vật phẩm "${item.icon} ${item.name}" vào Túi đồ?`)) {
+                return;
+            }
+
+            _isRedeemingShopItem = true;
+            showToast(`⏳ Đang đổi "${item.name}"...`, item.icon);
+
+            try {
+                const newScore = currentPts - item.price;
+                ownedList.push(item.id);
+                const mssvVal = normalizeMssv(currentStudentRecord.mssv);
+                const wishData = buildUniqueWishData(currentStudentRecord, allSheetRecordsCache);
+                const nextMeta = {
+                    ...currentStudentRecord,
+                    diem: newScore,
+                    diem_tich_luoi: newScore,
+                    vat_pham_so_huu: ownedList
+                };
+
+                const payload = {
+                    "mssv": mssvVal,
+                    "hoten": formatHotenForSheet(mssvVal, currentStudentRecord.hoten),
+                    "thoigian": formatTimeForSheet(mssvVal, wishData.wishId, newScore, nextMeta),
+                    "phongban": currentStudentRecord.phongban || '',
+                    "wishlist": currentStudentRecord.wishlist || '',
+                    "blacklist": currentStudentRecord.blacklist || ''
+                };
+
+                const updated = await saveOrUpdateStudentToSheet(payload, currentStudentRecord);
+                currentStudentRecord = updated;
+                renderPart1UserInfo(updated, allSheetRecordsCache);
+                applyEventScheduleUI();
+
+                if (window._spawnCanvasBurst) {
+                    window._spawnCanvasBurst(window.innerWidth / 2, window.innerHeight / 2, 42);
+                }
+                const newOwnedCount = NOEL_REWARD_SHOP_ITEMS.filter(it => ownedList.includes(it.id)).length;
+                if (newOwnedCount >= NOEL_REWARD_SHOP_ITEMS.length) {
+                    showToast(`🎉 Chúc mừng! Bạn đã sưu tập đủ 5/5 Vật Phẩm Noel! Hãy kéo xuống bấm "Mở Hộp Quà Bí Ẩn Từ BTC" ngay!`, '🏆');
+                } else {
+                    showToast(`✅ Đổi thành công "${item.name}" vào Túi đồ! (Đã có ${newOwnedCount}/5 món)`, item.icon);
+                }
+                loadLeaderboardData(false, { fast: _hasFullFetchedOnce });
+            } catch (err) {
+                console.error('Lỗi đổi vật phẩm:', err);
+                showToast('⚠️ Không thể đổi vật phẩm lúc này. Vui lòng thử lại!', '⚠️');
+            } finally {
+                _isRedeemingShopItem = false;
+            }
+        }
+
+        async function claimBtcMysteryBox() {
+            if (!currentStudentRecord || !currentStudentRecord.mssv) return;
+            const ownedList = Array.isArray(currentStudentRecord.vat_pham_so_huu)
+                ? [...currentStudentRecord.vat_pham_so_huu]
+                : [];
+            const hasAllFive = NOEL_REWARD_SHOP_ITEMS.every(it => ownedList.includes(it.id));
+            if (!hasAllFive) {
+                showToast('🔒 Bạn cần sưu tập đủ cả 5 Vật Phẩm Noel trong Cửa hàng để mở Hộp Quà Bí Ẩn Từ BTC!', '🎁');
+                return;
+            }
+
+            if (_isRedeemingShopItem) return;
+            _isRedeemingShopItem = true;
+            showToast('🎲 Đang kích hoạt vòng quay Hộp Quà Bí Ẩn Từ BTC...', '🎁');
+
+            try {
+                const picked = BTC_MYSTERY_GIFTS[Math.floor(Math.random() * BTC_MYSTERY_GIFTS.length)];
+                const randSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+                const giftCode = `BTC204-${ normalizeMssv(currentStudentRecord.mssv).slice(-4) }-${randSuffix}`;
+                const nowStr = getFormattedNowStr();
+
+                const prevHistory = Array.isArray(currentStudentRecord.lich_su_doi_qua)
+                    ? [...currentStudentRecord.lich_su_doi_qua]
+                    : [];
+                const newEntry = {
+                    code: giftCode,
+                    id: picked.id,
+                    name: picked.name,
+                    icon: picked.icon,
+                    time: nowStr
+                };
+                prevHistory.unshift(newEntry);
+
+                // Khóa/trừ bộ 5 vật phẩm đã ghép thành Hộp Quà Bí Ẩn để tránh bấm nhận lặp
+                const currentPts = getScoreFromRow(currentStudentRecord);
+                const mssvVal = normalizeMssv(currentStudentRecord.mssv);
+                const wishData = buildUniqueWishData(currentStudentRecord, allSheetRecordsCache);
+                const nextMeta = {
+                    ...currentStudentRecord,
+                    vat_pham_so_huu: [],
+                    lich_su_doi_qua: prevHistory
+                };
+
+                const payload = {
+                    "mssv": mssvVal,
+                    "hoten": formatHotenForSheet(mssvVal, currentStudentRecord.hoten),
+                    "thoigian": formatTimeForSheet(mssvVal, wishData.wishId, currentPts, nextMeta),
+                    "phongban": currentStudentRecord.phongban || '',
+                    "wishlist": currentStudentRecord.wishlist || '',
+                    "blacklist": currentStudentRecord.blacklist || ''
+                };
+
+                const updated = await saveOrUpdateStudentToSheet(payload, currentStudentRecord);
+                currentStudentRecord = updated;
+                renderPart1UserInfo(updated, allSheetRecordsCache);
+                applyEventScheduleUI();
+
+                // Hiển thị Modal chúc mừng trúng quà bí ẩn BTC
+                const modal = document.getElementById('mysteryBoxResultModal');
+                const iconEl = document.getElementById('mysteryModalIcon');
+                const nameEl = document.getElementById('mysteryModalGiftName');
+                const descEl = document.getElementById('mysteryModalGiftDesc');
+                const codeEl = document.getElementById('mysteryModalGiftCode');
+                const timeEl = document.getElementById('mysteryModalGiftTime');
+
+                if (iconEl) iconEl.textContent = picked.icon;
+                if (nameEl) nameEl.textContent = picked.name;
+                if (descEl) descEl.textContent = picked.desc;
+                if (codeEl) codeEl.textContent = giftCode;
+                if (timeEl) timeEl.textContent = `Thời gian mở: ${nowStr}`;
+                if (modal) modal.classList.remove('hidden');
+
+                if (window._spawnCanvasBurst) {
+                    window._spawnCanvasBurst(window.innerWidth / 2, window.innerHeight / 3, 60);
+                }
+                loadLeaderboardData(false, { fast: _hasFullFetchedOnce });
+            } catch (err) {
+                console.error('Lỗi mở Hộp Quà Bí Ẩn:', err);
+                showToast('⚠️ Không thể mở Hộp Quà Bí Ẩn lúc này. Vui lòng thử lại!', '⚠️');
+            } finally {
+                _isRedeemingShopItem = false;
+            }
+        }
+
+        function closeMysteryBoxResultModal() {
+            const modal = document.getElementById('mysteryBoxResultModal');
+            if (modal) modal.classList.add('hidden');
+        }
 
         function openPart2GameModal() {
             const p2 = getPartUnlockState(2);
@@ -2981,6 +3636,7 @@
             document.body.style.overflow = '';
         }
 
+        // LUỒNG B: CHƠI MINIGAME NHẬN ĐIỂM NGẪU NHIÊN 50 - 100 PTS (GIỚI HẠN 5 LƯỢT/NGÀY)
         async function handlePart2GameProgress(data) {
             if (!data || !currentStudentRecord || !getPartUnlockState(2).unlocked) return;
             const levelCleared = Math.min(4, Math.max(0, parseInt(data.levelCleared, 10) || 0));
@@ -2995,20 +3651,52 @@
                 return;
             }
 
-            const prevPart2Pts = Math.min(300, Math.max(0, Number(currentStudentRecord.part2Pts) || 0));
+            const todayStr = getVietnamTodayDateStr();
+            const playsToday = getTodayMinigamePlays(currentStudentRecord);
             const prevBest = Math.max(0, Number(currentStudentRecord.part2Best) || 0);
-            const targetPart2Pts = Math.min(300, Math.max(prevPart2Pts, levelCleared * 75));
             const nextBest = Math.max(prevBest, gameScore);
-            const deltaPts = Math.max(0, targetPart2Pts - prevPart2Pts);
+            const canAwardPts = (levelCleared > 0 && playsToday < MAX_DAILY_MINIGAME_REWARDS);
+            const randomRewardPts = canAwardPts ? (Math.floor(Math.random() * 51) + 50) : 0; // Random 50 - 100 điểm
+            const nextPlaysToday = canAwardPts ? (playsToday + 1) : playsToday;
 
-            if (deltaPts === 0 && nextBest <= prevBest) return;
+            const frame = document.getElementById('part2GameFrame');
+            if (!canAwardPts && levelCleared > 0) {
+                if (frame && frame.contentWindow) {
+                    try {
+                        frame.contentWindow.postMessage({
+                            type: 'SECRET_SANTA_PART2_REWARD_RESULT',
+                            awardedPts: 0,
+                            playsToday: playsToday,
+                            maxPlays: MAX_DAILY_MINIGAME_REWARDS,
+                            limitReached: true
+                        }, '*');
+                    } catch (e) {}
+                }
+            }
+
+            if (randomRewardPts === 0 && nextBest <= prevBest) {
+                if (levelCleared > 0 && !canAwardPts) {
+                    showToast(`⚠️ Bạn đã nhận đủ ${MAX_DAILY_MINIGAME_REWARDS}/${MAX_DAILY_MINIGAME_REWARDS} lượt thưởng Minigame hôm nay!`, '🎲');
+                }
+                return;
+            }
 
             _isSavingPart2Progress = true;
             try {
                 const mssvVal = normalizeMssv(currentStudentRecord.mssv);
                 const wishData = buildUniqueWishData(currentStudentRecord, allSheetRecordsCache);
-                const newTotalScore = getScoreFromRow(currentStudentRecord) + deltaPts;
-                const nextMeta = { ...currentStudentRecord, part2Pts: targetPart2Pts, part2Best: nextBest };
+                const prevPart2Pts = Math.max(0, Number(currentStudentRecord.part2Pts) || 0);
+                const targetPart2Pts = prevPart2Pts + randomRewardPts;
+                const newTotalScore = getScoreFromRow(currentStudentRecord) + randomRewardPts;
+                const nextMeta = {
+                    ...currentStudentRecord,
+                    diem: newTotalScore,
+                    diem_tich_luoi: newTotalScore,
+                    part2Pts: targetPart2Pts,
+                    part2Best: nextBest,
+                    ngay_choi_game_cuoi: todayStr,
+                    luot_choi_hom_nay: nextPlaysToday
+                };
 
                 const payload = {
                     "mssv": mssvVal,
@@ -3020,16 +3708,25 @@
                 };
 
                 const updated = await saveOrUpdateStudentToSheet(payload, currentStudentRecord);
-                updated.part2Pts = targetPart2Pts;
-                updated.part2Best = nextBest;
                 currentStudentRecord = updated;
-                try { localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(updated)); } catch (e) {}
-
                 renderPart1UserInfo(updated, allSheetRecordsCache);
                 applyEventScheduleUI();
 
-                if (deltaPts > 0) {
-                    showToast(`🧹 Hoàn thành Ca ${levelCleared}/4 Dọn Phòng 204! Cộng +${deltaPts} PTS (BXH: ${newTotalScore} PTS)`, '🏆');
+                if (randomRewardPts > 0 && frame && frame.contentWindow) {
+                    try {
+                        frame.contentWindow.postMessage({
+                            type: 'SECRET_SANTA_PART2_REWARD_RESULT',
+                            awardedPts: randomRewardPts,
+                            playsToday: nextPlaysToday,
+                            maxPlays: MAX_DAILY_MINIGAME_REWARDS,
+                            newTotalScore: newTotalScore,
+                            limitReached: false
+                        }, '*');
+                    } catch (e) {}
+                }
+
+                if (randomRewardPts > 0) {
+                    showToast(`🎲 Thắng Ca ${levelCleared}! Bạn nhận được +${randomRewardPts} PTS (Lượt hôm nay: ${nextPlaysToday}/${MAX_DAILY_MINIGAME_REWARDS} • Tổng: ${newTotalScore} PTS)`, '🏆');
                 } else if (nextBest > prevBest) {
                     showToast(`🏆 Kỷ lục Mini-Game Phòng 204 mới: ${nextBest.toLocaleString('vi-VN')} điểm!`, '🧹');
                 }
@@ -3424,6 +4121,24 @@
             return normMssv ? `${normMssv} - ${clean}` : clean;
         }
 
+        function serializeRewardStateToken(existing) {
+            if (!existing) return '';
+            const stateObj = {
+                d: String(existing.ngay_diem_danh_cuoi || ''),
+                dp: parseInt(existing.lastDailyPts, 10) || 0,
+                gd: String(existing.ngay_choi_game_cuoi || ''),
+                gp: parseInt(existing.luot_choi_hom_nay, 10) || 0,
+                inv: Array.isArray(existing.vat_pham_so_huu) ? existing.vat_pham_so_huu : [],
+                hist: Array.isArray(existing.lich_su_doi_qua) ? existing.lich_su_doi_qua : []
+            };
+            if (!stateObj.d && !stateObj.gd && stateObj.inv.length === 0 && stateObj.hist.length === 0) return '';
+            try {
+                return 'RW:' + encodeURIComponent(JSON.stringify(stateObj));
+            } catch (e) {
+                return '';
+            }
+        }
+
         function formatTimeForSheet(mssv, wishId = '', score = 150, existing = null) {
             const timeClean = getFormattedNowStr();
             const parts = [timeClean];
@@ -3434,7 +4149,20 @@
             const b2 = existing ? (parseInt(existing.part2Best, 10) || 0) : 0;
             if (p2 > 0) parts.push(`P2:${p2}`);
             if (b2 > 0) parts.push(`B2:${b2}`);
+            const rwToken = serializeRewardStateToken(existing);
+            if (rwToken) parts.push(rwToken);
             return parts.join(' | ');
+        }
+
+        function parseJsonArraySafe(val) {
+            if (Array.isArray(val)) return val;
+            if (!val || typeof val !== 'string') return [];
+            try {
+                const parsed = JSON.parse(val);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (e) {
+                return [];
+            }
         }
 
         function parseSheetRow(rawRow) {
@@ -3445,9 +4173,15 @@
             let cleanName = rawHoten;
             let cleanTime = rawThoigian;
             let extractedWishId = '';
-            let extractedScore = parseInt(rawRow.diem, 10) || 0;
-            let extractedPart2Pts = 0;
-            let extractedPart2Best = 0;
+            let extractedScore = parseInt(rawRow.diem_tich_luoi !== undefined && rawRow.diem_tich_luoi !== '' ? rawRow.diem_tich_luoi : rawRow.diem, 10) || 0;
+            let extractedPart2Pts = parseInt(rawRow.part2Pts, 10) || 0;
+            let extractedPart2Best = parseInt(rawRow.part2Best, 10) || 0;
+            let extractedLastCheckinDate = String(rawRow.ngay_diem_danh_cuoi || '').trim();
+            let extractedLastDailyPts = parseInt(rawRow.lastDailyPts, 10) || 0;
+            let extractedLastGameDate = String(rawRow.ngay_choi_game_cuoi || '').trim();
+            let extractedGamePlaysToday = parseInt(rawRow.luot_choi_hom_nay, 10) || 0;
+            let extractedOwnedItems = parseJsonArraySafe(rawRow.vat_pham_so_huu);
+            let extractedGiftHistory = parseJsonArraySafe(rawRow.lich_su_doi_qua);
 
             const bracketMatch = rawHoten.match(/^\[([^\]]+)\]\s*(.*)$/);
             if (bracketMatch) {
@@ -3465,7 +4199,8 @@
                 const segments = rawThoigian.split('|').map(s => s.trim()).filter(Boolean);
                 cleanTime = segments[0] || rawThoigian;
                 for (let i = 1; i < segments.length; i++) {
-                    const seg = segments[i].toUpperCase();
+                    const rawSeg = segments[i];
+                    const seg = rawSeg.toUpperCase();
                     if (/^W\d{2,3}$/.test(seg)) {
                         extractedWishId = seg;
                     } else if (/^\d+PTS$/.test(seg)) {
@@ -3474,6 +4209,18 @@
                         extractedPart2Pts = parseInt(seg.slice(3), 10) || 0;
                     } else if (/^B2:\d+$/.test(seg)) {
                         extractedPart2Best = parseInt(seg.slice(3), 10) || 0;
+                    } else if (seg.startsWith('RW:')) {
+                        try {
+                            const rwObj = JSON.parse(decodeURIComponent(rawSeg.slice(3)));
+                            if (rwObj && typeof rwObj === 'object') {
+                                if (rwObj.d && !extractedLastCheckinDate) extractedLastCheckinDate = String(rwObj.d);
+                                if (rwObj.dp) extractedLastDailyPts = parseInt(rwObj.dp, 10) || 0;
+                                if (rwObj.gd) extractedLastGameDate = String(rwObj.gd);
+                                if (rwObj.gp !== undefined) extractedGamePlaysToday = parseInt(rwObj.gp, 10) || 0;
+                                if (Array.isArray(rwObj.inv) && extractedOwnedItems.length === 0) extractedOwnedItems = rwObj.inv;
+                                if (Array.isArray(rwObj.hist) && extractedGiftHistory.length === 0) extractedGiftHistory = rwObj.hist;
+                            }
+                        } catch (e) {}
                     } else if (/^[A-Z0-9]{3,15}$/.test(seg) && !extractedMssv) {
                         extractedMssv = seg;
                     }
@@ -3492,6 +4239,13 @@
                 thoigian: cleanTime,
                 wishId: extractedWishId,
                 diem: extractedScore,
+                diem_tich_luoi: extractedScore,
+                ngay_diem_danh_cuoi: extractedLastCheckinDate,
+                lastDailyPts: extractedLastDailyPts,
+                ngay_choi_game_cuoi: extractedLastGameDate,
+                luot_choi_hom_nay: extractedGamePlaysToday,
+                vat_pham_so_huu: extractedOwnedItems,
+                lich_su_doi_qua: extractedGiftHistory,
                 part2Pts: extractedPart2Pts,
                 part2Best: extractedPart2Best,
                 _rawHoten: rawRow.hoten || '',
@@ -3504,7 +4258,7 @@
 
         function getScoreFromRow(row) {
             if (!row) return 100;
-            const parsed = parseInt(row.diem, 10);
+            const parsed = parseInt(row.diem_tich_luoi !== undefined && row.diem_tich_luoi !== '' ? row.diem_tich_luoi : row.diem, 10);
             if (!isNaN(parsed) && parsed > 0) return parsed;
             const hasWish = (row.wishlist || '').trim() && row.wishlist !== '(Chưa cập nhật)';
             return hasWish ? 150 : 100;
@@ -3683,6 +4437,15 @@
         }
 
         async function saveOrUpdateStudentToSheet(payload, existingRecord = null) {
+            const mergedPreview = parseSheetRow({ ...(existingRecord || {}), ...payload });
+            if (mergedPreview) {
+                payload.mssv = mergedPreview.mssv || payload.mssv || '';
+                payload.diem_tich_luoi = String(getScoreFromRow(mergedPreview));
+                payload.ngay_diem_danh_cuoi = String(mergedPreview.ngay_diem_danh_cuoi || '');
+                payload.vat_pham_so_huu = JSON.stringify(Array.isArray(mergedPreview.vat_pham_so_huu) ? mergedPreview.vat_pham_so_huu : []);
+                payload.lich_su_doi_qua = JSON.stringify(Array.isArray(mergedPreview.lich_su_doi_qua) ? mergedPreview.lich_su_doi_qua : []);
+            }
+
             let saved = false;
 
             if (existingRecord && existingRecord._rawHoten) {
@@ -4108,7 +4871,7 @@
         window._currentHubTab = 'home';
 
         function switchHubTab(tab) {
-            const map = { home: 'Home', tree: 'Tree', feed: 'Feed', chat: 'Chat' };
+            const map = { home: 'Home', tree: 'Tree', feed: 'Feed', chat: 'Chat', shop: 'Shop' };
             Object.keys(map).forEach(k => {
                 const btn = document.getElementById('hubTab' + map[k]);
                 const panel = document.getElementById('hubPanel' + map[k]);
@@ -4137,6 +4900,8 @@
                 }
             } else if (tab === 'feed') {
                 markFeedSeen();
+            } else if (tab === 'shop') {
+                renderRewardShopAndInventory();
             }
             updateHubBadges();
             scheduleNextAutoSync();
@@ -4900,6 +5665,7 @@
                 _lastFeedSig = sigs.feedSig;
                 _lastChatSig = sigs.chatSig;
                 _lastCfgSig = sigs.cfgSig;
+                setTimeout(() => checkAndTriggerDailyCheckin(false), 650);
             } else {
                 loadLeaderboardData(true);
             }
@@ -5125,6 +5891,7 @@
                         currentStudentRecord = freshMe;
                         try { localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(freshMe)); } catch (e) {}
                         if (meChanged) renderPart1UserInfo(freshMe, uniqueList);
+                        checkAndTriggerDailyCheckin(false);
                     }
                 }
                 if (cfgChanged || usersChanged) {
@@ -5562,6 +6329,15 @@
                             <button onclick="editScoreByIndex(${index})" class="inline-flex items-center justify-center gap-1 whitespace-nowrap bg-amber-100 hover:bg-amber-200 text-amber-900 font-extrabold text-xs px-3 py-1.5 rounded-full border border-amber-300 shadow-sm transition" title="Bấm để cộng/sửa điểm BXH">
                                 <span>🏆</span> <span>${scoreVal} PTS</span>
                             </button>
+                            ${(() => {
+                                const inv = Array.isArray(row.vat_pham_so_huu) ? row.vat_pham_so_huu : [];
+                                const hist = Array.isArray(row.lich_su_doi_qua) ? row.lich_su_doi_qua : [];
+                                const icons = NOEL_REWARD_SHOP_ITEMS.filter(it => inv.includes(it.id)).map(it => it.icon).join('');
+                                let sub = '';
+                                if (icons) sub += `<div class="text-[11px] mt-1" title="Túi đồ Noel (${inv.length}/5)">🎒 ${icons} <span class="text-[10px] font-bold text-gray-500">(${inv.length}/5)</span></div>`;
+                                if (hist.length > 0) sub += `<div class="text-[10px] mt-0.5 font-extrabold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full" title="${escapeHtml(hist.map(h => (h.code || '') + ': ' + (h.name || '')).join(' | '))}">🎁 Quà BTC: ${escapeHtml(hist[0].code || 'Đã nhận')}</div>`;
+                                return sub;
+                            })()}
                         </td>
                         <td class="p-3">${checkinCellHtml}</td>
                         <td class="p-3 text-gray-700 whitespace-pre-line text-xs">${wishDisplay}</td>
