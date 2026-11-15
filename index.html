@@ -630,12 +630,12 @@
                 <span class="text-xl sm:text-2xl">🧹</span>
                 <div class="min-w-0">
                     <p class="text-xs sm:text-sm font-black truncate text-amber-300">Part 2: Đại Chiến Dọn Phòng Họp 204</p>
-                    <p class="text-[10px] sm:text-xs text-teal-200 truncate">Hoàn thành từng Ca để nhận tới +300 PTS Secret Santa</p>
+                    <p class="text-[10px] sm:text-xs text-teal-200 truncate">Thắng mỗi Ca nhận ngẫu nhiên +350 ~ 600 PTS (3 lượt/ngày + Nhiệm vụ tăng lượt)</p>
                 </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-                <span id="part2ModalScorePill" class="hidden sm:inline-flex items-center gap-1 bg-amber-400/20 border border-amber-300/40 text-amber-200 text-xs font-extrabold px-2.5 py-1 rounded-full">⭐ BXH: 150 PTS</span>
-                <span id="part2ModalRewardPill" class="bg-emerald-500/25 border border-emerald-400/40 text-emerald-200 text-[11px] sm:text-xs font-extrabold px-2.5 py-1 rounded-full">🎁 Part 2: 0/300 PTS</span>
+                <span id="part2ModalScorePill" class="hidden sm:inline-flex items-center gap-1 bg-amber-400/20 border border-amber-300/40 text-amber-200 text-xs font-extrabold px-2.5 py-1 rounded-full">⭐ Điểm tích lũy: 150 PTS</span>
+                <span id="part2ModalRewardPill" class="bg-emerald-500/25 border border-emerald-400/40 text-emerald-200 text-[11px] sm:text-xs font-extrabold px-2.5 py-1 rounded-full">🎲 Lượt hôm nay: 0/3</span>
                 <button type="button" onclick="closePart2GameModal()" class="bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs sm:text-sm px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1">
                     <span>✕</span> <span class="hidden sm:inline">Thoát Game</span>
                 </button>
@@ -644,7 +644,7 @@
         <iframe id="part2GameFrame" src="about:blank" title="Mini-Game Dọn Phòng Họp 204" class="flex-1 w-full h-full border-0 bg-slate-950" allow="autoplay"></iframe>
     </div>
 
-    <!-- MODAL CHÚC MỪNG ĐIỂM DANH HẰNG NGÀY (DAILY CHECK-IN 1-100 PTS) -->
+    <!-- MODAL CHÚC MỪNG ĐIỂM DANH HẰNG NGÀY (DAILY CHECK-IN 100-300 PTS) -->
     <div id="dailyCheckinRewardModal" class="hidden fixed inset-0 bg-black/75 z-[192] flex items-center justify-center p-4" onclick="closeDailyCheckinModal()">
         <div class="bg-gradient-to-b from-amber-50 via-white to-red-50 border-4 border-amber-400 rounded-3xl max-w-md w-full p-6 text-center shadow-2xl space-y-4 greeting-card-anim" onclick="event.stopPropagation()">
             <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-amber-400 to-red-600 text-white flex items-center justify-center text-4xl shadow-lg animate-bounce">
@@ -654,10 +654,10 @@
                 Điểm Danh Hằng Ngày
             </span>
             <h3 id="dailyModalTitle" class="text-xl sm:text-2xl font-black text-red-800 leading-snug">
-                Bạn nhận được +50 điểm điểm danh hôm nay!
+                Bạn nhận được +200 PTS &amp; +1 lượt chơi hôm nay!
             </h3>
             <p id="dailyModalDesc" class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                Điểm thưởng ngẫu nhiên (1 – 100 điểm) đã được cộng trực tiếp vào quỹ Điểm Tích Lũy của bạn để đổi Vật Phẩm Noel!
+                Điểm thưởng ngẫu nhiên (100 – 300 PTS) kèm <strong>+1 lượt chơi Minigame</strong> đã được cộng trực tiếp vào tài khoản để đổi 6 Vật Phẩm Noel!
             </p>
             <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-2xl p-3.5 shadow-inner">
                 <p class="text-[11px] uppercase font-bold text-emerald-100">Tổng điểm tích lũy hiện tại</p>
@@ -698,6 +698,83 @@
             <button type="button" onclick="closeMysteryBoxResultModal()" class="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-105 text-red-950 font-black text-sm py-3 rounded-xl shadow-lg transition">
                 🎉 Tuyệt vời! Lưu vào Lịch Sử Quà
             </button>
+        </div>
+    </div>
+
+    <!-- MODAL DONATE ỦNG HỘ KINH PHÍ MUA QUÀ BAN TỔ CHỨC (TÙY TÂM 5K - 10K) -->
+    <div id="btcDonateModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[212] hidden flex items-center justify-center p-3 sm:p-4" onclick="if(event.target===this) closeBtcDonateModal()">
+        <div class="bg-gradient-to-b from-rose-950 via-red-900 to-slate-950 text-white rounded-3xl max-w-md w-full p-5 sm:p-6 border-2 border-amber-300 shadow-[0_0_60px_rgba(251,191,36,0.45)] relative overflow-y-auto max-h-[92vh] text-center space-y-3.5">
+            <button type="button" onclick="closeBtcDonateModal()" class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white font-bold text-sm flex items-center justify-center transition">✕</button>
+            <span class="inline-flex items-center gap-1.5 bg-amber-400 text-red-950 font-black text-[11px] px-3.5 py-1 rounded-full uppercase tracking-wider shadow">
+                💖 Trạm Tiếp Sức • Secret Santa Phòng 204
+            </span>
+            <h3 class="text-xl sm:text-2xl font-black text-amber-300 leading-snug">
+                🎁 Donate Quỹ Mua Quà Ban Tổ Chức
+            </h3>
+            <div class="bg-gradient-to-r from-amber-400/25 via-rose-500/25 to-amber-400/25 border-2 border-amber-300 rounded-2xl px-4 py-2.5 shadow-inner">
+                <p class="text-sm sm:text-base font-black text-amber-200 tracking-wide">
+                    ✨ Ủng hộ tùy tâm chỉ từ <span class="text-yellow-300 underline decoration-wavy">5K – 10K</span> ✨
+                </p>
+                <p class="text-[11px] sm:text-xs text-rose-100 mt-0.5 leading-relaxed">
+                    Mỗi đóng góp nhỏ của bạn giúp BTC chuẩn bị thêm thật nhiều phần quà hiện vật, trà sữa &amp; Hộp Quà Bí Ẩn siêu xịn tại Phòng 204!
+                </p>
+            </div>
+
+            <!-- Khung mã QR MoMo / VietQR / Napas247 -->
+            <div class="bg-white rounded-2xl p-3 sm:p-3.5 shadow-2xl border-2 border-pink-200 max-w-[270px] mx-auto space-y-2">
+                <img src="donate-qr.jpg" alt="QR Donate BTC - Nguyễn Tiến Long" class="w-full h-auto rounded-xl object-contain mx-auto shadow-sm" />
+                <div class="pt-1 border-t border-pink-100 text-slate-800 space-y-1">
+                    <p class="text-xs font-black uppercase tracking-wider text-rose-700">NGUYỄN TIẾN LONG</p>
+                    <p class="text-[11px] font-bold text-slate-500">MoMo • VietQR • Napas 247 (*******698)</p>
+                    <p class="text-[10px] font-semibold text-emerald-700">Nội dung CK: <code class="bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 font-bold">SS204 + MSSV</code></p>
+                    <a href="donate-qr.jpg" download="QR_Donate_BTC_Phong204.jpg" class="inline-flex items-center justify-center gap-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-[11px] py-1 px-3 rounded-lg transition">
+                        <span>📥</span> <span>Tải Ảnh Mã QR</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Đặc quyền cảm ơn từ BTC khi Donate -->
+            <div class="bg-emerald-950/70 border border-emerald-400/50 rounded-2xl p-3 text-left space-y-1">
+                <p class="text-xs font-black text-emerald-300 flex items-center gap-1.5">
+                    <span>🎁</span> <span>Cơ Chế Xác Nhận &amp; Cộng Thưởng Minh Bạch:</span>
+                </p>
+                <p class="text-[11px] text-emerald-100 leading-relaxed">
+                    • <strong>Bước 1:</strong> Quét mã QR ủng hộ tùy tâm <strong>5K – 10K</strong> và chụp màn hình Bill chuyển khoản.<br>
+                    • <strong>Bước 2:</strong> Tải ảnh Bill lên form bên dưới để gửi riêng cho Ban Tổ Chức.<br>
+                    • <strong>Bước 3:</strong> Ngay khi <strong>Admin (BTC) bấm Duyệt Bill</strong>, hệ thống tự động cộng <strong>+5 Lượt chơi Minigame</strong> &amp; <strong>+300 PTS</strong> (đủ đổi ngay <strong>🏷️ Icon 204</strong>) vào tài khoản của bạn!
+                </p>
+            </div>
+
+            <!-- Form gửi ảnh Bill chuyển khoản để Admin xác nhận -->
+            <form onsubmit="submitBtcDonateBill(event)" class="bg-black/35 border border-amber-300/50 rounded-2xl p-3.5 text-left space-y-2.5">
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <span class="text-xs font-black text-amber-300">🧾 Xác Nhận Bill Chuyển Khoản Với BTC:</span>
+                    <span id="donateUserStatusPill" class="text-[10px] font-black px-2.5 py-1 rounded-full bg-white/15 text-amber-200 border border-amber-300/40">
+                        ⏳ Chưa gửi ảnh Bill
+                    </span>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-amber-100 mb-1">1. Ảnh chụp màn hình Bill chuyển khoản *</label>
+                    <div class="flex items-center gap-2.5">
+                        <label for="donateBillFile" class="cursor-pointer bg-white/15 hover:bg-white/25 text-white border border-dashed border-amber-300 font-bold py-2 px-3 rounded-xl text-xs transition flex-1 text-center">
+                            📸 Chọn / Chụp ảnh Bill chuyển khoản
+                        </label>
+                        <input type="file" id="donateBillFile" accept="image/*" class="hidden" onchange="loadDonateBillImage(event)">
+                        <img id="donateBillPreview" src="" alt="Bill Preview" class="hidden w-12 h-12 rounded-xl object-cover border-2 border-amber-300 shadow shrink-0">
+                    </div>
+                    <input type="hidden" id="donateBillBase64">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-amber-100 mb-1">2. Ghi chú số tiền / Lời nhắn gửi BTC</label>
+                    <input type="text" id="donateBillNote" placeholder="VD: Em ủng hộ 10K quỹ quà phòng 204 ạ..." class="w-full px-3 py-2 rounded-xl bg-white text-gray-900 text-xs font-semibold focus:outline-none border-2 border-transparent focus:border-amber-400">
+                </div>
+
+                <button type="submit" id="btnConfirmDonateQuest" class="w-full bg-gradient-to-r from-amber-400 via-yellow-300 to-emerald-400 hover:brightness-105 text-slate-950 font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
+                    <span>📤</span> <span id="btnConfirmDonateQuestText">Gửi Ảnh Bill Cho BTC Duyệt (+5 Lượt &amp; +300 PTS)</span>
+                </button>
+            </form>
         </div>
     </div>
 
@@ -757,7 +834,7 @@
     <!-- CONTAINER CHÍNH -->
     <div class="container mx-auto px-3 sm:px-5 pt-7 sm:pt-10 pb-12 max-w-6xl relative z-10">
         <!-- HEADER PHONG CÁCH MERRY CHRISTMAS -->
-        <div class="text-center mb-5 sm:mb-8">
+        <div class="text-center mb-4 sm:mb-6">
             <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-400/20 border border-amber-200/50 text-amber-100 text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-2 shadow">
                 🎅 Merry Christmas • Secret Santa 2026 🦌
             </div>
@@ -767,6 +844,31 @@
             <p class="text-xs sm:text-base text-amber-100 font-semibold px-2">
                 Trạm Bưu Tá Secret Santa 2026 — Chạm vào Ông Già Noel đang bay để hứng mưa quà tặng!
             </p>
+
+            <!-- BANNER NỔI BẬT NGAY KHI VÀO WEB: DONATE QUỸ MUA QUÀ BTC (TÙY TÂM 5K - 10K) -->
+            <div class="mt-3.5 max-w-2xl mx-auto">
+                <div onclick="openBtcDonateModal()" class="cursor-pointer group bg-gradient-to-r from-amber-400 via-rose-500 to-amber-400 p-[2px] rounded-2xl shadow-[0_8px_30px_rgba(251,191,36,0.35)] hover:shadow-[0_10px_38px_rgba(251,191,36,0.55)] transition-all duration-300 transform hover:-translate-y-0.5">
+                    <div class="bg-gradient-to-r from-red-950/95 via-rose-900/95 to-red-950/95 backdrop-blur-md rounded-[14px] px-3.5 py-2.5 sm:px-5 sm:py-3 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-left">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-11 h-11 rounded-xl bg-white p-1 shrink-0 shadow-md border border-amber-300 hidden xs:flex sm:flex items-center justify-center overflow-hidden">
+                                <img src="donate-qr.jpg" alt="QR Donate BTC" class="w-full h-full object-cover rounded-lg" />
+                            </div>
+                            <div class="min-w-0 text-center sm:text-left">
+                                <div class="flex items-center justify-center sm:justify-start gap-1.5 flex-wrap">
+                                    <span class="bg-amber-400 text-red-950 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">💖 Quỹ Quà Phòng 204</span>
+                                    <span class="text-xs sm:text-sm font-black text-amber-200">Ủng hộ kinh phí mua quà cùng BTC — <span class="text-yellow-300 underline">Tùy tâm từ 5K – 10K</span>!</span>
+                                </div>
+                                <p class="text-[11px] text-rose-100/90 mt-0.5">
+                                    Quét mã QR Nguyễn Tiến Long • Tặng ngay <strong>+5 lượt chơi Minigame</strong> &amp; <strong>+300 PTS</strong> đổi Icon 204!
+                                </p>
+                            </div>
+                        </div>
+                        <span class="bg-gradient-to-r from-amber-300 to-yellow-400 group-hover:brightness-110 text-red-950 font-black text-xs px-3.5 py-2 rounded-xl shadow whitespace-nowrap shrink-0 flex items-center gap-1">
+                            <span>💖</span> <span>Mở QR Donate Ngay</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- ========================================================================= -->
@@ -924,6 +1026,29 @@
                         </button>
                     </form>
                 </div>
+
+                <!-- KHUNG DONATE TRỰC TIẾP TRÊN TRANG ĐẦU TIÊN (VỪA VÀO WEB LÀ THẤY NGAY) -->
+                <div class="mt-5 bg-gradient-to-br from-rose-50 via-amber-50/70 to-pink-50 border-2 border-amber-300 rounded-2xl p-3.5 sm:p-4 shadow-md">
+                    <div class="flex flex-col sm:flex-row items-center gap-3.5">
+                        <img src="donate-qr.jpg" alt="QR Donate BTC Phòng 204" onclick="openBtcDonateModal()" class="w-28 h-28 sm:w-24 sm:h-24 rounded-xl object-contain bg-white p-1 border-2 border-rose-300 shadow cursor-pointer shrink-0 hover:scale-105 transition" title="Bấm để phóng to mã QR Donate" />
+                        <div class="text-center sm:text-left flex-1 space-y-1">
+                            <span class="inline-block bg-rose-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wide">
+                                💖 Góc Donate Kinh Phí Mua Quà BTC
+                            </span>
+                            <h3 class="text-sm sm:text-base font-black text-red-900">
+                                Ủng Hộ Quỹ Quà Phòng 204 — <span class="text-rose-600 underline">Tùy Tâm Từ 5K – 10K</span>
+                            </h3>
+                            <p class="text-[11px] text-gray-600 leading-relaxed">
+                                Quét QR <strong>NGUYỄN TIẾN LONG (*******698)</strong> để tiếp sức cho Ban Tổ Chức chuẩn bị quà &amp; nước uống! Đặc quyền khi Donate: <strong>+5 Lượt chơi Minigame</strong> &amp; <strong>+300 PTS</strong>!
+                            </p>
+                            <div class="pt-1">
+                                <button type="button" onclick="openBtcDonateModal()" class="bg-gradient-to-r from-rose-600 to-amber-500 hover:brightness-105 text-white font-black text-xs px-3.5 py-1.5 rounded-xl shadow transition inline-flex items-center gap-1.5">
+                                    <span>🔍</span> <span>Xem Mã QR Rõ Nét &amp; Nhận +5 Lượt Chơi</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -943,6 +1068,9 @@
                     <div class="min-w-0">
                         <div class="flex items-center gap-1.5 flex-wrap">
                             <span id="hubHeaderName" class="font-extrabold text-gray-800 text-sm sm:text-base truncate">---</span>
+                            <span id="hubHeader204Badge" class="hidden items-center gap-1 whitespace-nowrap bg-gradient-to-r from-amber-400 to-yellow-300 text-red-950 text-[10px] font-black px-2 py-0.5 rounded-full border border-amber-500 shadow-sm" title="Chủ sở hữu Icon 204 Độc Quyền">
+                                🏷️ ICON 204
+                            </span>
                             <span class="inline-flex items-center whitespace-nowrap bg-red-600 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full shadow-sm">
                                 <span id="hubHeaderMssv">TH12345</span>
                             </span>
@@ -956,8 +1084,11 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
+                    <button type="button" onclick="openBtcDonateModal()" class="bg-gradient-to-r from-rose-600 to-amber-500 hover:brightness-105 text-white font-extrabold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 whitespace-nowrap shadow-sm">
+                        <span>💖</span> <span>Donate BTC (5K–10K)</span>
+                    </button>
                     <button type="button" id="btnHeaderDailyCheckin" onclick="checkAndTriggerDailyCheckin(true)" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:brightness-105 text-white font-extrabold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 whitespace-nowrap shadow-sm">
-                        <span>📅</span> <span id="headerDailyCheckinLabel">Điểm danh (+1~100 PTS)</span>
+                        <span>📅</span> <span id="headerDailyCheckinLabel">Điểm danh (+100~300 PTS)</span>
                     </button>
                     <button onclick="openMyChristmasWishModal()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 whitespace-nowrap shadow-sm">
                         <span>🔒</span> <span>Lời Chúc Bí Mật Của Bạn</span>
@@ -1045,7 +1176,7 @@
                         </button>
                         <button type="button" id="hubTabShop" onclick="switchHubTab('shop')" class="hub-tab">
                             <span class="hub-tab-icon">🎁</span><span class="hub-tab-label">Đổi Quà</span>
-                            <span id="hubShopBadge" class="hub-tab-badge" style="background:#d97706">0/5</span>
+                            <span id="hubShopBadge" class="hub-tab-badge" style="background:#d97706">0/6</span>
                         </button>
                     </div>
 
@@ -1088,8 +1219,8 @@
                                     <span class="text-[10px] font-black bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full">ĐỔI QUÀ →</span>
                                 </div>
                                 <p class="font-black text-base mt-2">Cửa Hàng &amp; Túi Đồ Noel</p>
-                                <p id="homeShopStat" class="text-xs text-purple-200">Đã sưu tập: 0/5 vật phẩm</p>
-                                <p class="text-[11px] text-amber-200/90 truncate mt-1">Đủ 5 món mở Hộp Quà Bí Ẩn BTC!</p>
+                                <p id="homeShopStat" class="text-xs text-purple-200">Đã sưu tập: 0/6 vật phẩm</p>
+                                <p class="text-[11px] text-amber-200/90 truncate mt-1">Có Icon 204 (204 PTS) &amp; Quà Bí Ẩn BTC!</p>
                             </button>
                         </div>
 
@@ -1422,10 +1553,10 @@
                                         🎁 Trung Tâm Đổi Thưởng &amp; Tích Lũy Secret Santa 2026
                                     </span>
                                     <h3 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
-                                        <span>🛒 Cửa Hàng Vật Phẩm Noel &amp; Kho Báu Phòng 204</span>
+                                        <span>🛒 Cửa Hàng 6 Vật Phẩm Noel &amp; Kho Báu Phòng 204</span>
                                     </h3>
                                     <p class="text-xs sm:text-sm text-amber-100/90">
-                                        Điểm danh mỗi ngày (1–100 PTS) &amp; chơi Minigame (50–100 PTS/lượt) để tích điểm đổi trọn bộ 5 Vật Phẩm Noel, mở khóa <strong>Hộp Quà Bí Ẩn Từ BTC</strong>!
+                                        Điểm danh mỗi ngày (<strong>100–300 PTS</strong>) &amp; chơi Minigame (<strong>350–600 PTS/lượt</strong> • 3 lượt/ngày + Nhiệm vụ tăng lượt) để đổi trọn bộ <strong>6 Vật Phẩm Noel</strong> (từ <strong>Icon 204: 204 PTS</strong>), mở khóa <strong>Hộp Quà Bí Ẩn Từ BTC</strong>!
                                     </p>
                                 </div>
                                 <div class="bg-black/35 border-2 border-amber-300/70 rounded-2xl px-5 py-3 text-center shrink-0">
@@ -1441,7 +1572,7 @@
                                         <p class="text-xs sm:text-sm font-black text-amber-300 flex items-center gap-1.5">
                                             <span>📅</span> <span>Luồng A: Điểm Danh Hằng Ngày</span>
                                         </p>
-                                        <p id="shopDailyStatusText" class="text-[11px] text-emerald-100">Nhận ngẫu nhiên từ 1 đến 100 điểm mỗi ngày đăng nhập!</p>
+                                        <p id="shopDailyStatusText" class="text-[11px] text-emerald-100">Nhận ngẫu nhiên từ 100 đến 300 điểm mỗi ngày đăng nhập!</p>
                                     </div>
                                     <button type="button" id="btnShopDailyCheckin" onclick="checkAndTriggerDailyCheckin(true)" class="bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 font-black text-xs px-3.5 py-2.5 rounded-xl shadow hover:brightness-105 transition whitespace-nowrap shrink-0">
                                         🎲 Điểm Danh Ngay
@@ -1452,26 +1583,39 @@
                                         <p class="text-xs sm:text-sm font-black text-sky-300 flex items-center gap-1.5">
                                             <span>🧹</span> <span>Luồng B: Chơi Minigame Nhận Điểm</span>
                                         </p>
-                                        <p id="shopMinigamePlaysText" class="text-[11px] text-sky-100">Thưởng ngẫu nhiên 50 – 100 PTS / lượt thắng (Tối đa 5 lượt/ngày)</p>
+                                        <p id="shopMinigamePlaysText" class="text-[11px] text-sky-100">Thưởng 350 – 600 PTS / lượt thắng (3 lượt/ngày + Nhiệm vụ tăng lượt)</p>
                                     </div>
                                     <button type="button" onclick="switchEventPart(2)" class="bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-xs px-3.5 py-2.5 rounded-xl shadow hover:brightness-105 transition whitespace-nowrap shrink-0">
                                         🎮 Tới Minigame →
                                     </button>
                                 </div>
                             </div>
+
+                            <!-- BẢNG NHIỆM VỤ KIẾM THÊM LƯỢT CHƠI MINIGAME TRONG NGÀY -->
+                            <div class="bg-black/30 border border-amber-300/40 rounded-2xl p-3.5 sm:p-4 space-y-2.5">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <p class="text-xs sm:text-sm font-black text-amber-300 flex items-center gap-1.5">
+                                        <span>⚡</span> <span>Nhiệm Vụ Mở Khóa Thêm Lượt Chơi Hôm Nay (Ngoài 3 lượt mặc định):</span>
+                                    </p>
+                                    <span id="shopQuestPlaysBadge" class="text-[11px] bg-emerald-400/20 text-emerald-200 border border-emerald-400/50 font-extrabold px-2.5 py-0.5 rounded-full">
+                                        Lượt chơi hôm nay: 0/3
+                                    </span>
+                                </div>
+                                <div id="shopQuestsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
+                            </div>
                         </div>
 
-                        <!-- KHU VỰC 1: TÚI ĐỒ CỦA BẠN & CỬA HÀNG ĐỔI VẬT PHẨM NOEL -->
+                        <!-- KHU VỰC 1: TÚI ĐỒ CỦA BẠN & CỬA HÀNG ĐỔI 6 VẬT PHẨM NOEL -->
                         <div class="bg-white rounded-3xl p-4 sm:p-6 border-2 border-amber-200 shadow-lg space-y-5">
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 pb-3">
                                 <div>
                                     <h4 class="text-base sm:text-lg font-black text-gray-800 flex items-center gap-2">
-                                        <span>🎒</span> <span>1. Cửa Hàng Đổi Vật Phẩm Noel &amp; Túi Đồ Cá Nhân</span>
+                                        <span>🎒</span> <span>1. Cửa Hàng Đổi 6 Vật Phẩm Noel &amp; Túi Đồ Cá Nhân</span>
                                     </h4>
-                                    <p class="text-xs text-gray-500 mt-0.5">Dùng điểm tích lũy (<code class="text-red-700 font-bold">diem_tich_luoi</code>) để quy đổi 5 bảo vật Giáng Sinh vào Túi đồ của bạn.</p>
+                                    <p class="text-xs text-gray-500 mt-0.5">Dùng điểm tích lũy (<code class="text-red-700 font-bold">diem_tich_luoi</code>) để quy đổi 6 bảo vật Giáng Sinh (bắt đầu từ <strong>🏷️ Icon 204 chỉ 204 PTS</strong>) vào Túi đồ của bạn.</p>
                                 </div>
                                 <span id="shopOwnedCountBadge" class="inline-flex items-center self-start sm:self-auto bg-amber-100 text-amber-900 border border-amber-300 font-black text-xs px-3 py-1 rounded-full">
-                                    Túi đồ: 0/5 vật phẩm
+                                    Túi đồ: 0/6 vật phẩm
                                 </span>
                             </div>
 
@@ -1480,10 +1624,10 @@
                                 <p class="text-xs font-extrabold text-amber-900 mb-2.5 flex items-center gap-1.5">
                                     <span>✨</span> <span>Túi Đồ Đang Sở Hữu (<code class="text-[11px]">vat_pham_so_huu</code>):</span>
                                 </p>
-                                <div id="noelInventorySlots" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5"></div>
+                                <div id="noelInventorySlots" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5"></div>
                             </div>
 
-                            <!-- Danh sách 5 vật phẩm Noel trong cửa hàng -->
+                            <!-- Danh sách 6 vật phẩm Noel trong cửa hàng -->
                             <div id="noelShopItemsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
                         </div>
 
@@ -1498,20 +1642,20 @@
                                         <span>🎁 2. Sư Đoàn Sưu Tập &amp; Mở Hộp Quà Bí Ẩn Từ BTC</span>
                                     </h4>
                                     <p class="text-xs sm:text-sm text-indigo-100 leading-relaxed">
-                                        Khi sở hữu đủ trọn bộ <strong>5 Vật Phẩm Noel</strong> (🎅 Mũ Santa, 🧦 Tất Giáng Sinh, 🔔 Chuông Bạc, 🦌 Sừng Tuần Lộc, 🎄 Cây Thông 204), nút mở Hộp Quà Bí Ẩn từ Ban Tổ Chức sẽ sáng lên!
+                                        Khi sở hữu đủ trọn bộ <strong>6 Vật Phẩm Noel</strong> (🏷️ Icon 204, 🎅 Mũ Santa, 🧦 Tất Giáng Sinh, 🔔 Chuông Bạc, 🦌 Sừng Tuần Lộc, 🎄 Cây Thông 204), nút mở Hộp Quà Bí Ẩn từ Ban Tổ Chức sẽ sáng lên!
                                     </p>
                                 </div>
                                 <div class="text-center shrink-0">
                                     <button type="button" id="btnOpenBtcMysteryBox" onclick="claimBtcMysteryBox()" disabled class="w-full md:w-auto px-6 py-3.5 rounded-2xl font-black text-xs sm:text-sm bg-slate-700 text-slate-300 border-2 border-slate-500 cursor-not-allowed transition flex items-center justify-center gap-2 shadow-lg">
-                                        <span>🔒</span> <span>Mở Hộp Quà Bí Ẩn Từ BTC (0/5)</span>
+                                        <span>🔒</span> <span>Mở Hộp Quà Bí Ẩn Từ BTC (0/6)</span>
                                     </button>
                                 </div>
                             </div>
 
-                            <!-- Thanh tiến độ 5/5 món -->
+                            <!-- Thanh tiến độ 6/6 món -->
                             <div class="bg-white/10 border border-white/15 rounded-2xl p-3.5 space-y-2">
                                 <div class="flex items-center justify-between text-xs font-extrabold">
-                                    <span id="btcCollectionProgressText" class="text-amber-200">Tiến độ bộ sưu tập: 0/5 vật phẩm Noel</span>
+                                    <span id="btcCollectionProgressText" class="text-amber-200">Tiến độ bộ sưu tập: 0/6 vật phẩm Noel</span>
                                     <span id="btcCollectionStatusLabel" class="text-indigo-200">Chưa đủ bộ</span>
                                 </div>
                                 <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden p-0.5">
@@ -1525,7 +1669,7 @@
                                     <span>📜</span> <span>Lịch Sử Nhận Quà Bí Ẩn Từ BTC (<code class="text-[11px]">lich_su_doi_qua</code>):</span>
                                 </p>
                                 <div id="btcGiftHistoryList" class="space-y-2 text-xs text-indigo-100">
-                                    <p class="text-indigo-300/70 italic">Chưa có lịch sử mở Hộp Quà Bí Ẩn nào. Hãy sưu tập đủ 5 vật phẩm Noel để mở hộp quà đầu tiên nhé!</p>
+                                    <p class="text-indigo-300/70 italic">Chưa có lịch sử mở Hộp Quà Bí Ẩn nào. Hãy sưu tập đủ 6 vật phẩm Noel để mở hộp quà đầu tiên nhé!</p>
                                 </div>
                             </div>
                         </div>
@@ -1547,7 +1691,7 @@
                         </span>
                         <h3 id="part2TitleEl" class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 2: Dọn Phòng Họp 204 — Đại Chiến Tổng Vệ Sinh</h3>
                         <p id="part2DescEl" class="text-gray-600 text-xs sm:text-base leading-relaxed">
-                            Tại Chặng 2, hãy phối hợp cùng bé Poodle trắng <strong>Gôn Đi 🐩</strong> tổng vệ sinh Phòng 204! Mỗi lượt hoàn thành Ca trực nhận ngẫu nhiên <strong>+50 đến +100 PTS</strong> (tối đa 5 lượt thưởng/ngày) để đổi trọn bộ <strong>5 Vật Phẩm Noel</strong>!
+                            Tại Chặng 2, hãy phối hợp cùng bé Poodle trắng <strong>Bông 🐩</strong> tổng vệ sinh Phòng 204! Mỗi lượt hoàn thành Ca trực nhận ngẫu nhiên <strong>+350 đến +600 PTS</strong> (mặc định <strong>3 lượt/ngày</strong> + làm nhiệm vụ nhận thêm lượt) để đổi trọn bộ <strong>6 Vật Phẩm Noel</strong>!
                         </p>
                         <div id="part2CountdownBanner" class="hidden max-w-lg mx-auto bg-slate-900 text-white rounded-2xl p-4 border-2 border-amber-400 shadow-lg space-y-1"></div>
                         <div id="part2UnlockedBar" class="hidden max-w-xl mx-auto bg-gradient-to-r from-emerald-600 to-green-700 text-white rounded-2xl p-4 border-2 border-lime-300 shadow-lg space-y-1.5">
@@ -1558,7 +1702,7 @@
                     </div>
 
                     <!-- THẺ KHỞI CHẠY MINI-GAME DỌN PHÒNG HỌP 204 -->
-                    <div id="part2GameLauncherCard" class="bg-gradient-to-br from-slate-900 via-teal-950 to-emerald-950 text-white border-2 border-teal-400/60 rounded-2xl p-4 sm:p-5 shadow-xl overflow-hidden">
+                    <div id="part2GameLauncherCard" class="bg-gradient-to-br from-slate-900 via-teal-950 to-emerald-950 text-white border-2 border-teal-400/60 rounded-2xl p-4 sm:p-5 shadow-xl overflow-hidden space-y-4">
                         <div class="grid grid-cols-1 sm:grid-cols-5 gap-4 items-center">
                             <div class="sm:col-span-2 relative rounded-xl overflow-hidden border-2 border-teal-300/50 shadow-lg bg-black/40">
                                 <img src="room204.jpg" alt="Sơ đồ Phòng Họp 204" class="w-full h-40 sm:h-44 object-cover" />
@@ -1568,14 +1712,14 @@
                             <div class="sm:col-span-3 space-y-2.5 text-left">
                                 <div class="flex items-center justify-between gap-2 flex-wrap">
                                     <h4 class="text-base sm:text-lg font-black text-amber-300">🧹 Đại Chiến Dọn Phòng 204</h4>
-                                    <span id="part2RewardProgressBadge" class="text-[11px] bg-emerald-500/25 text-emerald-200 border border-emerald-400/50 font-extrabold px-2.5 py-0.5 rounded-full">🎲 Lượt thưởng hôm nay: 0/5</span>
+                                    <span id="part2RewardProgressBadge" class="text-[11px] bg-emerald-500/25 text-emerald-200 border border-emerald-400/50 font-extrabold px-2.5 py-0.5 rounded-full">🎲 Lượt thưởng hôm nay: 0/3</span>
                                 </div>
                                 <p class="text-xs text-teal-100 leading-relaxed">
                                     Kéo thả rác vào đúng thùng, chà sạch vết bẩn trên sàn/bảng trắng, chỉnh 3 bảng khẩu hiệu, tắt TV, dựng bình hoa &amp; cùng bé Poodle Bông tiêu diệt lũ gián tinh quái!
                                 </p>
                                 <div class="flex flex-wrap gap-1.5 text-[10px] font-bold">
-                                    <span class="bg-emerald-500/25 border border-emerald-300/40 px-2 py-1 rounded-lg text-emerald-200">🎲 Thưởng thắng: 50 – 100 PTS / lượt</span>
-                                    <span class="bg-white/10 border border-white/15 px-2 py-1 rounded-lg text-amber-200">⚡ Giới hạn: 5 lượt nhận điểm / ngày</span>
+                                    <span class="bg-emerald-500/25 border border-emerald-300/40 px-2 py-1 rounded-lg text-emerald-200">🎲 Thưởng thắng: 350 – 600 PTS / lượt</span>
+                                    <span class="bg-white/10 border border-white/15 px-2 py-1 rounded-lg text-amber-200">⚡ Mặc định: 3 lượt/ngày (+Nhiệm vụ tăng lượt)</span>
                                     <span id="part2GameBestBadge" class="bg-sky-500/25 border border-sky-300/40 px-2 py-1 rounded-lg text-sky-200">🏆 Kỷ lục game: 0đ</span>
                                 </div>
                                 <div class="pt-1 flex flex-col sm:flex-row sm:items-center gap-2">
@@ -1586,27 +1730,40 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- KHUNG NHIỆM VỤ NHẬN THÊM LƯỢT CHƠI NGAY TRONG PART 2 -->
+                        <div class="bg-black/35 border border-teal-400/35 rounded-2xl p-3.5 space-y-2.5 text-left">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <p class="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                                    <span>🎯</span> <span>Hết 3 lượt mặc định? Làm Nhiệm Vụ Nhận Thêm Lượt Chơi Ngay:</span>
+                                </p>
+                                <button type="button" onclick="openBtcDonateModal()" class="text-[11px] bg-gradient-to-r from-rose-500 to-amber-400 text-slate-950 font-black px-2.5 py-1 rounded-lg shadow hover:brightness-105 transition">
+                                    💖 Donate BTC (+5 Lượt &amp; +300 PTS)
+                                </button>
+                            </div>
+                            <div id="part2QuestsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"></div>
+                        </div>
                     </div>
 
                     <div class="bg-gradient-to-br from-amber-50 via-white to-red-50 border-2 border-amber-300 rounded-2xl p-4 sm:p-6 shadow-md space-y-4">
                         <div class="flex items-center justify-between gap-2 flex-wrap">
                             <h4 class="text-sm sm:text-base font-extrabold text-red-800 flex items-center gap-1.5">
-                                <span>🎒</span> Cửa Hàng 5 Vật Phẩm Noel &amp; Hộp Quà Bí Ẩn BTC
+                                <span>🎒</span> Cửa Hàng 6 Vật Phẩm Noel (Có Icon 204) &amp; Hộp Quà Bí Ẩn BTC
                             </h4>
                             <span id="part2ShopStatusBadge" class="text-[11px] bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-300">🟢 Đang mở đổi vật phẩm</span>
                         </div>
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                             <div class="bg-white p-3 rounded-xl border border-dashed border-amber-400">
-                                <div class="text-3xl mb-1">🎅</div>
-                                <p class="text-xs font-extrabold text-gray-800">Mũ Santa &amp; Tất</p>
-                                <p class="text-[10px] text-amber-700 font-semibold">1,000 – 1,500 PTS</p>
-                                <span id="part2Item1Status" class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">1,000 PTS</span>
+                                <div class="text-3xl mb-1">🏷️</div>
+                                <p class="text-xs font-extrabold text-gray-800">Icon 204 &amp; Mũ</p>
+                                <p class="text-[10px] text-amber-700 font-semibold">204 – 1,000 PTS</p>
+                                <span id="part2Item1Status" class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">Từ 204 PTS</span>
                             </div>
                             <div class="bg-white p-3 rounded-xl border border-dashed border-amber-400">
                                 <div class="text-3xl mb-1">🔔</div>
-                                <p class="text-xs font-extrabold text-gray-800">Chuông &amp; Sừng</p>
-                                <p class="text-[10px] text-amber-700 font-semibold">2,000 – 3,000 PTS</p>
-                                <span id="part2Item2Status" class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">2,000 PTS</span>
+                                <p class="text-xs font-extrabold text-gray-800">Tất, Chuông &amp; Sừng</p>
+                                <p class="text-[10px] text-amber-700 font-semibold">1,500 – 3,000 PTS</p>
+                                <span id="part2Item2Status" class="inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">1,500 PTS</span>
                             </div>
                             <div class="bg-white p-3 rounded-xl border border-dashed border-amber-400">
                                 <div class="text-3xl mb-1">🎄</div>
@@ -1617,8 +1774,8 @@
                             <div class="bg-gradient-to-b from-red-600 to-red-800 text-white p-3 rounded-xl border-2 border-amber-300 shadow">
                                 <div class="text-3xl mb-1">🎁</div>
                                 <p class="text-xs font-extrabold">Hộp Quà Bí Ẩn BTC</p>
-                                <p class="text-[10px] text-amber-200">Đủ trọn bộ 5 món</p>
-                                <span id="part2SecretStatus" class="inline-block mt-1.5 text-[10px] bg-amber-400 text-red-950 font-black px-2 py-0.5 rounded">0/5 món</span>
+                                <p class="text-[10px] text-amber-200">Đủ trọn bộ 6 món</p>
+                                <span id="part2SecretStatus" class="inline-block mt-1.5 text-[10px] bg-amber-400 text-red-950 font-black px-2 py-0.5 rounded">0/6 món</span>
                             </div>
                         </div>
                         <div class="text-center pt-1">
@@ -1801,8 +1958,23 @@
             </div>
 
             <!-- ===================================================================== -->
-            <!-- KHU VỰC KIỂM DUYỆT BẢNG TIN & KÊNH CHAT DÀNH CHO BTC (ADMIN)          -->
+            <!-- KHU VỰC KIỂM DUYỆT BILL DONATE, BẢNG TIN & KÊNH CHAT DÀNH CHO BTC     -->
             <!-- ===================================================================== -->
+            <div class="bg-gradient-to-r from-rose-50 via-amber-50 to-pink-50 rounded-2xl border-2 border-rose-300 p-4 sm:p-5 shadow-md">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-rose-200 pb-3 mb-4">
+                    <div>
+                        <h3 class="text-base sm:text-lg font-black text-rose-800 flex items-center gap-1.5">
+                            <span>💖</span> Kiểm Duyệt Bill Donate Quỹ Quà BTC (5K–10K)
+                        </h3>
+                        <p class="text-xs text-gray-600">Kiểm tra ảnh Bill chuyển khoản của thành viên và bấm <strong>"✅ Duyệt Donate"</strong> để cộng tự động <strong>+5 Lượt chơi Minigame &amp; +300 PTS</strong> vào tài khoản bạn đó</p>
+                    </div>
+                    <span id="adminDonateCountBadge" class="text-xs bg-rose-600 text-white font-extrabold px-3.5 py-1 rounded-full shadow-sm">0 bill</span>
+                </div>
+                <div id="adminDonateModerationList" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[380px] overflow-y-auto custom-scroll pr-1">
+                    <p class="text-xs text-gray-400 text-center py-6 md:col-span-2">Chưa có thành viên nào gửi ảnh Bill Donate.</p>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 pt-4 border-t border-gray-200">
                 <!-- Kiểm duyệt Bảng Tin -->
                 <div class="lg:col-span-7 bg-white rounded-2xl border-2 border-red-200 p-4 sm:p-5 shadow-sm">
@@ -2018,83 +2190,100 @@
         }
 
         // =========================================================================
-        // CÁC HÀM TRUY XUẤT CƠ SỞ DỮ LIỆU ĐỒNG BỘ 100% (TỐI ƯU CHẾ ĐỘ FAST LITE)
+        // CÁC HÀM TRUY XUẤT CƠ SỞ DỮ LIỆU ĐỒNG BỘ 100% (TỐI ƯU CHẾ ĐỘ FAST LITE & DEDUPLICATE)
         // =========================================================================
+        let _inflightDbFetchFast = null;
+        let _inflightDbFetchFull = null;
+
         async function dbFetchRows(options = {}) {
-            const ctrl = new AbortController();
-            const timer = setTimeout(() => ctrl.abort(), 10000);
             const canUseFast = Boolean(options && options.fast)
                 && (_rowImageCache.size > 0 || _hasFullFetchedOnce)
                 && (isGoogleAppsScript() || isSqlServerApi());
 
-            try {
-                let fetchUrl = SHEETDB_API;
-                if (isGoogleAppsScript() || isSqlServerApi()) {
-                    const sep = SHEETDB_API.includes('?') ? '&' : '?';
-                    fetchUrl = `${SHEETDB_API}${sep}_t=${Date.now()}${canUseFast ? '&mode=fast' : ''}`;
-                }
+            if (canUseFast && _inflightDbFetchFast) return _inflightDbFetchFast;
+            if (!canUseFast && _inflightDbFetchFull) return _inflightDbFetchFull;
 
-                const res = await fetch(fetchUrl, {
-                    method: 'GET',
-                    cache: 'no-store',
-                    signal: ctrl.signal
-                });
-                clearTimeout(timer);
-
-                if (res.status === 429) {
-                    _lastDbError = 'QUOTA_429';
-                    refreshDbEngineBadge();
-                    throw new Error('QUOTA_429');
-                }
-                if (!res.ok) {
-                    _lastDbError = `HTTP_${res.status}`;
-                    refreshDbEngineBadge();
-                    throw new Error(`HTTP_${res.status}`);
-                }
-
-                const data = await res.json();
-                if (data && !Array.isArray(data) && data.error) {
-                    _lastDbError = String(data.error);
-                    refreshDbEngineBadge();
-                    throw new Error(String(data.error));
-                }
-
-                const rows = Array.isArray(data) ? data : [];
-                let needFullHydration = false;
-                rows.forEach(r => {
-                    if (!r) return;
-                    const k = String(r.hoten || '').trim();
-                    const pb = String(r.phongban || '');
-                    if (pb.startsWith('__IMG_REF__:')) {
-                        const expectedLen = parseInt(pb.split(':')[1], 10) || 0;
-                        const cachedImg = _rowImageCache.get(k);
-                        if (cachedImg && (!expectedLen || cachedImg.length === expectedLen)) {
-                            r.phongban = cachedImg;
-                        } else {
-                            needFullHydration = true;
-                        }
-                    } else if (k && pb.startsWith('data:image')) {
-                        _rowImageCache.set(k, pb);
+            const runner = (async () => {
+                const ctrl = new AbortController();
+                const timer = setTimeout(() => ctrl.abort(), 10000);
+                try {
+                    let fetchUrl = SHEETDB_API;
+                    if (isGoogleAppsScript() || isSqlServerApi()) {
+                        const sep = SHEETDB_API.includes('?') ? '&' : '?';
+                        fetchUrl = `${SHEETDB_API}${sep}_t=${Date.now()}${canUseFast ? '&mode=fast' : ''}`;
                     }
-                });
 
-                if (canUseFast && needFullHydration) {
-                    return await dbFetchRows({ fast: false });
-                }
+                    const res = await fetch(fetchUrl, {
+                        method: 'GET',
+                        cache: 'no-store',
+                        signal: ctrl.signal
+                    });
+                    clearTimeout(timer);
 
-                _hasFullFetchedOnce = true;
-                _lastDbFetchAt = Date.now();
-                _lastDbError = '';
-                saveLocalCachedRows(rows);
-                refreshDbEngineBadge();
-                return rows;
-            } catch (err) {
-                clearTimeout(timer);
-                if (err.message !== 'QUOTA_429' && !String(err.message || '').startsWith('HTTP_')) {
-                    _lastDbError = 'NETWORK';
+                    if (res.status === 429) {
+                        _lastDbError = 'QUOTA_429';
+                        refreshDbEngineBadge();
+                        throw new Error('QUOTA_429');
+                    }
+                    if (!res.ok) {
+                        _lastDbError = `HTTP_${res.status}`;
+                        refreshDbEngineBadge();
+                        throw new Error(`HTTP_${res.status}`);
+                    }
+
+                    const data = await res.json();
+                    if (data && !Array.isArray(data) && data.error) {
+                        _lastDbError = String(data.error);
+                        refreshDbEngineBadge();
+                        throw new Error(String(data.error));
+                    }
+
+                    const rows = Array.isArray(data) ? data : [];
+                    let needFullHydration = false;
+                    rows.forEach(r => {
+                        if (!r) return;
+                        const k = String(r.hoten || '').trim();
+                        const pb = String(r.phongban || '');
+                        if (pb.startsWith('__IMG_REF__:')) {
+                            const expectedLen = parseInt(pb.split(':')[1], 10) || 0;
+                            const cachedImg = _rowImageCache.get(k);
+                            if (cachedImg && (!expectedLen || cachedImg.length === expectedLen)) {
+                                r.phongban = cachedImg;
+                            } else {
+                                needFullHydration = true;
+                            }
+                        } else if (k && pb.startsWith('data:image')) {
+                            _rowImageCache.set(k, pb);
+                        }
+                    });
+
+                    if (canUseFast && needFullHydration) {
+                        _inflightDbFetchFast = null;
+                        return await dbFetchRows({ fast: false });
+                    }
+
+                    _hasFullFetchedOnce = true;
+                    _lastDbFetchAt = Date.now();
+                    _lastDbError = '';
+                    saveLocalCachedRows(rows);
                     refreshDbEngineBadge();
+                    return rows;
+                } catch (err) {
+                    clearTimeout(timer);
+                    if (err.message !== 'QUOTA_429' && !String(err.message || '').startsWith('HTTP_')) {
+                        _lastDbError = 'NETWORK';
+                        refreshDbEngineBadge();
+                    }
+                    throw err;
                 }
-                throw err;
+            })();
+
+            if (canUseFast) {
+                _inflightDbFetchFast = runner.finally(() => { _inflightDbFetchFast = null; });
+                return _inflightDbFetchFast;
+            } else {
+                _inflightDbFetchFull = runner.finally(() => { _inflightDbFetchFull = null; });
+                return _inflightDbFetchFull;
             }
         }
 
@@ -2365,6 +2554,7 @@
         let currentStudentRecord = null;
         let allSheetRecordsCache = [];
         let giftCheckinMap = new Map(); // Lưu riêng bản ghi Check-in Quà theo MSSV (Chỉ chủ tài khoản & BTC xem được)
+        let btcDonateMap = new Map();   // Lưu riêng bản ghi Bill Donate Quỹ Quà BTC theo MSSV (Chờ BTC duyệt / Đã duyệt)
         let publicFeedPosts = [];       // Lưu danh sách bài đăng trên Bảng Tin Giáng Sinh
         let publicChatMessages = [];    // Lưu danh sách tin nhắn Kênh Chat Chung
         let adminAllRecords = [];
@@ -2377,6 +2567,7 @@
         let _lastFeedSig = '';
         let _lastChatSig = '';
         let _lastCheckinSig = '';
+        let _lastDonateSig = '';
         let _lastCfgSig = '';
 
         const DEFAULT_EVENT_SCHEDULE = {
@@ -2463,7 +2654,16 @@
         let santaDir = 1;
         let santaPhase = 0;
 
+        function isHeavyModalActive() {
+            const p2m = document.getElementById('part2GameModal');
+            return document.hidden || Boolean(p2m && !p2m.classList.contains('hidden'));
+        }
+
         function animateSantaFlight() {
+            if (isHeavyModalActive()) {
+                requestAnimationFrame(animateSantaFlight);
+                return;
+            }
             const vw = window.innerWidth;
             const vh = window.innerHeight;
             const speed = vw < 640 ? 1.5 : 2.3;
@@ -2604,6 +2804,10 @@
             });
 
             function animate() {
+                if (isHeavyModalActive()) {
+                    requestAnimationFrame(animate);
+                    return;
+                }
                 ctx.clearRect(0, 0, width, height);
 
                 for (const f of snowflakes) {
@@ -3091,15 +3295,15 @@
                 }
             }
             const tiers = [
-                { id: 'part2Item1Status', need: 1000 },
-                { id: 'part2Item2Status', need: 2000 },
+                { id: 'part2Item1Status', need: 204 },
+                { id: 'part2Item2Status', need: 1500 },
                 { id: 'part2Item3Status', need: 5000 }
             ];
             tiers.forEach(t => {
                 const el = document.getElementById(t.id);
                 if (!el) return;
                 if (!p2.unlocked) {
-                    el.textContent = `${t.need.toLocaleString('vi-VN')} PTS`;
+                    el.textContent = `Từ ${t.need.toLocaleString('vi-VN')} PTS`;
                     el.className = 'inline-block mt-1.5 text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded';
                 } else if (myScore >= t.need) {
                     el.textContent = `✅ Đủ điểm (${t.need.toLocaleString('vi-VN')} PTS)`;
@@ -3113,14 +3317,16 @@
                 ? currentStudentRecord.vat_pham_so_huu
                 : [];
             const ownedCount = NOEL_REWARD_SHOP_ITEMS.filter(it => ownedItems.includes(it.id)).length;
+            const totalShopItems = NOEL_REWARD_SHOP_ITEMS.length;
             const secEl = document.getElementById('part2SecretStatus');
             if (secEl) {
-                secEl.textContent = ownedCount >= NOEL_REWARD_SHOP_ITEMS.length
-                    ? '🎁 Đủ 5/5 • Mở Ngay!'
-                    : `Đã có ${ownedCount}/5 món`;
+                secEl.textContent = ownedCount >= totalShopItems
+                    ? `🎁 Đủ ${totalShopItems}/${totalShopItems} • Mở Ngay!`
+                    : `Đã có ${ownedCount}/${totalShopItems} món`;
             }
 
             const playsToday = getTodayMinigamePlays(currentStudentRecord);
+            const maxPlaysToday = getMaxDailyMinigamePlays(currentStudentRecord);
             const p2Best = Math.max(0, Number(currentStudentRecord && currentStudentRecord.part2Best) || 0);
             const p2ProgEl = document.getElementById('part2RewardProgressBadge');
             const p2BestEl = document.getElementById('part2GameBestBadge');
@@ -3129,18 +3335,18 @@
             const p2ModalScore = document.getElementById('part2ModalScorePill');
             const p2ModalReward = document.getElementById('part2ModalRewardPill');
 
-            if (p2ProgEl) p2ProgEl.textContent = `🎲 Lượt thưởng hôm nay: ${playsToday}/${MAX_DAILY_MINIGAME_REWARDS}`;
+            if (p2ProgEl) p2ProgEl.textContent = `🎲 Lượt thưởng hôm nay: ${playsToday}/${maxPlaysToday}`;
             if (p2BestEl) p2BestEl.textContent = `🏆 Kỷ lục game: ${p2Best.toLocaleString('vi-VN')}đ`;
             if (p2ModalScore) p2ModalScore.textContent = `⭐ Điểm tích lũy: ${myScore.toLocaleString('vi-VN')} PTS`;
-            if (p2ModalReward) p2ModalReward.textContent = `🎲 Lượt hôm nay: ${playsToday}/${MAX_DAILY_MINIGAME_REWARDS}`;
+            if (p2ModalReward) p2ModalReward.textContent = `🎲 Lượt hôm nay: ${playsToday}/${maxPlaysToday}`;
 
             if (p2LaunchBtn) {
                 p2LaunchBtn.disabled = !p2.unlocked;
                 if (p2.unlocked) {
                     p2LaunchBtn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 shadow-lg hover:brightness-105 transition inline-flex items-center justify-center gap-2 cursor-pointer';
-                    p2LaunchBtn.innerHTML = playsToday >= MAX_DAILY_MINIGAME_REWARDS
-                        ? '<span>🏆</span> <span>Chơi Tiếp Để Phá Kỷ Lục Phòng 204</span>'
-                        : '<span>🚀</span> <span>Chơi Mini-Game (+50~100 PTS)</span>';
+                    p2LaunchBtn.innerHTML = playsToday >= maxPlaysToday
+                        ? '<span>🎯</span> <span>Làm Nhiệm Vụ Bên Dưới Để Nhận Thêm Lượt (Hoặc Chơi Phá Kỷ Lục)</span>'
+                        : '<span>🚀</span> <span>Chơi Mini-Game (+350~600 PTS/lượt)</span>';
                 } else {
                     p2LaunchBtn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm bg-slate-700/80 text-slate-300 border border-slate-500/50 cursor-not-allowed inline-flex items-center justify-center gap-2 opacity-80';
                     p2LaunchBtn.innerHTML = '<span>🔒</span> <span>Chờ Mở Khóa Part 2</span>';
@@ -3148,9 +3354,9 @@
             }
             if (p2LockNote) {
                 p2LockNote.textContent = p2.unlocked
-                    ? (playsToday >= MAX_DAILY_MINIGAME_REWARDS
-                        ? `✅ Đã nhận đủ ${MAX_DAILY_MINIGAME_REWARDS}/${MAX_DAILY_MINIGAME_REWARDS} lượt điểm thưởng hôm nay!`
-                        : `Còn ${MAX_DAILY_MINIGAME_REWARDS - playsToday} lượt nhận thưởng ngẫu nhiên (50–100 PTS) hôm nay`)
+                    ? (playsToday >= maxPlaysToday
+                        ? `⚠️ Đã hết ${playsToday}/${maxPlaysToday} lượt hôm nay! Hãy làm nhiệm vụ bên dưới (Donate BTC, Đăng Bảng Tin, Chat...) để cộng thêm lượt chơi ngay!`
+                        : `Còn ${maxPlaysToday - playsToday} lượt nhận thưởng (${MINIGAME_REWARD_MIN}–${MINIGAME_REWARD_MAX} PTS/lượt) hôm nay`)
                     : (p2.mode === 'auto' && p2.openTs > 0 ? `Mở lúc ${formatVietnamDateTime(p2.openAt)}` : 'Admin chưa mở khóa chặng này.');
             }
 
@@ -3159,11 +3365,76 @@
         }
 
         // =========================================================================
-        // HỆ THỐNG ĐỔI THƯỞNG & TÍCH LŨY (DAILY CHECK-IN, MINIGAME 50-100 PTS, SHOP 5 MÓN & QUÀ BÍ ẨN BTC)
+        // HỆ THỐNG ĐỔI THƯỞNG & TÍCH LŨY (DAILY CHECK-IN, MINIGAME 350-600 PTS, 3 LƯỢT/NGÀY + NHIỆM VỤ, SHOP 6 MÓN & QUÀ BÍ ẨN BTC)
         // =========================================================================
-        const MAX_DAILY_MINIGAME_REWARDS = 5;
+        const BASE_DAILY_MINIGAME_PLAYS = 3;
+        const MINIGAME_REWARD_MIN = 350;
+        const MINIGAME_REWARD_MAX = 600;
+        const DAILY_CHECKIN_MIN = 100;
+        const DAILY_CHECKIN_MAX = 300;
+        const DONATE_BONUS_PTS = 300;
 
+        // 6 Nhiệm vụ hằng ngày giúp mở khóa thêm lượt chơi Minigame (ngoài 3 lượt miễn phí/ngày)
+        const DAILY_PLAY_QUESTS = [
+            {
+                id: 'donate_btc',
+                name: 'Donate Quỹ Quà BTC (5K–10K)',
+                icon: '💖',
+                bonusPlays: 5,
+                bonusPts: 300,
+                desc: 'Quét QR ủng hộ 5K–10K & gửi ảnh Bill để Admin (BTC) duyệt cộng +5 lượt & +300 PTS.',
+                btnText: '💖 Donate & Gửi Bill (+5 lượt)'
+            },
+            {
+                id: 'post_feed',
+                name: 'Đăng Bài Lên Bảng Tin Noel',
+                icon: '📸',
+                bonusPlays: 2,
+                bonusPts: 0,
+                desc: 'Đăng 1 khoảnh khắc hoặc lời chúc mới lên Bảng Tin (Tự động xác nhận khi đăng).',
+                btnText: '📸 Đăng Bảng Tin (+2 lượt)'
+            },
+            {
+                id: 'gift_or_wish',
+                name: 'Check-in Quà / Cập Nhật Wishlist',
+                icon: '🎁',
+                bonusPlays: 2,
+                bonusPts: 0,
+                desc: 'Gửi ảnh Check-in Quà hoặc bấm Lưu cập nhật Wishlist/Hồ sơ (Tự động xác nhận khi lưu).',
+                btnText: '🎁 Làm Nhiệm Vụ (+2 lượt)'
+            },
+            {
+                id: 'send_chat',
+                name: 'Nhắn Chúc Noel Trên Kênh Chat',
+                icon: '💬',
+                bonusPlays: 1,
+                bonusPts: 0,
+                desc: 'Gửi 1 tin nhắn chúc Giáng Sinh tới mọi người trong Kênh Chat (Tự động xác nhận khi gửi).',
+                btnText: '💬 Tới Kênh Chat (+1 lượt)'
+            },
+            {
+                id: 'like_feed',
+                name: 'Thả Tim Bài Viết Bảng Tin',
+                icon: '❤️',
+                bonusPlays: 1,
+                bonusPts: 0,
+                desc: 'Thả tim 1 bài đăng bất kỳ của bạn bè trên Bảng Tin (Tự động xác nhận khi thả tim).',
+                btnText: '❤️ Tới Thả Tim (+1 lượt)'
+            },
+            {
+                id: 'daily_checkin',
+                name: 'Điểm Danh Nhận Lộc Đầu Ngày',
+                icon: '📅',
+                bonusPlays: 1,
+                bonusPts: 0,
+                desc: 'Hoàn thành Điểm Danh Hằng Ngày để nhận 100–300 PTS và thêm 1 lượt chơi.',
+                btnText: '📅 Điểm Danh (+1 lượt)'
+            }
+        ];
+
+        // Danh sách 6 Vật Phẩm Noel trong Cửa Hàng (Tổng 12,704 PTS -> cân đối với 350-600 PTS/lượt chơi)
         const NOEL_REWARD_SHOP_ITEMS = [
+            { id: 'icon_204', name: 'Icon 204 Độc Quyền', icon: '🏷️', price: 204, desc: 'Huy hiệu [🏷️ ICON 204] danh giá gắn cạnh tên bạn trên Bảng Xếp Hạng, Kênh Chat & Bảng Tin!' },
             { id: 'mu_noel', name: 'Mũ Santa Thần Kỳ', icon: '🎅', price: 1000, desc: 'Chiếc mũ đỏ phép thuật của Ông Già Noel mang lại may mắn suốt mùa lễ hội.' },
             { id: 'tat_giang_sinh', name: 'Tất Giáng Sinh May Mắn', icon: '🧦', price: 1500, desc: 'Chiếc tất len ấm áp luôn đầy ắp kẹo ngọt và những điều bất ngờ đêm Giáng Sinh.' },
             { id: 'chuong_bac', name: 'Chuông Bạc Vang Vọng', icon: '🔔', price: 2000, desc: 'Tiếng chuông ngân vang dẫn lối đoàn tuần lộc vượt qua màn tuyết trắng.' },
@@ -3176,7 +3447,7 @@
             { id: 'blindbox_noel', name: 'Hộp Quà Hiện Vật Blindbox Giáng Sinh', icon: '🎁', desc: '1 món quà hiện vật bí ẩn đặc biệt từ Ban Tổ Chức trao tặng tại đêm hội mở quà!' },
             { id: 'vip_pass_204', name: 'Đặc Quyền VIP Secret Santa Phòng 204', icon: '👑', desc: 'Đặc quyền ưu tiên khui quà & nhận 1 phụ kiện Giáng Sinh giới hạn từ BTC!' },
             { id: 'sweet_box_204', name: 'Combo Socola & Thiệp Đặc Biệt BTC', icon: '🍫', desc: 'Set quà ngọt ngào kèm thiệp chúc viết tay độc quyền từ Ban Tổ Chức Phòng 204!' },
-            { id: 'lucky_star_204', name: 'Ngôi Sao May Mắn Phòng 204 (Quà Đặc Biệt)', icon: '🌟', desc: 'Phần quà hiện vật giá trị dành riêng cho nhà sưu tập hoàn thành trọn bộ 5 vật phẩm Noel!' }
+            { id: 'lucky_star_204', name: 'Ngôi Sao May Mắn Phòng 204 (Quà Đặc Biệt)', icon: '🌟', desc: 'Phần quà hiện vật giá trị dành riêng cho nhà sưu tập hoàn thành trọn bộ 6 vật phẩm Noel!' }
         ];
 
         function getVietnamTodayDateStr() {
@@ -3187,11 +3458,68 @@
             return `${y}-${m}-${d}`;
         }
 
+        function getCompletedQuestsToday(record) {
+            if (!record || !record.mssv) return [];
+            const todayStr = getVietnamTodayDateStr();
+            const mssvVal = normalizeMssv(record.mssv);
+            const localKey = `ss26_quests_${mssvVal}_${todayStr}`;
+            const set = new Set();
+
+            if (String(record.ngay_nhiem_vu_cuoi || '') === todayStr && Array.isArray(record.nhiem_vu_hom_nay)) {
+                record.nhiem_vu_hom_nay.forEach(q => { if (q) set.add(String(q)); });
+            }
+            try {
+                const savedLocal = JSON.parse(localStorage.getItem(localKey) || '[]');
+                if (Array.isArray(savedLocal)) savedLocal.forEach(q => {
+                    // Riêng donate_btc bắt buộc phải được Admin duyệt (APPROVED trên server hoặc trong record)
+                    if (q && q !== 'donate_btc') set.add(String(q));
+                });
+            } catch (e) {}
+
+            // Kiểm tra trạng thái Bill Donate BTC đã được Admin duyệt hay chưa
+            const dn = btcDonateMap.get(mssvVal);
+            if (dn) {
+                if (dn.status === 'APPROVED') {
+                    set.add('donate_btc');
+                } else {
+                    set.delete('donate_btc');
+                }
+            }
+
+            // Nếu đã điểm danh hôm nay thì tự động tính hoàn thành nhiệm vụ daily_checkin
+            if (String(record.ngay_diem_danh_cuoi || '') === todayStr || localStorage.getItem(`ss26_daily_checkin_${mssvVal}`) === todayStr) {
+                set.add('daily_checkin');
+            }
+            return Array.from(set);
+        }
+
+        function getMaxDailyMinigamePlays(record) {
+            const completed = getCompletedQuestsToday(record);
+            let bonus = 0;
+            DAILY_PLAY_QUESTS.forEach(q => {
+                if (completed.includes(q.id)) bonus += q.bonusPlays;
+            });
+            return BASE_DAILY_MINIGAME_PLAYS + bonus;
+        }
+
         function getTodayMinigamePlays(record) {
             if (!record) return 0;
             const todayStr = getVietnamTodayDateStr();
             if (String(record.ngay_choi_game_cuoi || '') !== todayStr) return 0;
-            return Math.min(MAX_DAILY_MINIGAME_REWARDS, Math.max(0, parseInt(record.luot_choi_hom_nay, 10) || 0));
+            const maxPlays = getMaxDailyMinigamePlays(record);
+            return Math.min(maxPlays, Math.max(0, parseInt(record.luot_choi_hom_nay, 10) || 0));
+        }
+
+        function hasUserIcon204(recordOrMssv) {
+            if (!recordOrMssv) return false;
+            let rec = recordOrMssv;
+            if (typeof recordOrMssv === 'string') {
+                const norm = normalizeMssv(recordOrMssv);
+                rec = (currentStudentRecord && normalizeMssv(currentStudentRecord.mssv) === norm)
+                    ? currentStudentRecord
+                    : allSheetRecordsCache.find(r => normalizeMssv(r.mssv) === norm);
+            }
+            return Boolean(rec && Array.isArray(rec.vat_pham_so_huu) && rec.vat_pham_so_huu.includes('icon_204'));
         }
 
         let _isProcessingDailyCheckin = false;
@@ -3199,7 +3527,261 @@
         let _isSavingPart2Progress = false;
         let _queuedPart2Progress = null;
 
-        // LUỒNG A: NHẬN ĐIỂM THƯỞNG HẰNG NGÀY (DAILY CHECK-IN 1 - 100 ĐIỂM)
+        // MODAL DONATE CHO BAN TỔ CHỨC (TÙY TÂM 5K - 10K) & GỬI ẢNH BILL ĐỂ ADMIN XÁC NHẬN (+5 LƯỢT CHƠI & +300 PTS)
+        function openBtcDonateModal() {
+            const modal = document.getElementById('btcDonateModal');
+            renderUserDonateState();
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeBtcDonateModal() {
+            const modal = document.getElementById('btcDonateModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function loadDonateBillImage(event) {
+            const file = event && event.target && event.target.files ? event.target.files[0] : null;
+            if (!file) return;
+            compressImageFileToBase64(file, 580, (b64) => {
+                const preview = document.getElementById('donateBillPreview');
+                const base64Input = document.getElementById('donateBillBase64');
+                if (preview) {
+                    preview.src = b64;
+                    preview.classList.remove('hidden');
+                }
+                if (base64Input) base64Input.value = b64;
+                showToast('📸 Đã tải ảnh chụp màn hình Bill chuyển khoản lên! Hãy bấm nút Gửi cho BTC nhé.', '🧾');
+            });
+        }
+
+        function renderUserDonateState() {
+            const statusPill = document.getElementById('donateUserStatusPill');
+            const preview = document.getElementById('donateBillPreview');
+            const base64Input = document.getElementById('donateBillBase64');
+            const noteInput = document.getElementById('donateBillNote');
+            const btnText = document.getElementById('btnConfirmDonateQuestText');
+
+            if (!currentStudentRecord || !currentStudentRecord.mssv) {
+                if (statusPill) {
+                    statusPill.className = 'text-[10px] font-black px-2.5 py-1 rounded-full bg-white/15 text-amber-200 border border-amber-300/40';
+                    statusPill.textContent = '🔑 Đăng nhập MSSV để gửi Bill nhận thưởng';
+                }
+                if (btnText) btnText.textContent = 'Đăng Nhập & Gửi Ảnh Bill Cho BTC Duyệt';
+                return;
+            }
+
+            const mssvVal = normalizeMssv(currentStudentRecord.mssv);
+            const myDonate = btcDonateMap.get(mssvVal);
+            const isApprovedToday = getCompletedQuestsToday(currentStudentRecord).includes('donate_btc');
+
+            if (!myDonate && !isApprovedToday) {
+                if (statusPill) {
+                    statusPill.className = 'text-[10px] font-black px-2.5 py-1 rounded-full bg-white/15 text-amber-200 border border-amber-300/40';
+                    statusPill.textContent = '⏳ Chưa gửi ảnh Bill xác nhận';
+                }
+                if (btnText) btnText.textContent = 'Gửi Ảnh Bill Cho BTC Duyệt (+5 Lượt & +300 PTS)';
+            } else if (myDonate && myDonate.status === 'PENDING' && !isApprovedToday) {
+                if (myDonate.billImage && myDonate.billImage.startsWith('data:image') && preview && base64Input && !base64Input.value) {
+                    preview.src = myDonate.billImage;
+                    preview.classList.remove('hidden');
+                    base64Input.value = myDonate.billImage;
+                }
+                if (noteInput && !noteInput.value) noteInput.value = myDonate.note || '';
+                if (statusPill) {
+                    statusPill.className = 'text-[10px] font-black px-2.5 py-1 rounded-full bg-amber-400 text-red-950 shadow';
+                    statusPill.textContent = '🟡 Đã gửi Bill • Đang chờ BTC xác nhận';
+                }
+                if (btnText) btnText.textContent = '🔄 Cập Nhật Lại Ảnh Bill Đã Gửi Cho BTC';
+            } else {
+                if (myDonate && myDonate.billImage && myDonate.billImage.startsWith('data:image') && preview && base64Input && !base64Input.value) {
+                    preview.src = myDonate.billImage;
+                    preview.classList.remove('hidden');
+                    base64Input.value = myDonate.billImage;
+                }
+                if (myDonate && noteInput && !noteInput.value) noteInput.value = myDonate.note || '';
+                if (statusPill) {
+                    statusPill.className = 'text-[10px] font-black px-2.5 py-1 rounded-full bg-emerald-500 text-slate-950 shadow';
+                    statusPill.textContent = '🟢 BTC Đã Duyệt! Đã cộng +5 Lượt & +300 PTS';
+                }
+                if (btnText) btnText.textContent = '💖 Gửi Thêm Bill Donate Mới Cho BTC';
+            }
+        }
+
+        async function submitBtcDonateBill(e) {
+            if (e && typeof e.preventDefault === 'function') e.preventDefault();
+            if (!currentStudentRecord || !currentStudentRecord.mssv) {
+                closeBtcDonateModal();
+                showToast('🔑 Vui lòng đăng nhập MSSV trước, sau đó mở lại mục Donate để gửi ảnh Bill cho BTC duyệt nhé!', 'ℹ️');
+                return;
+            }
+
+            const billB64 = (document.getElementById('donateBillBase64')?.value || '').trim();
+            const noteVal = (document.getElementById('donateBillNote')?.value || '').trim();
+
+            if (!billB64 || !billB64.startsWith('data:image')) {
+                alert('📸 Vui lòng chọn hoặc chụp ảnh màn hình Bill chuyển khoản (5K–10K) trước khi bấm gửi để Ban Tổ Chức kiểm tra và xác nhận nhé!');
+                return;
+            }
+
+            const btn = document.getElementById('btnConfirmDonateQuest');
+            const btnText = document.getElementById('btnConfirmDonateQuestText');
+            if (btn) btn.disabled = true;
+            if (btnText) btnText.textContent = '⏳ Đang gửi ảnh Bill lên Ban Tổ Chức...';
+
+            const mssv = normalizeMssv(currentStudentRecord.mssv);
+            const existingDonate = btcDonateMap.get(mssv);
+            const donateHotenKey = `DONATE_BTC | ${mssv} | ${currentStudentRecord.hoten}`;
+            const nowStr = getFormattedNowStr();
+            const payload = {
+                "hoten": donateHotenKey,
+                "thoigian": `${nowStr} | ${mssv} | PENDING`,
+                "phongban": billB64,
+                "wishlist": noteVal || 'Ủng hộ tùy tâm quỹ quà Phòng 204 (5K–10K)',
+                "blacklist": "PENDING"
+            };
+
+            try {
+                let updatedDn = false;
+                if (existingDonate && existingDonate._rawHoten) {
+                    const patchRes = await dbPatchRow('hoten', existingDonate._rawHoten, payload);
+                    if (patchRes && patchRes.ok) updatedDn = true;
+                }
+                if (!updatedDn) {
+                    await dbInsertRow(payload);
+                }
+
+                await loadLeaderboardData(false, { fast: false });
+                renderUserDonateState();
+                renderRewardShopAndInventory();
+                showToast('💖 Đã gửi ảnh Bill chuyển khoản cho BTC! Ngay khi Admin bấm Duyệt, bạn sẽ nhận tự động +5 Lượt chơi & +300 PTS!', '🧾');
+                closeBtcDonateModal();
+            } catch (err) {
+                console.error(err);
+                alert(describeDbError(err));
+            } finally {
+                if (btn) btn.disabled = false;
+                renderUserDonateState();
+            }
+        }
+        const confirmBtcDonateQuest = submitBtcDonateBill;
+
+        async function markPlayQuestCompleted(questId, showCelebration = true) {
+            if (!currentStudentRecord || !currentStudentRecord.mssv) return false;
+            const quest = DAILY_PLAY_QUESTS.find(q => q.id === questId);
+            if (!quest) return false;
+
+            const todayStr = getVietnamTodayDateStr();
+            const mssvVal = normalizeMssv(currentStudentRecord.mssv);
+            const localKey = `ss26_quests_${mssvVal}_${todayStr}`;
+            const completed = getCompletedQuestsToday(currentStudentRecord);
+            if (completed.includes(questId)) return false;
+
+            const nextQuests = [...completed, questId];
+            try { localStorage.setItem(localKey, JSON.stringify(nextQuests)); } catch (e) {}
+
+            const bonusPts = quest.bonusPts || 0;
+            const prevScore = getScoreFromRow(currentStudentRecord);
+            const newTotalScore = prevScore + bonusPts;
+
+            currentStudentRecord.nhiem_vu_hom_nay = nextQuests;
+            currentStudentRecord.ngay_nhiem_vu_cuoi = todayStr;
+            if (bonusPts > 0) {
+                currentStudentRecord.diem = newTotalScore;
+                currentStudentRecord.diem_tich_luoi = newTotalScore;
+            }
+
+            try { localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentStudentRecord)); } catch (e) {}
+            renderPart1UserInfo(currentStudentRecord, allSheetRecordsCache);
+            applyEventScheduleUI();
+
+            if (showCelebration) {
+                const ptsMsg = bonusPts > 0 ? ` và +${bonusPts} PTS` : '';
+                showToast(`🎉 Hoàn thành nhiệm vụ "${quest.name}": Cộng thêm +${quest.bonusPlays} lượt chơi Minigame hôm nay${ptsMsg}!`, quest.icon);
+                if (window._spawnCanvasBurst) {
+                    window._spawnCanvasBurst(window.innerWidth / 2, window.innerHeight / 3, 32);
+                }
+            }
+
+            // Đồng bộ trạng thái nhiệm vụ & điểm lên Google Sheets / Database
+            try {
+                const wishData = buildUniqueWishData(currentStudentRecord, allSheetRecordsCache);
+                const payload = {
+                    "mssv": mssvVal,
+                    "hoten": formatHotenForSheet(mssvVal, currentStudentRecord.hoten),
+                    "thoigian": formatTimeForSheet(mssvVal, wishData.wishId, newTotalScore, currentStudentRecord),
+                    "phongban": currentStudentRecord.phongban || '',
+                    "wishlist": currentStudentRecord.wishlist || '',
+                    "blacklist": currentStudentRecord.blacklist || ''
+                };
+                const updated = await saveOrUpdateStudentToSheet(payload, currentStudentRecord);
+                currentStudentRecord = updated;
+                renderPart1UserInfo(updated, allSheetRecordsCache);
+                applyEventScheduleUI();
+            } catch (err) {
+                console.warn('Đồng bộ nhiệm vụ:', err.message);
+            }
+            return true;
+        }
+
+        async function handleQuestAction(questId) {
+            if (!currentStudentRecord || !currentStudentRecord.mssv) {
+                showToast('Vui lòng đăng nhập tài khoản để làm nhiệm vụ nhận lượt chơi!', 'ℹ️');
+                return;
+            }
+            const completed = getCompletedQuestsToday(currentStudentRecord);
+            if (completed.includes(questId)) {
+                showToast('✅ Bạn đã hoàn thành nhiệm vụ này và nhận thêm lượt chơi trong hôm nay rồi!', '🎉');
+                return;
+            }
+
+            const myMssv = normalizeMssv(currentStudentRecord.mssv);
+            if (questId === 'donate_btc') {
+                openBtcDonateModal();
+                return;
+            }
+            if (questId === 'daily_checkin') {
+                await checkAndTriggerDailyCheckin(true);
+                return;
+            }
+            if (questId === 'post_feed') {
+                closePart2MinigameModal();
+                switchEventPart(1);
+                switchHubTab('feed');
+                const input = document.getElementById('feedCaptionInput');
+                if (input) {
+                    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => input.focus(), 250);
+                }
+                showToast('📸 Hãy đăng 1 bài viết mới lên Bảng Tin — hệ thống sẽ tự động xác nhận và cộng +2 lượt chơi ngay khi đăng xong!', '📸');
+                return;
+            }
+            if (questId === 'send_chat') {
+                closePart2MinigameModal();
+                openChatFromAnywhere();
+                showToast('💬 Hãy gửi 1 lời chúc Giáng Sinh trên Kênh Chat — hệ thống sẽ tự động xác nhận và cộng +1 lượt chơi ngay khi gửi!', '💬');
+                return;
+            }
+            if (questId === 'like_feed') {
+                closePart2MinigameModal();
+                switchEventPart(1);
+                switchHubTab('feed');
+                showToast('❤️ Hãy bấm Thả Tim 1 bài viết trên Bảng Tin — hệ thống sẽ tự động xác nhận và cộng +1 lượt chơi ngay khi bạn thả tim!', '❤️');
+                return;
+            }
+            if (questId === 'gift_or_wish') {
+                closePart2MinigameModal();
+                switchEventPart(1);
+                switchHubTab('profile');
+                const noteEl = document.getElementById('checkinGiftNote') || document.getElementById('p1WishlistInput');
+                if (noteEl) {
+                    noteEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => noteEl.focus(), 250);
+                }
+                showToast('🎁 Hãy gửi ảnh Check-in Quà hoặc bấm Lưu cập nhật Wishlist/Hồ sơ — hệ thống sẽ tự động xác nhận và cộng +2 lượt chơi!', '🎁');
+            }
+        }
+
+        // LUỒNG A: NHẬN ĐIỂM THƯỞNG HẰNG NGÀY (DAILY CHECK-IN 100 - 300 ĐIỂM + MỞ KHÓA +1 LƯỢT CHƠI)
         async function checkAndTriggerDailyCheckin(manualClick = false) {
             if (!currentStudentRecord || !currentStudentRecord.mssv) return;
             const mssvVal = normalizeMssv(currentStudentRecord.mssv);
@@ -3211,7 +3793,7 @@
             if (alreadyToday) {
                 if (manualClick) {
                     const lastPts = parseInt(currentStudentRecord.lastDailyPts, 10) || 0;
-                    showToast(`✅ Hôm nay (${todayStr}) bạn đã điểm danh nhận thưởng${lastPts > 0 ? ` (+${lastPts} PTS)` : ''} rồi! Hẹn gặp lại vào ngày mai nhé.`, '📅');
+                    showToast(`✅ Hôm nay (${todayStr}) bạn đã điểm danh nhận thưởng${lastPts > 0 ? ` (+${lastPts} PTS & +1 lượt chơi)` : ''} rồi! Hẹn gặp lại vào ngày mai nhé.`, '📅');
                 }
                 renderRewardShopAndInventory();
                 return;
@@ -3221,18 +3803,23 @@
             _isProcessingDailyCheckin = true;
 
             try {
-                const randomBonus = Math.floor(Math.random() * 100) + 1; // Random từ 1 đến 100 điểm
+                const randomBonus = Math.floor(Math.random() * (DAILY_CHECKIN_MAX - DAILY_CHECKIN_MIN + 1)) + DAILY_CHECKIN_MIN;
                 const prevScore = getScoreFromRow(currentStudentRecord);
                 const newTotalScore = prevScore + randomBonus;
 
                 try { localStorage.setItem(localKey, todayStr); } catch (e) {}
+                const questKey = `ss26_quests_${mssvVal}_${todayStr}`;
+                const nextQuests = Array.from(new Set([...getCompletedQuestsToday(currentStudentRecord), 'daily_checkin']));
+                try { localStorage.setItem(questKey, JSON.stringify(nextQuests)); } catch (e) {}
 
                 const nextMeta = {
                     ...currentStudentRecord,
                     diem: newTotalScore,
                     diem_tich_luoi: newTotalScore,
                     ngay_diem_danh_cuoi: todayStr,
-                    lastDailyPts: randomBonus
+                    lastDailyPts: randomBonus,
+                    ngay_nhiem_vu_cuoi: todayStr,
+                    nhiem_vu_hom_nay: nextQuests
                 };
 
                 const wishData = buildUniqueWishData(currentStudentRecord, allSheetRecordsCache);
@@ -3256,7 +3843,7 @@
                 const totalEl = document.getElementById('dailyModalTotalPts');
                 const dateBadge = document.getElementById('dailyModalDateBadge');
                 if (dateBadge) dateBadge.textContent = `📅 Điểm Danh Ngày ${todayStr}`;
-                if (titleEl) titleEl.textContent = `Bạn nhận được ${randomBonus} điểm điểm danh hôm nay!`;
+                if (titleEl) titleEl.textContent = `Bạn nhận được +${randomBonus} PTS & +1 lượt chơi hôm nay!`;
                 if (totalEl) totalEl.textContent = newTotalScore.toLocaleString('vi-VN');
                 if (modal) modal.classList.remove('hidden');
 
@@ -3277,7 +3864,59 @@
             if (modal) modal.classList.add('hidden');
         }
 
-        // LUỒNG C: TRANG ĐỔI QUÀ RIÊNG (CỬA HÀNG 5 VẬT PHẨM NOEL, TÚI ĐỒ & QUÀ BÍ ẨN BTC)
+        function renderDailyPlayQuestsUI(playsToday, maxPlaysToday) {
+            const completed = getCompletedQuestsToday(currentStudentRecord);
+            const shopQuestBadge = document.getElementById('shopQuestPlaysBadge');
+            if (shopQuestBadge) {
+                shopQuestBadge.textContent = `🎲 Lượt chơi hôm nay: ${playsToday}/${maxPlaysToday} (Mặc định 3 + Nhiệm vụ +${maxPlaysToday - BASE_DAILY_MINIGAME_PLAYS})`;
+            }
+
+            const myDonate = (currentStudentRecord && currentStudentRecord.mssv)
+                ? btcDonateMap.get(normalizeMssv(currentStudentRecord.mssv))
+                : null;
+
+            const buildCards = (darkTheme) => DAILY_PLAY_QUESTS.map(q => {
+                const isDone = completed.includes(q.id);
+                const isPendingDonate = (q.id === 'donate_btc' && !isDone && myDonate && myDonate.status === 'PENDING');
+                const bonusBadge = isPendingDonate
+                    ? '⏳ Chờ BTC duyệt'
+                    : `+${q.bonusPlays} lượt${q.bonusPts ? ` & +${q.bonusPts} PTS` : ''}`;
+                return `
+                    <div class="rounded-xl p-3 border transition flex flex-col justify-between gap-2 ${
+                        isDone
+                            ? 'bg-emerald-950/60 border-emerald-400/60 text-emerald-100'
+                            : (isPendingDonate
+                                ? 'bg-amber-950/60 border-amber-400/70 text-amber-100'
+                                : (darkTheme ? 'bg-white/10 border-white/20 text-white hover:border-amber-300/70' : 'bg-white/10 border-white/20 text-white'))
+                    }">
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <span class="text-xs font-black text-amber-300 flex items-center gap-1 truncate">
+                                    <span>${q.icon}</span> <span class="truncate">${escapeHtml(q.name)}</span>
+                                </span>
+                                <span class="text-[10px] font-black px-2 py-0.5 rounded-full whitespace-nowrap shrink-0 ${isDone ? 'bg-emerald-500 text-slate-950' : (isPendingDonate ? 'bg-amber-300 text-red-950 animate-pulse' : 'bg-amber-400 text-red-950')}">
+                                    ${bonusBadge}
+                                </span>
+                            </div>
+                            <p class="text-[11px] text-gray-200/90 leading-snug">${escapeHtml(q.desc)}</p>
+                        </div>
+                        ${isDone
+                            ? `<button type="button" disabled class="w-full py-1.5 px-2.5 rounded-lg bg-emerald-500/25 text-emerald-200 border border-emerald-400/40 font-black text-[11px] cursor-default">✅ Đã Xác Nhận (+${q.bonusPlays} Lượt)</button>`
+                            : (isPendingDonate
+                                ? `<button type="button" onclick="handleQuestAction('${q.id}')" class="w-full py-1.5 px-2.5 rounded-lg bg-amber-400/90 hover:bg-amber-300 text-red-950 font-black text-[11px] shadow transition cursor-pointer">🟡 Đã Gửi Bill • Chờ BTC Duyệt (Xem/Sửa)</button>`
+                                : `<button type="button" onclick="handleQuestAction('${q.id}')" class="w-full py-1.5 px-2.5 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-300 hover:brightness-105 text-slate-950 font-black text-[11px] shadow transition cursor-pointer">${escapeHtml(q.btnText)}</button>`)
+                        }
+                    </div>
+                `;
+            }).join('');
+
+            const p2Grid = document.getElementById('part2QuestsGrid');
+            if (p2Grid) p2Grid.innerHTML = buildCards(true);
+            const shopGrid = document.getElementById('shopQuestsGrid');
+            if (shopGrid) shopGrid.innerHTML = buildCards(true);
+        }
+
+        // LUỒNG C: TRANG ĐỔI QUÀ RIÊNG (CỬA HÀNG 6 VẬT PHẨM NOEL, TÚI ĐỒ & QUÀ BÍ ẨN BTC)
         function renderRewardShopAndInventory() {
             const rec = currentStudentRecord;
             const myScore = rec ? getScoreFromRow(rec) : 150;
@@ -3285,10 +3924,23 @@
             const isCheckedInToday = rec && (String(rec.ngay_diem_danh_cuoi || '') === todayStr || localStorage.getItem(`ss26_daily_checkin_${normalizeMssv(rec.mssv)}`) === todayStr);
             const lastDailyPts = rec ? (parseInt(rec.lastDailyPts, 10) || 0) : 0;
             const playsToday = getTodayMinigamePlays(rec);
+            const maxPlaysToday = getMaxDailyMinigamePlays(rec);
             const ownedList = (rec && Array.isArray(rec.vat_pham_so_huu)) ? rec.vat_pham_so_huu : [];
             const historyList = (rec && Array.isArray(rec.lich_su_doi_qua)) ? rec.lich_su_doi_qua : [];
             const ownedCount = NOEL_REWARD_SHOP_ITEMS.filter(it => ownedList.includes(it.id)).length;
             const totalItems = NOEL_REWARD_SHOP_ITEMS.length;
+
+            // Render huy hiệu [🏷️ ICON 204] trên Header nếu sở hữu
+            const hdr204Badge = document.getElementById('hubHeader204Badge');
+            if (hdr204Badge) {
+                if (ownedList.includes('icon_204')) {
+                    hdr204Badge.classList.remove('hidden');
+                    hdr204Badge.classList.add('inline-flex');
+                } else {
+                    hdr204Badge.classList.add('hidden');
+                    hdr204Badge.classList.remove('inline-flex');
+                }
+            }
 
             // Header Daily Check-in button
             const hdrBtn = document.getElementById('btnHeaderDailyCheckin');
@@ -3299,7 +3951,7 @@
                     hdrLbl.textContent = `Đã điểm danh hôm nay${lastDailyPts > 0 ? ` (+${lastDailyPts} PTS)` : ''}`;
                 } else {
                     hdrBtn.className = 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:brightness-105 text-white font-extrabold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 whitespace-nowrap shadow-sm animate-pulse';
-                    hdrLbl.textContent = 'Điểm danh hôm nay (+1~100 PTS)';
+                    hdrLbl.textContent = `Điểm danh (+${DAILY_CHECKIN_MIN}~${DAILY_CHECKIN_MAX} PTS)`;
                 }
             }
 
@@ -3322,11 +3974,11 @@
             const btnShopDaily = document.getElementById('btnShopDailyCheckin');
             if (shopDailyStatus && btnShopDaily) {
                 if (isCheckedInToday) {
-                    shopDailyStatus.textContent = `✅ Đã điểm danh ngày ${todayStr}${lastDailyPts > 0 ? ` (Nhận +${lastDailyPts} PTS)` : ''}. Quay lại vào ngày mai nhé!`;
+                    shopDailyStatus.textContent = `✅ Đã điểm danh ngày ${todayStr}${lastDailyPts > 0 ? ` (Nhận +${lastDailyPts} PTS & +1 lượt chơi)` : ''}. Quay lại vào ngày mai nhé!`;
                     btnShopDaily.textContent = '✅ Đã Nhận Hôm Nay';
                     btnShopDaily.className = 'bg-white/15 text-emerald-200 border border-emerald-400/40 font-bold text-xs px-3.5 py-2.5 rounded-xl whitespace-nowrap shrink-0';
                 } else {
-                    shopDailyStatus.textContent = '🎁 Hôm nay bạn chưa điểm danh! Bấm để nhận ngẫu nhiên từ 1 đến 100 PTS.';
+                    shopDailyStatus.textContent = `🎁 Hôm nay bạn chưa điểm danh! Bấm để nhận ngẫu nhiên ${DAILY_CHECKIN_MIN} – ${DAILY_CHECKIN_MAX} PTS & +1 lượt chơi.`;
                     btnShopDaily.textContent = '🎲 Điểm Danh Ngay';
                     btnShopDaily.className = 'bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 font-black text-xs px-3.5 py-2.5 rounded-xl shadow hover:brightness-105 transition whitespace-nowrap shrink-0';
                 }
@@ -3334,13 +3986,15 @@
 
             const shopGameText = document.getElementById('shopMinigamePlaysText');
             if (shopGameText) {
-                shopGameText.textContent = `Hôm nay đã nhận: ${playsToday}/${MAX_DAILY_MINIGAME_REWARDS} lượt (Mỗi lượt thắng cộng ngẫu nhiên 50 – 100 PTS)`;
+                shopGameText.textContent = `Hôm nay đã chơi: ${playsToday}/${maxPlaysToday} lượt (Thưởng ${MINIGAME_REWARD_MIN} – ${MINIGAME_REWARD_MAX} PTS/lượt thắng • Làm nhiệm vụ để cộng thêm lượt!)`;
             }
+
+            renderDailyPlayQuestsUI(playsToday, maxPlaysToday);
 
             const ownedBadge = document.getElementById('shopOwnedCountBadge');
             if (ownedBadge) ownedBadge.textContent = `Túi đồ: ${ownedCount}/${totalItems} vật phẩm`;
 
-            // Render 5 ô Túi Đồ (vat_pham_so_huu)
+            // Render 6 ô Túi Đồ (vat_pham_so_huu)
             const invSlotsEl = document.getElementById('noelInventorySlots');
             if (invSlotsEl) {
                 invSlotsEl.innerHTML = NOEL_REWARD_SHOP_ITEMS.map(item => {
@@ -3350,14 +4004,14 @@
                             <div class="text-3xl mb-1 ${hasIt ? '' : 'grayscale'}">${item.icon}</div>
                             <p class="text-xs font-extrabold text-gray-800 truncate">${escapeHtml(item.name)}</p>
                             <span class="inline-block mt-1 text-[10px] font-black px-2 py-0.5 rounded-full ${hasIt ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-600'}">
-                                ${hasIt ? '✓ Đã sở hữu' : 'Chưa có'}
+                                ${hasIt ? '✓ Đã sở hữu' : `${item.price.toLocaleString('vi-VN')} PTS`}
                             </span>
                         </div>
                     `;
                 }).join('');
             }
 
-            // Render 5 thẻ Cửa Hàng Đổi Vật Phẩm Noel
+            // Render 6 thẻ Cửa Hàng Đổi Vật Phẩm Noel
             const shopGridEl = document.getElementById('noelShopItemsGrid');
             if (shopGridEl) {
                 shopGridEl.innerHTML = NOEL_REWARD_SHOP_ITEMS.map(item => {
@@ -3374,7 +4028,7 @@
                     }
 
                     return `
-                        <div class="bg-gradient-to-b from-white to-amber-50/40 rounded-2xl p-4 border-2 ${hasIt ? 'border-emerald-400' : 'border-amber-200'} shadow-sm flex flex-col justify-between gap-3">
+                        <div class="bg-gradient-to-b from-white to-amber-50/40 rounded-2xl p-4 border-2 ${hasIt ? 'border-emerald-400' : (item.id === 'icon_204' ? 'border-rose-400 ring-2 ring-amber-200' : 'border-amber-200')} shadow-sm flex flex-col justify-between gap-3">
                             <div class="flex items-start gap-3">
                                 <div class="w-14 h-14 rounded-2xl bg-amber-100/80 border border-amber-300 flex items-center justify-center text-3xl shrink-0 shadow-inner">
                                     ${item.icon}
@@ -3405,7 +4059,7 @@
 
             if (ownedCount >= totalItems) {
                 if (progLabel) {
-                    progLabel.textContent = '🟢 ĐÃ ĐỦ TRỌN BỘ 5 MÓN — SẴN SÀNG MỞ QUÀ!';
+                    progLabel.textContent = `🟢 ĐÃ ĐỦ TRỌN BỘ ${totalItems} MÓN — SẴN SÀNG MỞ QUÀ!`;
                     progLabel.className = 'text-emerald-300 font-black';
                 }
                 if (mysteryBtn) {
@@ -3429,7 +4083,7 @@
             const histEl = document.getElementById('btcGiftHistoryList');
             if (histEl) {
                 if (historyList.length === 0) {
-                    histEl.innerHTML = `<p class="text-indigo-300/75 italic">Chưa có lịch sử mở Hộp Quà Bí Ẩn nào. Hãy sưu tập đủ 5 vật phẩm Noel để mở hộp quà đầu tiên nhé!</p>`;
+                    histEl.innerHTML = `<p class="text-indigo-300/75 italic">Chưa có lịch sử mở Hộp Quà Bí Ẩn nào. Hãy sưu tập đủ ${totalItems} vật phẩm Noel để mở hộp quà đầu tiên nhé!</p>`;
                 } else {
                     histEl.innerHTML = historyList.map((g, i) => `
                         <div class="bg-white/10 border border-amber-300/40 rounded-xl p-3 flex items-center justify-between gap-3 flex-wrap">
@@ -3507,10 +4161,11 @@
                     window._spawnCanvasBurst(window.innerWidth / 2, window.innerHeight / 2, 42);
                 }
                 const newOwnedCount = NOEL_REWARD_SHOP_ITEMS.filter(it => ownedList.includes(it.id)).length;
-                if (newOwnedCount >= NOEL_REWARD_SHOP_ITEMS.length) {
-                    showToast(`🎉 Chúc mừng! Bạn đã sưu tập đủ 5/5 Vật Phẩm Noel! Hãy kéo xuống bấm "Mở Hộp Quà Bí Ẩn Từ BTC" ngay!`, '🏆');
+                const totalShopItems = NOEL_REWARD_SHOP_ITEMS.length;
+                if (newOwnedCount >= totalShopItems) {
+                    showToast(`🎉 Chúc mừng! Bạn đã sưu tập đủ ${totalShopItems}/${totalShopItems} Vật Phẩm Noel! Hãy kéo xuống bấm "Mở Hộp Quà Bí Ẩn Từ BTC" ngay!`, '🏆');
                 } else {
-                    showToast(`✅ Đổi thành công "${item.name}" vào Túi đồ! (Đã có ${newOwnedCount}/5 món)`, item.icon);
+                    showToast(`✅ Đổi thành công "${item.name}" vào Túi đồ! (Đã có ${newOwnedCount}/${totalShopItems} món)`, item.icon);
                 }
                 loadLeaderboardData(false, { fast: _hasFullFetchedOnce });
             } catch (err) {
@@ -3526,9 +4181,9 @@
             const ownedList = Array.isArray(currentStudentRecord.vat_pham_so_huu)
                 ? [...currentStudentRecord.vat_pham_so_huu]
                 : [];
-            const hasAllFive = NOEL_REWARD_SHOP_ITEMS.every(it => ownedList.includes(it.id));
-            if (!hasAllFive) {
-                showToast('🔒 Bạn cần sưu tập đủ cả 5 Vật Phẩm Noel trong Cửa hàng để mở Hộp Quà Bí Ẩn Từ BTC!', '🎁');
+            const hasAllItems = NOEL_REWARD_SHOP_ITEMS.every(it => ownedList.includes(it.id));
+            if (!hasAllItems) {
+                showToast(`🔒 Bạn cần sưu tập đủ cả ${NOEL_REWARD_SHOP_ITEMS.length} Vật Phẩm Noel trong Cửa hàng để mở Hộp Quà Bí Ẩn Từ BTC!`, '🎁');
                 return;
             }
 
@@ -3554,13 +4209,13 @@
                 };
                 prevHistory.unshift(newEntry);
 
-                // Khóa/trừ bộ 5 vật phẩm đã ghép thành Hộp Quà Bí Ẩn để tránh bấm nhận lặp
+                // Giữ lại huy hiệu Icon 204 cho thành viên sau khi mở Hộp Quà Bí Ẩn, chỉ tiêu hao 5 vật phẩm Noel ghép hộp
                 const currentPts = getScoreFromRow(currentStudentRecord);
                 const mssvVal = normalizeMssv(currentStudentRecord.mssv);
                 const wishData = buildUniqueWishData(currentStudentRecord, allSheetRecordsCache);
                 const nextMeta = {
                     ...currentStudentRecord,
-                    vat_pham_so_huu: [],
+                    vat_pham_so_huu: ownedList.includes('icon_204') ? ['icon_204'] : [],
                     lich_su_doi_qua: prevHistory
                 };
 
@@ -3636,7 +4291,7 @@
             document.body.style.overflow = '';
         }
 
-        // LUỒNG B: CHƠI MINIGAME NHẬN ĐIỂM NGẪU NHIÊN 50 - 100 PTS (GIỚI HẠN 5 LƯỢT/NGÀY)
+        // LUỒNG B: CHƠI MINIGAME NHẬN ĐIỂM NGẪU NHIÊN 350 - 600 PTS (MẶC ĐỊNH 3 LƯỢT/NGÀY + NHIỆM VỤ TĂNG LƯỢT)
         async function handlePart2GameProgress(data) {
             if (!data || !currentStudentRecord || !getPartUnlockState(2).unlocked) return;
             const levelCleared = Math.min(4, Math.max(0, parseInt(data.levelCleared, 10) || 0));
@@ -3653,10 +4308,13 @@
 
             const todayStr = getVietnamTodayDateStr();
             const playsToday = getTodayMinigamePlays(currentStudentRecord);
+            const maxPlaysToday = getMaxDailyMinigamePlays(currentStudentRecord);
             const prevBest = Math.max(0, Number(currentStudentRecord.part2Best) || 0);
             const nextBest = Math.max(prevBest, gameScore);
-            const canAwardPts = (levelCleared > 0 && playsToday < MAX_DAILY_MINIGAME_REWARDS);
-            const randomRewardPts = canAwardPts ? (Math.floor(Math.random() * 51) + 50) : 0; // Random 50 - 100 điểm
+            const canAwardPts = (levelCleared > 0 && playsToday < maxPlaysToday);
+            const randomRewardPts = canAwardPts
+                ? (Math.floor(Math.random() * (MINIGAME_REWARD_MAX - MINIGAME_REWARD_MIN + 1)) + MINIGAME_REWARD_MIN)
+                : 0;
             const nextPlaysToday = canAwardPts ? (playsToday + 1) : playsToday;
 
             const frame = document.getElementById('part2GameFrame');
@@ -3667,7 +4325,7 @@
                             type: 'SECRET_SANTA_PART2_REWARD_RESULT',
                             awardedPts: 0,
                             playsToday: playsToday,
-                            maxPlays: MAX_DAILY_MINIGAME_REWARDS,
+                            maxPlays: maxPlaysToday,
                             limitReached: true
                         }, '*');
                     } catch (e) {}
@@ -3676,7 +4334,7 @@
 
             if (randomRewardPts === 0 && nextBest <= prevBest) {
                 if (levelCleared > 0 && !canAwardPts) {
-                    showToast(`⚠️ Bạn đã nhận đủ ${MAX_DAILY_MINIGAME_REWARDS}/${MAX_DAILY_MINIGAME_REWARDS} lượt thưởng Minigame hôm nay!`, '🎲');
+                    showToast(`⚠️ Bạn đã dùng hết ${playsToday}/${maxPlaysToday} lượt hôm nay! Hãy làm Nhiệm Vụ (Donate BTC +5 lượt, Đăng Bảng Tin +2 lượt...) để chơi tiếp nhé!`, '🎯');
                 }
                 return;
             }
@@ -3718,7 +4376,7 @@
                             type: 'SECRET_SANTA_PART2_REWARD_RESULT',
                             awardedPts: randomRewardPts,
                             playsToday: nextPlaysToday,
-                            maxPlays: MAX_DAILY_MINIGAME_REWARDS,
+                            maxPlays: maxPlaysToday,
                             newTotalScore: newTotalScore,
                             limitReached: false
                         }, '*');
@@ -3726,7 +4384,7 @@
                 }
 
                 if (randomRewardPts > 0) {
-                    showToast(`🎲 Thắng Ca ${levelCleared}! Bạn nhận được +${randomRewardPts} PTS (Lượt hôm nay: ${nextPlaysToday}/${MAX_DAILY_MINIGAME_REWARDS} • Tổng: ${newTotalScore} PTS)`, '🏆');
+                    showToast(`🎲 Thắng Ca ${levelCleared}! Bạn nhận được +${randomRewardPts} PTS (Lượt hôm nay: ${nextPlaysToday}/${maxPlaysToday} • Tổng: ${newTotalScore} PTS)`, '🏆');
                 } else if (nextBest > prevBest) {
                     showToast(`🏆 Kỷ lục Mini-Game Phòng 204 mới: ${nextBest.toLocaleString('vi-VN')} điểm!`, '🧹');
                 }
@@ -4128,10 +4786,12 @@
                 dp: parseInt(existing.lastDailyPts, 10) || 0,
                 gd: String(existing.ngay_choi_game_cuoi || ''),
                 gp: parseInt(existing.luot_choi_hom_nay, 10) || 0,
+                qd: String(existing.ngay_nhiem_vu_cuoi || ''),
+                qt: Array.isArray(existing.nhiem_vu_hom_nay) ? existing.nhiem_vu_hom_nay : [],
                 inv: Array.isArray(existing.vat_pham_so_huu) ? existing.vat_pham_so_huu : [],
                 hist: Array.isArray(existing.lich_su_doi_qua) ? existing.lich_su_doi_qua : []
             };
-            if (!stateObj.d && !stateObj.gd && stateObj.inv.length === 0 && stateObj.hist.length === 0) return '';
+            if (!stateObj.d && !stateObj.gd && !stateObj.qd && stateObj.inv.length === 0 && stateObj.hist.length === 0) return '';
             try {
                 return 'RW:' + encodeURIComponent(JSON.stringify(stateObj));
             } catch (e) {
@@ -4180,6 +4840,8 @@
             let extractedLastDailyPts = parseInt(rawRow.lastDailyPts, 10) || 0;
             let extractedLastGameDate = String(rawRow.ngay_choi_game_cuoi || '').trim();
             let extractedGamePlaysToday = parseInt(rawRow.luot_choi_hom_nay, 10) || 0;
+            let extractedLastQuestDate = String(rawRow.ngay_nhiem_vu_cuoi || '').trim();
+            let extractedQuestsToday = parseJsonArraySafe(rawRow.nhiem_vu_hom_nay);
             let extractedOwnedItems = parseJsonArraySafe(rawRow.vat_pham_so_huu);
             let extractedGiftHistory = parseJsonArraySafe(rawRow.lich_su_doi_qua);
 
@@ -4217,6 +4879,8 @@
                                 if (rwObj.dp) extractedLastDailyPts = parseInt(rwObj.dp, 10) || 0;
                                 if (rwObj.gd) extractedLastGameDate = String(rwObj.gd);
                                 if (rwObj.gp !== undefined) extractedGamePlaysToday = parseInt(rwObj.gp, 10) || 0;
+                                if (rwObj.qd) extractedLastQuestDate = String(rwObj.qd);
+                                if (Array.isArray(rwObj.qt) && extractedQuestsToday.length === 0) extractedQuestsToday = rwObj.qt;
                                 if (Array.isArray(rwObj.inv) && extractedOwnedItems.length === 0) extractedOwnedItems = rwObj.inv;
                                 if (Array.isArray(rwObj.hist) && extractedGiftHistory.length === 0) extractedGiftHistory = rwObj.hist;
                             }
@@ -4244,6 +4908,8 @@
                 lastDailyPts: extractedLastDailyPts,
                 ngay_choi_game_cuoi: extractedLastGameDate,
                 luot_choi_hom_nay: extractedGamePlaysToday,
+                ngay_nhiem_vu_cuoi: extractedLastQuestDate,
+                nhiem_vu_hom_nay: extractedQuestsToday,
                 vat_pham_so_huu: extractedOwnedItems,
                 lich_su_doi_qua: extractedGiftHistory,
                 part2Pts: extractedPart2Pts,
@@ -4274,6 +4940,7 @@
 
             const normalRows = [];
             const checkinTempMap = new Map();
+            const donateTempMap = new Map();
             const feedTempList = [];
             const chatTempList = [];
             let latestConfigJson = '';
@@ -4287,6 +4954,28 @@
                 if (h.startsWith('EVENT_CONFIG |')) {
                     configHotens.push(h);
                     if (raw.wishlist) latestConfigJson = String(raw.wishlist);
+                } else if (h.startsWith('DONATE_BTC |')) {
+                    const parts = h.split('|').map(s => s.trim());
+                    const mssv = normalizeMssv(parts[1] || '');
+                    const authorName = parts[2] || '';
+                    const timeParts = t.split('|').map(s => s.trim());
+                    const cleanTime = timeParts[0] || t;
+                    const status = (raw.blacklist || timeParts[2] || 'PENDING').toUpperCase().includes('APPROVED') ? 'APPROVED' : 'PENDING';
+
+                    if (mssv) {
+                        const prev = donateTempMap.get(mssv);
+                        donateTempMap.set(mssv, {
+                            mssv,
+                            hoten: authorName,
+                            thoigian: cleanTime,
+                            billImage: raw.phongban || '',
+                            note: raw.wishlist || '',
+                            status,
+                            _rawHoten: h,
+                            _rawThoigian: t,
+                            _allRawHotens: prev ? Array.from(new Set([...prev._allRawHotens, h])) : [h]
+                        });
+                    }
                 } else if (h.startsWith('CHECKIN_GIFT |')) {
                     const parts = h.split('|').map(s => s.trim());
                     const mssv = normalizeMssv(parts[1] || '');
@@ -4386,6 +5075,7 @@
             _pendingOptimisticChats = _pendingOptimisticChats.filter(m => !confirmedChatIds.has(m.msgId) && nowMs < (m._expiresAt || 0));
 
             giftCheckinMap = checkinTempMap;
+            btcDonateMap = donateTempMap;
             publicFeedPosts = [..._pendingOptimisticPosts, ...feedTempList.reverse()]; // Bài mới nhất lên đầu
             publicChatMessages = [...chatTempList, ..._pendingOptimisticChats];        // Tin nhắn theo thứ tự thời gian
 
@@ -5131,6 +5821,7 @@
                 await loadLeaderboardData();
                 renderUserGiftCheckinState();
                 showToast('🎁 Đã gửi ảnh Check-in Quà bảo mật cho Ban Tổ Chức! Vui lòng chờ BTC xác nhận nhé!', '✅');
+                markPlayQuestCompleted('gift_or_wish', true);
             } catch (err) {
                 console.error(err);
                 alert(describeDbError(err));
@@ -5191,6 +5882,7 @@
             try {
                 await dbInsertRow(payload);
                 optimisticMsg._optimistic = false;
+                markPlayQuestCompleted('send_chat', true);
                 loadLeaderboardData(false, { fast: true });
             } catch (err) {
                 console.error(err);
@@ -5236,6 +5928,9 @@
                 const avatar = avatarByMssv.get(normalizeMssv(msg.mssv))
                     || ('https://placehold.co/64x64/b91c1c/ffffff?text=' + encodeURIComponent(msg.mssv || 'U'));
                 const sendingTag = msg._optimistic ? '<span class="text-[9px] text-amber-600 font-bold">⏳ Đang gửi...</span>' : '';
+                const badge204 = hasUserIcon204(msg.mssv)
+                    ? '<span class="text-[9px] bg-gradient-to-r from-amber-400 to-yellow-300 text-red-950 font-black px-1.5 py-0.2 rounded-full border border-amber-500">🏷️ 204</span>'
+                    : '';
 
                 if (isMe) {
                     return `
@@ -5243,6 +5938,7 @@
                             <div class="flex items-center gap-1.5 mb-0.5">
                                 ${sendingTag}
                                 <span class="text-[10px] text-gray-400">${escapeHtml(msg.thoigian)}</span>
+                                ${badge204}
                                 <span class="text-[10px] font-bold text-red-700">Bạn (${escapeHtml(msg.mssv)})</span>
                                 ${msg._optimistic ? '' : `<button onclick="deleteChatMessageByIndex(${idx})" class="text-[10px] text-gray-400 hover:text-red-600" title="Xóa tin nhắn">✕</button>`}
                             </div>
@@ -5256,8 +5952,9 @@
                         <div class="flex items-start gap-2">
                             <img src="${avatar}" decoding="async" class="w-8 h-8 rounded-full object-cover border border-red-400 shrink-0 mt-1">
                             <div class="flex flex-col items-start max-w-[82%]">
-                                <div class="flex items-center gap-1.5 mb-0.5">
+                                <div class="flex items-center gap-1.5 mb-0.5 flex-wrap">
                                     <span class="text-[11px] font-extrabold text-gray-800">${escapeHtml(msg.authorName)}</span>
+                                    ${badge204}
                                     <span class="text-[9px] bg-red-100 text-red-700 font-bold px-1.5 py-0.2 rounded-full">${escapeHtml(msg.mssv)}</span>
                                     <span class="text-[9px] text-gray-400">${escapeHtml(msg.thoigian)}</span>
                                 </div>
@@ -5371,6 +6068,7 @@
                 await dbInsertRow(payload);
                 optimisticPost._optimistic = false;
                 showToast('🚀 Đã đăng bài lên Bảng Tin Giáng Sinh thành công!', '📸');
+                markPlayQuestCompleted('post_feed', true);
                 loadLeaderboardData(false, { fast: true });
             } catch (err) {
                 console.error(err);
@@ -5438,6 +6136,7 @@
                                 <div class="min-w-0">
                                     <div class="flex items-center gap-1.5 flex-wrap">
                                         <span class="font-extrabold text-gray-800 text-xs sm:text-sm truncate">${escapeHtml(post.authorName)}</span>
+                                        ${hasUserIcon204(post.mssv) ? '<span class="bg-gradient-to-r from-amber-400 to-yellow-300 text-red-950 border border-amber-500 text-[10px] font-black px-2 py-0.5 rounded-full">🏷️ ICON 204</span>' : ''}
                                         <span class="bg-red-50 text-red-700 border border-red-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full">${escapeHtml(post.mssv || '')}</span>
                                     </div>
                                     <p class="text-[10px] text-gray-400">${post._optimistic ? '⏳ Đang đồng bộ...' : escapeHtml(post.thoigian)}</p>
@@ -5512,6 +6211,7 @@
 
             try {
                 await dbPatchRow('hoten', post._rawHoten, { blacklist: serialized });
+                if (existIdx < 0) markPlayQuestCompleted('like_feed', true);
             } catch (e) {
                 console.warn('Like sync failed:', e);
             }
@@ -5662,6 +6362,7 @@
                 const sigs = buildSyncSignatures(preloadedList);
                 _lastUsersSig = sigs.usersSig;
                 _lastCheckinSig = sigs.checkinSig;
+                _lastDonateSig = sigs.donateSig;
                 _lastFeedSig = sigs.feedSig;
                 _lastChatSig = sigs.chatSig;
                 _lastCfgSig = sigs.cfgSig;
@@ -5727,6 +6428,7 @@
                 renderPart1UserInfo(currentStudentRecord);
                 await loadLeaderboardData();
                 showToast('✅ Đã lưu cập nhật hồ sơ & Wishlist/Blacklist!', '🎁');
+                if (wishVal) markPlayQuestCompleted('gift_or_wish', true);
             } catch (err) {
                 console.error(err);
                 alert(describeDbError(err));
@@ -5814,8 +6516,14 @@
             const checkinSig = Array.from(giftCheckinMap.entries())
                 .sort((a, b) => a[0].localeCompare(b[0]))
                 .map(([k, v]) => {
-                    const pb = String((v && v.phongban) || '');
-                    return [k, v && v.wishlist, v && v.diadiem, v && v.thoigian, pb.length, pb.slice(-16)].join('|');
+                    const pb = String((v && (v.giftImage || v.phongban)) || '');
+                    return [k, v && (v.note || v.wishlist), v && v.status, v && v.thoigian, pb.length, pb.slice(-16)].join('|');
+                }).join(';');
+            const donateSig = Array.from(btcDonateMap.entries())
+                .sort((a, b) => a[0].localeCompare(b[0]))
+                .map(([k, v]) => {
+                    const pb = String((v && v.billImage) || '');
+                    return [k, v && v.note, v && v.status, v && v.thoigian, pb.length, pb.slice(-16)].join('|');
                 }).join(';');
             const feedSig = (publicFeedPosts || []).map(p => {
                 const likers = (p.likedBy || []).map(x => x && x.m ? x.m : '').join(',');
@@ -5825,7 +6533,7 @@
                 return [c.hoten || '', c.mssv, c.thoigian, c.message, c.isOptimistic ? 1 : 0].join('|');
             }).join(';');
             const cfgSig = JSON.stringify(eventScheduleConfig);
-            return { usersSig, checkinSig, feedSig, chatSig, cfgSig };
+            return { usersSig, checkinSig, donateSig, feedSig, chatSig, cfgSig };
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -5880,6 +6588,7 @@
                 const sigs = buildSyncSignatures(uniqueList);
                 const usersChanged = sigs.usersSig !== _lastUsersSig;
                 const checkinChanged = sigs.checkinSig !== _lastCheckinSig;
+                const donateChanged = sigs.donateSig !== _lastDonateSig;
                 const feedChanged = sigs.feedSig !== _lastFeedSig;
                 const chatChanged = sigs.chatSig !== _lastChatSig;
                 const cfgChanged = sigs.cfgSig !== _lastCfgSig;
@@ -5887,14 +6596,14 @@
                 if (currentStudentRecord && currentStudentRecord.mssv) {
                     const freshMe = uniqueList.find(r => normalizeMssv(r.mssv) === normalizeMssv(currentStudentRecord.mssv));
                     if (freshMe) {
-                        const meChanged = usersChanged || JSON.stringify(freshMe) !== JSON.stringify(currentStudentRecord);
+                        const meChanged = usersChanged || donateChanged || JSON.stringify(freshMe) !== JSON.stringify(currentStudentRecord);
                         currentStudentRecord = freshMe;
                         try { localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(freshMe)); } catch (e) {}
                         if (meChanged) renderPart1UserInfo(freshMe, uniqueList);
                         checkAndTriggerDailyCheckin(false);
                     }
                 }
-                if (cfgChanged || usersChanged) {
+                if (cfgChanged || usersChanged || donateChanged) {
                     applyEventScheduleUI();
                     _lastScheduleUnlockKey = getCurrentScheduleUnlockKey();
                 }
@@ -5905,6 +6614,9 @@
                 if (checkinChanged || usersChanged) {
                     renderUserGiftCheckinState();
                 }
+                if (donateChanged || usersChanged) {
+                    renderUserDonateState();
+                }
                 if (feedChanged) {
                     renderPublicFeed();
                 }
@@ -5914,6 +6626,7 @@
 
                 _lastUsersSig = sigs.usersSig;
                 _lastCheckinSig = sigs.checkinSig;
+                _lastDonateSig = sigs.donateSig;
                 _lastFeedSig = sigs.feedSig;
                 _lastChatSig = sigs.chatSig;
                 _lastCfgSig = sigs.cfgSig;
@@ -5993,7 +6706,10 @@
                             <div class="flex items-center gap-2">
                                 <img src="${avatar}" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border border-gray-300 shrink-0">
                                 <div class="min-w-0">
-                                    <span class="font-bold text-gray-800 block truncate max-w-[110px] sm:max-w-none">${escapeHtml(item.hoten || '---')}</span>
+                                    <div class="flex items-center gap-1.5 flex-wrap">
+                                        <span class="font-bold text-gray-800 block truncate max-w-[110px] sm:max-w-none">${escapeHtml(item.hoten || '---')}</span>
+                                        ${hasUserIcon204(item) ? '<span class="text-[9px] bg-gradient-to-r from-amber-400 to-yellow-300 text-red-950 px-1.5 py-0.5 rounded-full font-black border border-amber-500">🏷️ 204</span>' : ''}
+                                    </div>
                                     ${isMe ? '<span class="text-[9px] bg-red-600 text-white px-1.5 py-0.5 rounded-full font-bold">Bạn</span>' : ''}
                                 </div>
                             </div>
@@ -6190,15 +6906,64 @@
             document.getElementById('statApprovedGift').textContent = approvedCount;
         }
 
-        // Hiển thị danh sách Bài Đăng Bảng Tin & Tin Nhắn Chat để BTC kiểm duyệt / xóa bài vi phạm
+        // Hiển thị danh sách Bill Donate BTC, Bài Đăng Bảng Tin & Tin Nhắn Chat để BTC kiểm duyệt
         function renderAdminModerationPanels() {
+            const donateListEl = document.getElementById('adminDonateModerationList');
+            const donateCountEl = document.getElementById('adminDonateCountBadge');
             const feedListEl = document.getElementById('adminFeedModerationList');
             const feedCountEl = document.getElementById('adminFeedCountBadge');
             const chatListEl = document.getElementById('adminChatModerationList');
             const chatCountEl = document.getElementById('adminChatCountBadge');
 
+            const donateEntries = Array.from(btcDonateMap.values()).sort((a, b) => {
+                if (a.status !== b.status) return a.status === 'PENDING' ? -1 : 1;
+                return String(b.thoigian || '').localeCompare(String(a.thoigian || ''));
+            });
+            const pendingDonateCount = donateEntries.filter(d => d.status === 'PENDING').length;
+
+            if (donateCountEl) {
+                donateCountEl.textContent = pendingDonateCount > 0
+                    ? `${pendingDonateCount} chờ duyệt / ${donateEntries.length} bill`
+                    : `${donateEntries.length} bill`;
+            }
             if (feedCountEl) feedCountEl.textContent = `${publicFeedPosts.length} bài đăng`;
             if (chatCountEl) chatCountEl.textContent = `${publicChatMessages.length} tin nhắn`;
+
+            if (donateListEl) {
+                if (donateEntries.length === 0) {
+                    donateListEl.innerHTML = `<p class="text-xs text-gray-400 text-center py-6 md:col-span-2">Chưa có thành viên nào gửi ảnh Bill Donate.</p>`;
+                } else {
+                    donateListEl.innerHTML = donateEntries.map((dn) => {
+                        const hasBill = dn.billImage && dn.billImage.startsWith('data:image');
+                        const isApproved = dn.status === 'APPROVED';
+                        return `
+                            <div class="flex items-start justify-between gap-3 p-3.5 rounded-2xl border-2 ${isApproved ? 'border-emerald-200 bg-emerald-50/50' : 'border-rose-300 bg-white shadow-sm'} transition">
+                                <div class="flex items-start gap-3 min-w-0">
+                                    ${hasBill
+                                        ? `<img src="${dn.billImage}" onclick="openDonateLightboxByMssv('${escapeHtml(dn.mssv)}')" class="w-16 h-16 rounded-xl object-cover border-2 border-rose-400 shadow cursor-pointer shrink-0 hover:scale-105 transition" title="Bấm xem ảnh Bill chuyển khoản HD">`
+                                        : `<div class="w-16 h-16 rounded-xl bg-gray-200 flex items-center justify-center text-[10px] text-gray-500 shrink-0">Không ảnh</div>`
+                                    }
+                                    <div class="min-w-0 space-y-1">
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            <span class="font-extrabold text-xs sm:text-sm text-gray-800">${escapeHtml(dn.hoten || dn.mssv)}</span>
+                                            <span class="bg-rose-100 text-rose-700 font-extrabold text-[10px] px-2 py-0.5 rounded-full">${escapeHtml(dn.mssv)}</span>
+                                            <span class="text-[10px] text-gray-400">${escapeHtml(dn.thoigian)}</span>
+                                        </div>
+                                        <p class="text-xs text-gray-700 font-medium break-words">"${escapeHtml(dn.note || 'Ủng hộ quỹ quà BTC')}"</p>
+                                        <div class="flex flex-wrap items-center gap-1.5 pt-0.5">
+                                            ${isApproved
+                                                ? `<span class="inline-flex items-center bg-emerald-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">✅ Đã Duyệt (+5 Lượt & +300 PTS)</span>`
+                                                : `<button type="button" onclick="approveBtcDonateByMssv('${escapeHtml(dn.mssv)}')" class="inline-flex items-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:brightness-105 text-white text-[11px] font-black px-3 py-1 rounded-xl shadow transition cursor-pointer">✅ Duyệt Donate (+5 Lượt & +300 PTS)</button>`
+                                            }
+                                            <button type="button" onclick="rejectBtcDonateByMssv('${escapeHtml(dn.mssv)}')" class="inline-flex items-center bg-red-100 hover:bg-red-600 text-red-700 hover:text-white text-[10px] font-bold px-2.5 py-1 rounded-xl transition cursor-pointer">🗑️ Xóa Bill</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
 
             if (feedListEl) {
                 if (publicFeedPosts.length === 0) {
@@ -6298,6 +7063,7 @@
                     : `<div class="w-12 h-12 rounded-xl bg-gray-100 border border-gray-300 flex items-center justify-center text-[10px] text-gray-400 mx-auto">Không ảnh</div>`;
 
                 const ck = giftCheckinMap.get(normalizeMssv(row.mssv));
+                const dn = btcDonateMap.get(normalizeMssv(row.mssv));
                 let checkinCellHtml = `<span class="inline-flex items-center whitespace-nowrap text-xs text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">❌ Chưa check-in</span>`;
                 if (ck) {
                     const hasCkImg = ck.giftImage && ck.giftImage.startsWith('data:image');
@@ -6310,6 +7076,22 @@
                                 ${isApproved
                                     ? `<span class="inline-flex items-center whitespace-nowrap bg-emerald-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">✅ BTC Đã Xác Nhận</span>`
                                     : `<button onclick="approveGiftCheckinByIndex(${index})" class="inline-flex items-center whitespace-nowrap bg-amber-500 hover:bg-emerald-600 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-lg shadow transition">✅ Duyệt Quà (+100 PTS)</button>`
+                                }
+                            </div>
+                        </div>
+                    `;
+                }
+                if (dn) {
+                    const hasDnImg = dn.billImage && dn.billImage.startsWith('data:image');
+                    const isDnApproved = dn.status === 'APPROVED';
+                    checkinCellHtml += `
+                        <div class="flex items-center gap-2 bg-rose-50/80 p-2 rounded-xl border border-rose-200 mt-1.5">
+                            ${hasDnImg ? `<img src="${dn.billImage}" onclick="openDonateLightboxByMssv('${escapeHtml(dn.mssv)}')" class="w-10 h-10 rounded-lg object-cover border-2 border-rose-500 shadow cursor-pointer shrink-0" title="Bấm xem ảnh Bill Donate">` : ''}
+                            <div class="min-w-0 flex-1 space-y-0.5">
+                                <p class="text-[10px] text-rose-800 font-bold truncate" title="${escapeHtml(dn.note)}">💖 Bill: "${escapeHtml(dn.note || 'Donate BTC')}"</p>
+                                ${isDnApproved
+                                    ? `<span class="inline-flex items-center whitespace-nowrap bg-emerald-600 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full">✅ Đã Duyệt Donate</span>`
+                                    : `<button onclick="approveBtcDonateByMssv('${escapeHtml(dn.mssv)}')" class="inline-flex items-center whitespace-nowrap bg-rose-600 hover:bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-lg shadow transition">✅ Duyệt Bill (+5 Lượt & +300 PTS)</button>`
                                 }
                             </div>
                         </div>
@@ -6333,8 +7115,9 @@
                                 const inv = Array.isArray(row.vat_pham_so_huu) ? row.vat_pham_so_huu : [];
                                 const hist = Array.isArray(row.lich_su_doi_qua) ? row.lich_su_doi_qua : [];
                                 const icons = NOEL_REWARD_SHOP_ITEMS.filter(it => inv.includes(it.id)).map(it => it.icon).join('');
+                                const totalShop = NOEL_REWARD_SHOP_ITEMS.length;
                                 let sub = '';
-                                if (icons) sub += `<div class="text-[11px] mt-1" title="Túi đồ Noel (${inv.length}/5)">🎒 ${icons} <span class="text-[10px] font-bold text-gray-500">(${inv.length}/5)</span></div>`;
+                                if (icons) sub += `<div class="text-[11px] mt-1" title="Túi đồ Noel (${inv.length}/${totalShop})">🎒 ${icons} <span class="text-[10px] font-bold text-gray-500">(${inv.length}/${totalShop})</span></div>`;
                                 if (hist.length > 0) sub += `<div class="text-[10px] mt-0.5 font-extrabold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full" title="${escapeHtml(hist.map(h => (h.code || '') + ': ' + (h.name || '')).join(' | '))}">🎁 Quà BTC: ${escapeHtml(hist[0].code || 'Đã nhận')}</div>`;
                                 return sub;
                             })()}
@@ -6427,6 +7210,97 @@
                 `🎁 Ảnh Check-in Quà của ${row.hoten} (${row.mssv})`,
                 `Ghi chú gửi BTC: "${ck.note}" • Trạng thái: ${ck.status === 'APPROVED' ? 'Đã xác nhận' : 'Chờ xác nhận'}`
             );
+        }
+
+        function openDonateLightboxByMssv(mssvParam) {
+            const mssv = normalizeMssv(mssvParam);
+            const dn = btcDonateMap.get(mssv);
+            if (!dn || !dn.billImage) return;
+            openLightbox(
+                dn.billImage,
+                `💖 Ảnh Bill Donate của ${dn.hoten || mssv} (${mssv})`,
+                `Ghi chú: "${dn.note}" • Trạng thái: ${dn.status === 'APPROVED' ? 'Đã duyệt (+5 lượt & +300 PTS)' : 'Chờ Admin xác nhận'}`
+            );
+        }
+
+        async function approveBtcDonateByMssv(mssvParam) {
+            const mssv = normalizeMssv(mssvParam);
+            const dn = btcDonateMap.get(mssv);
+            if (!dn) return;
+
+            const row = adminAllRecords.find(r => normalizeMssv(r.mssv) === mssv)
+                || allSheetRecordsCache.find(r => normalizeMssv(r.mssv) === mssv);
+
+            showToast(`⏳ Đang duyệt Bill Donate của ${dn.hoten || mssv} (+5 lượt chơi & +${DONATE_BONUS_PTS} PTS)...`, '💖');
+
+            try {
+                const dnPayload = {
+                    "hoten": dn._rawHoten,
+                    "thoigian": `${getFormattedNowStr()} | ${mssv} | APPROVED`,
+                    "phongban": dn.billImage,
+                    "wishlist": dn.note,
+                    "blacklist": "APPROVED"
+                };
+                await dbPatchRow('hoten', dn._rawHoten, dnPayload);
+
+                if (row) {
+                    const todayStr = getVietnamTodayDateStr();
+                    const prevQuests = (String(row.ngay_nhiem_vu_cuoi || '') === todayStr && Array.isArray(row.nhiem_vu_hom_nay))
+                        ? row.nhiem_vu_hom_nay
+                        : [];
+                    const alreadyRewarded = prevQuests.includes('donate_btc');
+                    const nextQuests = Array.from(new Set([...prevQuests, 'donate_btc']));
+                    const newScore = getScoreFromRow(row) + (alreadyRewarded ? 0 : DONATE_BONUS_PTS);
+                    const nextMeta = {
+                        ...row,
+                        diem: newScore,
+                        diem_tich_luoi: newScore,
+                        ngay_nhiem_vu_cuoi: todayStr,
+                        nhiem_vu_hom_nay: nextQuests
+                    };
+                    const wishData = buildUniqueWishData(row, adminAllRecords.length ? adminAllRecords : allSheetRecordsCache);
+                    const userPayload = {
+                        "mssv": mssv,
+                        "hoten": formatHotenForSheet(mssv, row.hoten),
+                        "thoigian": formatTimeForSheet(mssv, wishData.wishId, newScore, nextMeta),
+                        "phongban": row.phongban || '',
+                        "wishlist": row.wishlist || '',
+                        "blacklist": row.blacklist || ''
+                    };
+                    const updatedStudent = await saveOrUpdateStudentToSheet(userPayload, row);
+                    if (currentStudentRecord && normalizeMssv(currentStudentRecord.mssv) === mssv) {
+                        currentStudentRecord = updatedStudent;
+                        try {
+                            localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(updatedStudent));
+                            localStorage.setItem(`ss26_quests_${mssv}_${todayStr}`, JSON.stringify(nextQuests));
+                        } catch (e) {}
+                    }
+                }
+
+                showToast(`✅ Đã duyệt Bill Donate của ${dn.hoten || mssv}! Cộng thành công +5 Lượt chơi Minigame & +${DONATE_BONUS_PTS} PTS!`, '🎉');
+                await fetchAdminData();
+            } catch (err) {
+                console.error(err);
+                alert('Không thể duyệt Bill Donate lúc này. Vui lòng thử lại!');
+            }
+        }
+
+        async function rejectBtcDonateByMssv(mssvParam) {
+            const mssv = normalizeMssv(mssvParam);
+            const dn = btcDonateMap.get(mssv);
+            if (!dn) return;
+            if (!confirm(`Bạn có chắc muốn xóa / từ chối Bill Donate của ${dn.hoten || mssv} (${mssv}) không?`)) return;
+            try {
+                const rawList = Array.isArray(dn._allRawHotens) && dn._allRawHotens.length > 0 ? dn._allRawHotens : [dn._rawHoten];
+                for (const rawH of rawList) {
+                    if (rawH) await dbDeleteRow('hoten', rawH);
+                }
+                showToast(`🗑️ Đã xóa Bill Donate của ${dn.hoten || mssv}.`, '✅');
+                await fetchAdminData();
+            } catch (err) {
+                console.error(err);
+                alert('Không thể xóa Bill Donate lúc này!');
+            }
         }
 
         async function approveGiftCheckinByIndex(idx) {
