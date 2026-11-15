@@ -18,6 +18,8 @@
 
 function doGet(e) {
   try {
+    var mode = (e && e.parameter && e.parameter.mode) ? String(e.parameter.mode).toLowerCase() : '';
+    var isFastMode = (mode === 'fast');
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     var data = sheet.getDataRange().getValues();
     if (!data || data.length <= 1) {
@@ -37,7 +39,12 @@ function doGet(e) {
       for (var j = 0; j < headers.length; j++) {
         var key = headers[j];
         if (key) {
-          obj[key] = (row[j] !== undefined && row[j] !== null) ? String(row[j]) : '';
+          var valStr = (row[j] !== undefined && row[j] !== null) ? String(row[j]) : '';
+          if (isFastMode && key === 'phongban' && valStr.indexOf('data:image') === 0) {
+            obj[key] = '__IMG_REF__:' + valStr.length;
+          } else {
+            obj[key] = valStr;
+          }
         }
       }
       rows.push(obj);
@@ -50,7 +57,9 @@ function doGet(e) {
 }
 
 function doPost(e) {
+  var lock = LockService.getScriptLock();
   try {
+    lock.waitLock(12000);
     var contents = e.postData ? e.postData.contents : '';
     var body = {};
     if (contents) {
@@ -61,12 +70,26 @@ function doPost(e) {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
     // Đảm bảo hàng tiêu đề chuẩn nếu sheet còn trống
+    var requiredCols = ['thoigian', 'hoten', 'phongban', 'wishlist', 'blacklist', 'mssv', 'diem_tich_luoi', 'ngay_diem_danh_cuoi', 'vat_pham_so_huu', 'lich_su_doi_qua'];
     if (sheet.getLastRow() === 0) {
-      sheet.appendRow(['thoigian', 'hoten', 'phongban', 'wishlist', 'blacklist']);
+      sheet.appendRow(requiredCols);
     }
 
     var data = sheet.getDataRange().getValues();
     var headers = data[0].map(function(h) { return String(h || '').trim().toLowerCase(); });
+
+    // Tự động bổ sung các cột mới của hệ thống tích điểm & đổi quà nếu Sheet cũ chưa có
+    var addedHeader = false;
+    requiredCols.forEach(function(col) {
+      if (headers.indexOf(col) === -1) {
+        headers.push(col);
+        sheet.getRange(1, headers.length).setValue(col);
+        addedHeader = true;
+      }
+    });
+    if (addedHeader) {
+      data = sheet.getDataRange().getValues();
+    }
 
     // 1. THÊM BẢN GHI MỚI (INSERT)
     if (action === 'INSERT') {
@@ -84,6 +107,7 @@ function doPost(e) {
         added++;
       });
 
+      SpreadsheetApp.flush();
       return jsonResponse({ success: true, created: added });
     }
 
@@ -108,6 +132,7 @@ function doPost(e) {
         }
       }
 
+      SpreadsheetApp.flush();
       return jsonResponse({ success: true, updated: updatedCount });
     }
 
@@ -128,12 +153,15 @@ function doPost(e) {
         }
       }
 
+      SpreadsheetApp.flush();
       return jsonResponse({ success: true, deleted: deletedCount });
     }
 
     return jsonResponse({ success: false, message: 'Unknown action: ' + action });
   } catch (err) {
     return jsonResponse({ error: err.toString() }, 500);
+  } finally {
+    try { lock.releaseLock(); } catch (ignore) {}
   }
 }
 
