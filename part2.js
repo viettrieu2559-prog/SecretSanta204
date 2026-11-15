@@ -1,6 +1,6 @@
 // ============================================================================
 // DỌN PHÒNG HỌP 204 — ĐẠI CHIẾN TỔNG VỆ SINH
-// Cập nhật: Giảm bớt rác, tăng thêm gián, thêm chú chó Poodle trắng "Bông", nút Tạm dừng
+// Cập nhật: Giảm bớt rác, tăng thêm gián, thêm chú chó Poodle trắng "Gôn Đi", nút Tạm dừng
 // ============================================================================
 
 const $ = (s) => document.querySelector(s);
@@ -14,12 +14,12 @@ const overlay = $("#overlay");
 const card = $("#card");
 const sponge = $("#sponge");
 
-// ---------- SVG CHÚ CHÓ POODLE TRẮNG XÙ "BÔNG" ----------
+// ---------- SVG CHÚ CHÓ POODLE TRẮNG XÙ "GÔN ĐI" ----------
 const WHITE_POODLE_SVG = `
 <svg viewBox="0 0 110 95" class="poodle-body" xmlns="http://www.w3.org/2000/svg">
-  <!-- Đuôi bông tròn -->
+  <!-- Đuôi Gôn Đi tròn -->
   <circle cx="88" cy="42" r="11" fill="#ffffff" stroke="#d9e2ec" stroke-width="2.5"/>
-  <!-- Thân bông xù trắng -->
+  <!-- Thân Gôn Đi xù trắng -->
   <ellipse cx="62" cy="58" rx="24" ry="18" fill="#ffffff" stroke="#d9e2ec" stroke-width="2.5"/>
   <circle cx="48" cy="52" r="16" fill="#ffffff"/>
   <circle cx="72" cy="54" r="15" fill="#ffffff"/>
@@ -35,7 +35,7 @@ const WHITE_POODLE_SVG = `
   <!-- Vòng cổ hồng xinh xắn + chuông vàng -->
   <path d="M 33 47 Q 44 55 54 46" fill="none" stroke="#ff4081" stroke-width="4.5" stroke-linecap="round"/>
   <circle cx="42" cy="52" r="4" fill="#ffd54f" stroke="#b28900" stroke-width="1.2"/>
-  <!-- Tai cụp bông xù -->
+  <!-- Tai cụp Gôn Đi -->
   <ellipse cx="52" cy="36" rx="10" ry="16" transform="rotate(-12 52 36)" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2.2"/>
   <ellipse cx="22" cy="38" rx="9" ry="15" transform="rotate(14 22 38)" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2.2"/>
   <!-- Đầu tròn & chỏm lông xù đặc trưng Poodle -->
@@ -284,7 +284,7 @@ const LEVELS = [
   },
   {
     name: "Ca 3: Hội Thảo Toàn Trung Tâm",
-    desc: "Đàn gián tấn công Phòng 204! Hãy phối hợp cùng bé Poodle Bông để diệt gián trước khi chúng bày bẩn!",
+    desc: "Đàn gián tấn công Phòng 204! Hãy phối hợp cùng bé Poodle Gôn Đi để diệt gián trước khi chúng bày bẩn!",
     items: 13,         // Giảm từ 24 xuống 13
     initialPests: 4,
     maxPests: 6,
@@ -646,7 +646,7 @@ function spawnWhitePoodle() {
   poodleEl.style.left = "70%";
   poodleEl.style.top = "78%";
   poodleEl.innerHTML = `
-    <div class="poodle-tag">🐩 Gôn Đi (Nhấn để cưng nựng!)</div>
+      <div class="poodle-tag">🐩 Gôn Đi (Nhấn để cưng nựng!)</div>
     ${WHITE_POODLE_SVG}
   `;
 
@@ -1234,8 +1234,19 @@ if (exitBtnEl && isEmbeddedInHub()) {
 }
 
 window.addEventListener("message", (ev) => {
-  if (ev && ev.data && ev.data.type === "SECRET_SANTA_STOP_GAME") {
+  if (!ev || !ev.data) return;
+  if (ev.data.type === "SECRET_SANTA_STOP_GAME") {
     stopTimers();
+  } else if (ev.data.type === "SECRET_SANTA_PART2_REWARD_RESULT") {
+    const bannerEl = document.getElementById("part2RewardBannerText");
+    if (!bannerEl) return;
+    if (ev.data.awardedPts > 0) {
+      bannerEl.innerHTML = `🎁 Chúc mừng! Bạn vừa nhận được <b>+${ev.data.awardedPts} PTS</b> tích lũy! (Lượt thưởng hôm nay: <b>${ev.data.playsToday}/${ev.data.maxPlays}</b>)`;
+      bannerEl.style.color = "#69f0ae";
+    } else if (ev.data.limitReached) {
+      bannerEl.innerHTML = `⚠️ Bạn đã dùng hết <b>${ev.data.playsToday}/${ev.data.maxPlays}</b> lượt thưởng hôm nay! Hãy bấm "Về Trạm" làm Nhiệm Vụ (Donate BTC +5 lượt, Đăng Bảng Tin +2 lượt...) để nhận thêm lượt chơi nhé!`;
+      bannerEl.style.color = "#ffd54f";
+    }
   }
 });
 
@@ -1267,12 +1278,11 @@ function winLevel() {
 
   const isLast = state.level === LEVELS.length - 1;
   const clearedNum = state.level + 1;
-  const milestonePts = Math.min(300, clearedNum * 75);
   notifyParentProgress(isLast ? "game_complete" : "level_win", clearedNum, state.score);
 
   const embedded = isEmbeddedInHub();
   const hubBanner = embedded
-    ? `<p style="color:#69f0ae;font-weight:700">🎄 Đã đồng bộ mốc thưởng Part 2: <b>${milestonePts}/300 PTS</b> lên Trạm Secret Santa!</p>`
+    ? `<p id="part2RewardBannerText" style="color:#69f0ae;font-weight:700">🎲 Đang quay thưởng ngẫu nhiên <b>350 – 600 PTS</b> cộng vào quỹ đổi 6 Vật Phẩm Noel...</p>`
     : "";
   const backBtn = embedded
     ? `<button class="btn secondary" onclick="exitToEventHub()">🎁 Nhận Điểm & Về Trạm</button>`
