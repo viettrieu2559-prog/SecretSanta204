@@ -70,7 +70,7 @@ function doPost(e) {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
     // Đảm bảo hàng tiêu đề chuẩn nếu sheet còn trống
-    var requiredCols = ['thoigian', 'hoten', 'phongban', 'wishlist', 'blacklist', 'mssv', 'diem_tich_luoi', 'ngay_diem_danh_cuoi', 'vat_pham_so_huu', 'lich_su_doi_qua'];
+    var requiredCols = ['thoigian', 'hoten', 'phongban', 'wishlist', 'blacklist', 'mssv', 'email', 'diem_tich_luoi', 'ngay_diem_danh_cuoi', 'vat_pham_so_huu', 'lich_su_doi_qua'];
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(requiredCols);
     }
@@ -155,6 +155,36 @@ function doPost(e) {
 
       SpreadsheetApp.flush();
       return jsonResponse({ success: true, deleted: deletedCount });
+    }
+
+    // 4. GỬI EMAIL MẬT THƯ BỐC THĂM SECRET SANTA (SEND_EMAIL / SEND_BULK_EMAIL)
+    if (action === 'SEND_EMAIL') {
+      var toEmail = String(body.to || '').trim();
+      var subject = String(body.subject || 'Mật thư Secret Santa 2026 - Phòng 204');
+      var mailBody = String(body.body || '');
+      if (!toEmail) return jsonResponse({ success: false, message: 'Missing recipient email' });
+      MailApp.sendEmail({
+        to: toEmail,
+        subject: subject,
+        body: mailBody
+      });
+      return jsonResponse({ success: true, sent: 1 });
+    }
+
+    if (action === 'SEND_BULK_EMAIL') {
+      var list = Array.isArray(body.emails) ? body.emails : [];
+      var sentCount = 0;
+      list.forEach(function(item) {
+        if (item && item.to) {
+          MailApp.sendEmail({
+            to: String(item.to).trim(),
+            subject: String(item.subject || 'Mật thư Secret Santa 2026 - Phòng 204'),
+            body: String(item.body || '')
+          });
+          sentCount++;
+        }
+      });
+      return jsonResponse({ success: true, sent: sentCount });
     }
 
     return jsonResponse({ success: false, message: 'Unknown action: ' + action });
