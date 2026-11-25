@@ -1,0 +1,3581 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>UNDERTALE 204: BOSS CÚN BÔNG — Secret Santa 204 (Part 3)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font hỗ trợ đầy đủ dấu tiếng Việt phong cách retro arcade -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&family=Chakra+Petch:wght@600;700&family=VT323&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --ut-orange: #ff8c1a;
+            --ut-yellow: #ffe600;
+            --ut-red: #ff2222;
+            --ut-green: #22ee55;
+            --ut-cyan: #00d8ff;
+            --ut-pink: #ff66b2;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            min-height: 100dvh;
+            background-color: #08090f;
+            color: #ffffff;
+            font-family: 'Chakra Petch', 'Be Vietnam Pro', sans-serif;
+            overscroll-behavior: none;
+            overflow: hidden;
+        }
+
+        .font-retro {
+            font-family: 'Chakra Petch', 'Be Vietnam Pro', sans-serif;
+            letter-spacing: 0.025em;
+        }
+
+        .font-pixel-num {
+            font-family: 'VT323', monospace;
+        }
+
+        /* Vùng chơi khóa hoàn toàn thao tác cuộn / phóng to trên điện thoại */
+        .game-lock-zone {
+            touch-action: none;
+            overscroll-behavior: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Nền Phòng 204 toàn màn hình + hiệu ứng làm mờ nhẹ */
+        #bgLayer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            background: #10131d;
+        }
+
+        #bgPhoto, #bgSvgFallback {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            filter: brightness(0.46) blur(2px) contrast(1.06);
+            transform: scale(1.04);
+            transition: filter 0.6s ease;
+        }
+
+        .bg-vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 50% 35%, rgba(8, 10, 18, 0.28) 0%, rgba(4, 5, 10, 0.84) 76%, rgba(0, 0, 0, 0.96) 100%),
+                repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px);
+            transition: background 0.6s ease;
+        }
+
+        /* Lớp phủ đỏ khi Boss kích hoạt Phase 2 (dưới 50% HP) */
+        #phase2Tint {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0;
+            background: radial-gradient(circle at 50% 25%, rgba(220, 20, 20, 0.24) 0%, rgba(120, 0, 0, 0.42) 100%);
+            transition: opacity 0.65s ease;
+        }
+
+        body.phase2-active #phase2Tint {
+            opacity: 1;
+            animation: phase2Glow 1.6s ease-in-out infinite alternate;
+        }
+
+        @keyframes phase2Glow {
+            from { opacity: 0.72; }
+            to { opacity: 1; }
+        }
+
+        /* Khung viền trắng nền đen chuẩn Undertale */
+        .ut-box {
+            background-color: rgba(4, 4, 7, 0.94);
+            border: 3.5px solid #ffffff;
+            box-shadow: 0 0 0 2px #000000, 0 8px 24px rgba(0, 0, 0, 0.82);
+            border-radius: 6px;
+        }
+
+        /* 4 nút hành động kinh điển Undertale */
+        .ut-action-btn {
+            background: rgba(8, 8, 12, 0.95);
+            border: 2.5px solid var(--ut-orange);
+            color: var(--ut-orange);
+            font-weight: 800;
+            border-radius: 6px;
+            transition: transform 0.08s ease, border-color 0.14s ease, color 0.14s ease, box-shadow 0.14s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 7px 4px;
+            white-space: nowrap;
+        }
+
+        .ut-action-btn:hover:not(:disabled),
+        .ut-action-btn.selected:not(:disabled) {
+            border-color: var(--ut-yellow);
+            color: var(--ut-yellow);
+            box-shadow: 0 0 12px rgba(255, 230, 0, 0.45), inset 0 0 8px rgba(255, 230, 0, 0.14);
+            transform: translateY(-1px);
+        }
+
+        .ut-action-btn:active:not(:disabled) {
+            transform: scale(0.96);
+        }
+
+        .ut-action-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Nút MERCY phát sáng vàng rực khi Thiện cảm đạt 100% */
+        .ut-action-btn.mercy-ready {
+            border-color: var(--ut-yellow) !important;
+            color: var(--ut-yellow) !important;
+            background: rgba(65, 48, 0, 0.88) !important;
+            animation: mercyPulse 0.85s infinite alternate ease-in-out;
+        }
+
+        @keyframes mercyPulse {
+            from {
+                box-shadow: 0 0 8px rgba(255, 230, 0, 0.55), inset 0 0 6px rgba(255, 230, 0, 0.2);
+                transform: scale(1);
+            }
+            to {
+                box-shadow: 0 0 20px rgba(255, 230, 0, 0.95), inset 0 0 14px rgba(255, 230, 0, 0.35);
+                transform: scale(1.03);
+            }
+        }
+
+        /* Hoạt ảnh nhịp thở & nổi quạu của Boss Cún Bông */
+        #bossWrap {
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .boss-idle {
+            animation: bossIdle 2.1s ease-in-out infinite;
+        }
+
+        .boss-angry-idle {
+            animation: bossAngryIdle 1.1s ease-in-out infinite;
+        }
+
+        .boss-phase2-tremble {
+            animation: bossPhase2Tremble 0.22s linear infinite;
+            filter: drop-shadow(0 0 14px rgba(255, 35, 35, 0.9));
+        }
+
+        .boss-charge {
+            animation: bossCharge 0.38s ease-in-out infinite alternate;
+        }
+
+        .boss-hit {
+            animation: bossHitShake 0.4s linear !important;
+            filter: drop-shadow(0 0 18px #ff1111) brightness(1.45) saturate(1.8) !important;
+        }
+
+        @keyframes bossIdle {
+            0%, 100% { transform: translateY(0px) scale(1, 1); }
+            50% { transform: translateY(-5px) scale(1.025, 0.98); }
+        }
+
+        @keyframes bossAngryIdle {
+            0%, 100% { transform: translateY(0px) rotate(-1.2deg) scale(1); }
+            50% { transform: translateY(-4px) rotate(1.4deg) scale(1.035); }
+        }
+
+        @keyframes bossPhase2Tremble {
+            0% { transform: translate(0, 0) scale(1.03); }
+            25% { transform: translate(-2px, -2px) scale(1.04); }
+            50% { transform: translate(2px, 1px) scale(1.02); }
+            75% { transform: translate(-1.5px, 2px) scale(1.04); }
+            100% { transform: translate(1.5px, -1px) scale(1.03); }
+        }
+
+        @keyframes bossCharge {
+            from { transform: scale(1.03) translateY(-2px); filter: drop-shadow(0 0 10px rgba(255, 45, 45, 0.75)); }
+            to { transform: scale(1.11) translateY(-6px); filter: drop-shadow(0 0 22px rgba(255, 45, 45, 1)); }
+        }
+
+        @keyframes bossHitShake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-14px) rotate(-5deg); }
+            40% { transform: translateX(13px) rotate(5deg); }
+            60% { transform: translateX(-10px) rotate(-3deg); }
+            80% { transform: translateX(8px) rotate(2deg); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Bong bóng thoại của Boss */
+        .boss-bubble {
+            background: #ffffff;
+            color: #111111;
+            border: 2.5px solid #111111;
+            border-radius: 10px;
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.65);
+            position: relative;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .boss-bubble::before {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 7px 10px 7px 0;
+            border-style: solid;
+            border-color: transparent #ffffff transparent transparent;
+            filter: drop-shadow(-2px 0 0 #111111);
+        }
+
+        /* Rung toàn màn hình khi dính đòn */
+        .screen-shake {
+            animation: screenShake 0.24s linear;
+        }
+
+        @keyframes screenShake {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-6px, 3px); }
+            50% { transform: translate(6px, -3px); }
+            75% { transform: translate(-4px, -2px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* Hiệu ứng chém ngang trên Boss */
+        .slash-fx {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 30;
+        }
+
+        .slash-line {
+            width: 120%;
+            height: 7px;
+            background: linear-gradient(90deg, transparent, #ffffff, #ffe600, #ff2222, transparent);
+            box-shadow: 0 0 16px #ff3333, 0 0 26px #ffffff;
+            transform: rotate(-32deg) scaleX(0);
+            border-radius: 99px;
+            animation: slashSweep 0.34s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slashSweep {
+            0% { transform: rotate(-32deg) scaleX(0); opacity: 1; }
+            45% { transform: rotate(-32deg) scaleX(1.15); opacity: 1; }
+            100% { transform: rotate(-32deg) scaleX(1.25); opacity: 0; }
+        }
+
+        /* Số sát thương / thiện cảm bay lên */
+        .float-pop {
+            position: absolute;
+            left: 50%;
+            top: 20%;
+            transform: translateX(-50%);
+            font-weight: 800;
+            pointer-events: none;
+            z-index: 40;
+            text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+            animation: floatUpPop 0.95s ease-out forwards;
+            white-space: nowrap;
+        }
+
+        @keyframes floatUpPop {
+            0% { transform: translate(-50%, 8px) scale(0.75); opacity: 0; }
+            22% { transform: translate(-50%, -14px) scale(1.2); opacity: 1; }
+            75% { transform: translate(-50%, -30px) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -48px) scale(0.9); opacity: 0; }
+        }
+
+        /* Mục menu con */
+        .sub-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 9px;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.1s, border-color 0.1s, color 0.1s;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .sub-option:hover:not(:disabled),
+        .sub-option.active:not(:disabled) {
+            background: rgba(255, 230, 0, 0.15);
+            border-color: var(--ut-yellow);
+            color: var(--ut-yellow);
+        }
+
+        .sub-option:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        /* Canvas Bullet Hell */
+        #battleCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+
+        /* =================================================================== */
+        /* CỤM TAY CẦM RETRO ARCADE CHO ĐIỆN THOẠI (VIRTUAL ANALOG JOYSTICK)    */
+        /* =================================================================== */
+        .arcade-deck {
+            background: linear-gradient(180deg, rgba(18, 20, 32, 0.94) 0%, rgba(8, 9, 16, 0.97) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.32);
+            box-shadow: inset 0 2px 10px rgba(255, 255, 255, 0.07), 0 6px 20px rgba(0, 0, 0, 0.85);
+            border-radius: 14px;
+            touch-action: none;
+        }
+
+        /* Vùng nhận chạm mở rộng bao quanh đế 120px để ngón cái không bị trượt khi né gấp */
+        .joystick-hit-zone {
+            position: relative;
+            width: 152px;
+            height: 136px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: none;
+            cursor: grab;
+        }
+
+        .joystick-hit-zone.dragging {
+            cursor: grabbing;
+        }
+
+        /* Đế tròn Cần gạt Analog 360 độ (120px) */
+        .joystick-base {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 9999px;
+            background: radial-gradient(circle at 50% 50%, rgba(30, 34, 54, 0.92) 0%, rgba(9, 10, 18, 0.98) 72%, rgba(255, 255, 255, 0.12) 100%);
+            border: 3px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 0 16px rgba(255, 255, 255, 0.28), inset 0 0 20px rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: none;
+            pointer-events: none;
+        }
+
+        .joystick-hit-zone.dragging .joystick-base {
+            border-color: #ffe600;
+            box-shadow: 0 0 24px rgba(255, 230, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.9);
+        }
+
+        /* Vệt sáng hướng đẩy phát sáng trên vòng đế khi gạt mạnh */
+        .joystick-glow-arc {
+            position: absolute;
+            inset: -5px;
+            border-radius: 9999px;
+            pointer-events: none;
+            opacity: 0;
+            background: conic-gradient(
+                from -42deg,
+                transparent 0deg,
+                rgba(255, 230, 0, 0.9) 28deg,
+                rgba(255, 68, 68, 1) 42deg,
+                rgba(255, 230, 0, 0.9) 56deg,
+                transparent 84deg
+            );
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px));
+            filter: drop-shadow(0 0 8px rgba(255, 210, 0, 0.95));
+            will-change: transform, opacity;
+        }
+
+        /* Vòng chỉ báo ngưỡng tốc độ chuẩn (~42%) & mũi tên 4 chiều mờ bên trong đế */
+        .joystick-ring {
+            position: absolute;
+            width: 52px;
+            height: 52px;
+            border-radius: 9999px;
+            border: 1.5px dashed rgba(255, 255, 255, 0.25);
+            pointer-events: none;
+        }
+
+        .joy-arrow {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.28);
+            font-size: 11px;
+            font-weight: 800;
+            pointer-events: none;
+        }
+
+        .joy-arrow.lit {
+            color: rgba(255, 230, 0, 0.98);
+            text-shadow: 0 0 8px #ffe600;
+        }
+
+        /* Núm gạt tròn màu đỏ có trái tim trắng — 0 độ trễ khi đang kéo */
+        .joystick-knob {
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            border-radius: 9999px;
+            background: radial-gradient(circle at 35% 30%, #ff5c5c 0%, #e11111 58%, #8f0000 100%);
+            border: 2.5px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), 0 0 14px rgba(255, 34, 34, 0.65);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            transition: none;
+            will-change: transform;
+        }
+
+        /* Chỉ bật transition siêu ngắn 70ms khi thả tay để bật mượt về tâm */
+        .joystick-knob.spring-back {
+            transition: transform 0.07s cubic-bezier(0.22, 1.35, 0.36, 1);
+        }
+
+        /* Phím D-pad 4 hướng thay thế */
+        .dpad-btn {
+            background: linear-gradient(180deg, #25293f 0%, #141726 100%);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: #ffffff;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.85);
+            touch-action: none;
+            transition: background 0.06s, transform 0.06s;
+        }
+
+        .dpad-btn.pressed, .dpad-btn:active {
+            background: linear-gradient(180deg, #ff3838 0%, #b80000 100%);
+            border-color: #ffe600;
+            transform: translateY(1px) scale(0.94);
+        }
+
+        /* 2 Nút phụ trợ ngón cái phải (NÉ CHẬM & CHỌN/ĐÁNH) */
+        .arcade-thumb-btn {
+            border-radius: 9999px;
+            border: 3px solid rgba(255, 255, 255, 0.92);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+            touch-action: none;
+            cursor: pointer;
+            transition: transform 0.07s ease, box-shadow 0.07s ease, filter 0.07s ease;
+            line-height: 1.05;
+        }
+
+        .btn-slow {
+            width: 72px;
+            height: 72px;
+            background: radial-gradient(circle at 35% 28%, #38bdf8 0%, #0284c7 55%, #075985 100%);
+            box-shadow: 0 5px 0 #04324d, 0 0 14px rgba(0, 216, 255, 0.45);
+        }
+
+        .btn-slow.active {
+            transform: translateY(3px) scale(0.94);
+            border-color: #67e8f9;
+            filter: brightness(1.22);
+            box-shadow: 0 2px 0 #04324d, 0 0 24px rgba(0, 216, 255, 0.95);
+        }
+
+        .btn-confirm {
+            width: 78px;
+            height: 78px;
+            background: radial-gradient(circle at 35% 28%, #fde047 0%, #f97316 58%, #b45309 100%);
+            box-shadow: 0 5px 0 #662705, 0 0 16px rgba(255, 160, 20, 0.55);
+        }
+
+        .btn-confirm.active, .btn-confirm:active {
+            transform: translateY(3px) scale(0.94);
+            border-color: #fef08a;
+            filter: brightness(1.18);
+            box-shadow: 0 2px 0 #662705, 0 0 26px rgba(255, 230, 0, 0.95);
+        }
+
+        /* Hiệu ứng vỡ tim Game Over */
+        @keyframes heartSplitLeft {
+            0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+            100% { transform: translate(-40px, 32px) rotate(-38deg); opacity: 0.25; }
+        }
+        @keyframes heartSplitRight {
+            0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+            100% { transform: translate(40px, 32px) rotate(38deg); opacity: 0.25; }
+        }
+        .heart-half-left { animation: heartSplitLeft 1.2s ease-out forwards; }
+        .heart-half-right { animation: heartSplitRight 1.2s ease-out forwards; }
+
+        /* Cho phép cuộn nhẹ chỉ riêng màn Start/End nếu màn hình điện thoại rất nhỏ */
+        .scrollable-screen {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            max-height: 100dvh;
+        }
+    </style>
+</head>
+<body class="relative flex flex-col items-center justify-center">
+
+    <!-- NỀN BỐI CẢNH PHÒNG 204 (Ưu tiên ảnh cục bộ room204.jpg + fallback SVG sắc nét) -->
+    <div id="bgLayer" aria-hidden="true">
+        <img id="bgPhoto" src="room204.jpg" alt="Phòng 204"
+             onerror="this.style.display='none'; document.getElementById('bgSvgFallback').classList.remove('hidden');">
+        <!-- SVG Fallback Phòng 204: sàn gạch caro vàng trắng, bàn họp dài, biển Phòng 204, TV, đàn Yamaha -->
+        <svg id="bgSvgFallback" class="hidden" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#f7f4ee"/>
+                    <stop offset="100%" stop-color="#e5dfd3"/>
+                </linearGradient>
+                <pattern id="floorTile" width="64" height="44" patternUnits="userSpaceOnUse">
+                    <rect width="64" height="44" fill="#fffaf0"/>
+                    <rect width="32" height="22" fill="#f7cf63"/>
+                    <rect x="32" y="22" width="32" height="22" fill="#f7cf63"/>
+                </pattern>
+            </defs>
+            <rect width="1280" height="465" fill="url(#wallGrad)"/>
+            <polygon points="0,0 1280,0 1090,145 190,145" fill="#ede7dc"/>
+            <polygon points="0,465 1280,465 1280,720 0,720" fill="url(#floorTile)"/>
+            <rect x="0" y="0" width="44" height="720" fill="#177e78"/>
+            <rect x="1236" y="0" width="44" height="720" fill="#177e78"/>
+            <!-- Biển hiệu Phòng 204 -->
+            <rect x="535" y="18" width="210" height="48" rx="20" fill="#1176c9"/>
+            <text x="640" y="50" text-anchor="middle" fill="#ffffff" font-size="27" font-weight="bold" font-family="sans-serif">Phòng 204</text>
+            <!-- TV bên trái -->
+            <polygon points="85,175 245,200 245,380 85,405" fill="#18202c" stroke="#111" stroke-width="6"/>
+            <polygon points="94,186 236,208 236,372 94,394" fill="#2b8be0"/>
+            <!-- Đồng hồ -->
+            <circle cx="355" cy="155" r="28" fill="#ffffff" stroke="#222" stroke-width="5"/>
+            <line x1="355" y1="155" x2="355" y2="136" stroke="#222" stroke-width="3"/>
+            <line x1="355" y1="155" x2="369" y2="160" stroke="#222" stroke-width="3"/>
+            <!-- 3 tấm khẩu hiệu -->
+            <rect x="315" y="210" width="60" height="90" fill="#1a6cd1"/>
+            <rect x="383" y="216" width="56" height="86" fill="#d94230"/>
+            <rect x="446" y="222" width="50" height="82" fill="#1f9a53"/>
+            <!-- Hai cửa sổ rèm xám -->
+            <rect x="570" y="205" width="115" height="170" fill="#70b796" stroke="#1d6f5a" stroke-width="6"/>
+            <rect x="570" y="205" width="115" height="82" fill="#8b929e"/>
+            <rect x="845" y="198" width="185" height="175" fill="#70b796" stroke="#1d6f5a" stroke-width="6"/>
+            <rect x="845" y="198" width="185" height="72" fill="#8b929e"/>
+            <!-- Bao đàn Yamaha -->
+            <path d="M1070 335 C1060 335 1055 370 1058 395 C1042 415 1042 465 1068 468 L1095 468 C1118 465 1118 415 1102 395 C1105 370 1100 335 1090 335 Z" fill="#23262e"/>
+            <!-- Bàn họp dài giữa phòng -->
+            <polygon points="315,500 785,400 905,405 645,560" fill="#f0c888" stroke="#b58344" stroke-width="4"/>
+            <polygon points="315,500 645,560 645,585 315,522" fill="#d9ad68"/>
+            <rect x="355" y="520" width="16" height="130" fill="#d4d4d4"/>
+            <rect x="580" y="565" width="18" height="135" fill="#d4d4d4"/>
+            <!-- Lọ hoa hồng -->
+            <ellipse cx="705" cy="430" rx="28" ry="18" fill="#f47ea2"/>
+            <rect x="692" y="440" width="26" height="30" rx="6" fill="rgba(220,245,255,0.75)"/>
+        </svg>
+    </div>
+    <div class="bg-vignette" aria-hidden="true"></div>
+    <div id="phase2Tint" aria-hidden="true"></div>
+
+    <!-- HỘP THÔNG BÁO TOAST (Không dùng alert/confirm) -->
+    <div id="toastBox" class="fixed top-3 left-1/2 -translate-x-1/2 z-[120] hidden px-4 py-2 rounded-lg bg-black/95 border-2 border-yellow-400 text-yellow-300 font-bold text-xs sm:text-sm shadow-2xl whitespace-nowrap">
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- MÀN HÌNH 1: START SCREEN (MÀN HÌNH MỞ ĐẦU)                           -->
+    <!-- =================================================================== -->
+    <section id="startScreen" class="scrollable-screen relative z-10 w-full max-w-lg px-3.5 py-4 flex flex-col items-center justify-center">
+        <div class="ut-box w-full p-4 sm:p-6 text-center relative">
+            <div class="inline-flex items-center gap-2 px-3 py-1 mb-2 rounded-full bg-red-950/90 border border-red-400 text-red-200 text-[11px] sm:text-xs font-bold tracking-wider uppercase">
+                <span>🎄 Secret Santa 204</span>
+                <span>•</span>
+                <span>Part 3 • Boss Battle</span>
+            </div>
+
+            <h1 class="font-retro text-3xl sm:text-4xl font-extrabold tracking-wider text-white drop-shadow-[0_3px_0_#ff2222] leading-tight">
+                UNDERTALE 204
+            </h1>
+            <p class="font-retro text-base sm:text-xl font-bold text-yellow-300 mt-0.5 mb-2">
+                ★ BOSS CÚN BÔNG ★
+            </p>
+
+            <!-- Preview Boss Cún Bông (SVG sắc nét trực tiếp, không nháy ảnh lỗi) -->
+            <div class="flex justify-center items-center my-1.5">
+                <div class="relative w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center boss-idle">
+                    <svg id="startBossSvg" class="w-full h-full drop-shadow-[0_0_16px_rgba(255,230,0,0.45)]" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Boss Cún Bông 204">
+                        <g stroke="#ffffff" stroke-width="9" stroke-linejoin="round">
+                            <circle cx="56" cy="64" r="34" fill="#f7e6c9"/>
+                            <circle cx="164" cy="64" r="34" fill="#f7e6c9"/>
+                            <circle cx="110" cy="112" r="64" fill="#faecd2"/>
+                            <ellipse cx="64" cy="182" rx="34" ry="22" fill="#f7e6c9"/>
+                            <ellipse cx="156" cy="182" rx="34" ry="22" fill="#f7e6c9"/>
+                        </g>
+                        <circle cx="56" cy="64" r="34" fill="#f7e6c9"/>
+                        <circle cx="56" cy="66" r="19" fill="#eab3a6"/>
+                        <circle cx="164" cy="64" r="34" fill="#f7e6c9"/>
+                        <circle cx="164" cy="66" r="19" fill="#eab3a6"/>
+                        <circle cx="110" cy="112" r="64" fill="#faecd2"/>
+                        <ellipse cx="110" cy="128" rx="35" ry="26" fill="#fff6e6"/>
+                        <circle cx="86" cy="100" r="9" fill="#181515"/>
+                        <circle cx="83" cy="97" r="3" fill="#ffffff"/>
+                        <circle cx="134" cy="100" r="9" fill="#181515"/>
+                        <circle cx="131" cy="97" r="3" fill="#ffffff"/>
+                        <ellipse cx="110" cy="116" rx="11" ry="8" fill="#1d1818"/>
+                        <path d="M95 129 Q110 156 125 129 Z" fill="#6b1d28"/>
+                        <ellipse cx="110" cy="141" rx="10" ry="12" fill="#ff7392"/>
+                        <ellipse cx="64" cy="182" rx="34" ry="22" fill="#f7e6c9"/>
+                        <ellipse cx="156" cy="182" rx="34" ry="22" fill="#f7e6c9"/>
+                        <path d="M26 135 C20 124 8 128 11 139 C14 148 26 155 26 155 C26 155 38 148 41 139 C44 128 32 124 26 135 Z" fill="#ff6688" stroke="#4b2619" stroke-width="3"/>
+                    </svg>
+                </div>
+            </div>
+
+            <p class="text-xs sm:text-sm text-gray-200 mb-2.5 leading-relaxed">
+                Chú Cún Bông gác cửa <strong class="text-yellow-300">Phòng 204</strong> đang nổi quạu!
+                Chọn <strong class="text-orange-400">FIGHT</strong> hoặc dùng <strong class="text-pink-400">ACT + MERCY</strong> làm dịu chú cún để nhận thưởng <strong class="text-green-400">Secret Santa 204</strong>!
+            </p>
+
+            <!-- Bảng mức thưởng Part 3 & trạng thái lượt chơi kết nối Secret Santa 204 -->
+            <div id="startBridgeCard" class="bg-gradient-to-b from-amber-950/50 to-black/80 border border-yellow-400/50 rounded-lg p-2.5 mb-3 text-left space-y-1.5">
+                <div id="startPlayerRow" class="hidden flex flex-wrap items-center justify-between gap-1.5 pb-1.5 border-b border-white/15 text-[11px] sm:text-xs">
+                    <div class="flex items-center gap-1.5 min-w-0">
+                        <span class="text-cyan-300 font-bold truncate">👤 <span id="startPlayerName">SV 204</span></span>
+                        <span class="px-1.5 py-0.5 rounded bg-yellow-500/20 border border-yellow-400/50 text-yellow-300 font-extrabold shrink-0">⭐ <span id="startPlayerScore">0</span> PTS</span>
+                    </div>
+                    <span id="startPlaysBadge" class="px-2 py-0.5 rounded bg-emerald-950/90 border border-emerald-400/70 text-emerald-200 font-extrabold shrink-0">🎲 Lượt hôm nay: 0/3</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px] sm:text-xs">
+                    <div class="bg-green-950/45 border border-green-400/40 rounded px-2 py-1.5">
+                        <div class="font-extrabold text-green-300">🏆 Thắng Boss (FIGHT / MERCY)</div>
+                        <div class="text-white font-bold"><span id="startWinRange" class="text-yellow-300 text-sm">160 – 260 PTS</span></div>
+                        <div class="text-[10px] text-gray-300">Cảm hóa MERCY hoặc giữ nhiều HP sẽ nhận mức cao hơn!</div>
+                    </div>
+                    <div class="bg-orange-950/45 border border-orange-400/40 rounded px-2 py-1.5">
+                        <div class="font-extrabold text-orange-300">💝 Thua Boss (Game Over)</div>
+                        <div class="text-white font-bold"><span id="startDefeatRange" class="text-amber-300 text-sm">40 – 70 PTS</span> <span class="text-[10px] text-gray-300">an ủi</span></div>
+                        <div class="text-[10px] text-gray-300">Áp dụng khi đã chiến đấu ít nhất 1 lượt với Boss.</div>
+                    </div>
+                </div>
+
+                <div id="startCapNotice" class="hidden text-[11px] text-amber-200 bg-amber-950/80 border border-amber-400/70 rounded px-2.5 py-1.5 font-bold text-center">
+                    ⚠️ Đã hết lượt nhận thưởng hôm nay — hãy làm nhiệm vụ để nhận thêm lượt! (Bạn vẫn có thể đấu giải trí)
+                </div>
+            </div>
+
+            <!-- Tóm tắt điều khiển tay cầm ảo + bàn phím -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left bg-white/5 border border-white/20 rounded-lg p-2.5 mb-3.5 text-[11px] sm:text-xs">
+                <div class="space-y-1">
+                    <div class="text-cyan-300 font-bold">📱 Tay cầm Ảo Siêu Nhạy</div>
+                    <div>• <strong>Cần gạt 360°:</strong> Phản hồi tức thì (Cao 1.7x / Siêu 2.2x / Vừa 1.2x) hoặc kéo thẳng trong khung đấu</div>
+                    <div>• <strong>NÉ CHẬM (HOLD):</strong> Giữ giảm còn ~42% tốc độ & hiện tâm hitbox</div>
+                    <div>• <strong>CHỌN / ĐÁNH (Z):</strong> Xác nhận thoại & chém chí mạng</div>
+                </div>
+                <div class="space-y-1">
+                    <div class="text-yellow-300 font-bold">⌨️ Máy tính (PC) & Mẹo</div>
+                    <div>• <strong>WASD / Mũi tên:</strong> Di chuyển • <strong>Shift:</strong> Đi chậm</div>
+                    <div>• <strong>Z / Enter / Space:</strong> Chọn • <strong>X / Esc:</strong> Quay lại</div>
+                    <div>• <span class="text-cyan-300 font-bold">Xương xanh dương:</span> Đứng yên! <span class="text-green-400 font-bold">Tim xanh:</span> +3 HP</div>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <button id="startBtn" type="button" onclick="startGame()"
+                        class="w-full py-3 bg-gradient-to-r from-red-600 via-orange-500 to-red-600 hover:from-yellow-400 hover:to-orange-500 hover:text-black text-white font-extrabold text-base sm:text-lg rounded-lg border-2 border-white shadow-[0_0_20px_rgba(255,60,30,0.75)] transition transform active:scale-95 cursor-pointer">
+                    ❤️ BẮT ĐẦU TRẬN ĐẤU
+                </button>
+                <button id="startCloseBtn" type="button" onclick="closePart3Modal()"
+                        class="w-full py-2 bg-white/10 hover:bg-white/20 text-gray-100 font-bold text-xs sm:text-sm rounded-lg border border-white/40 transition cursor-pointer">
+                    ← Quay về Secret Santa 204
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- MÀN HÌNH 2: CHIẾN ĐẤU CHÍNH (TỐI ƯU VỪA KHÍT MÀN HÌNH ĐIỆN THOẠI)    -->
+    <!-- =================================================================== -->
+    <main id="battleScreen" class="hidden game-lock-zone relative z-10 w-full max-w-[540px] h-[100dvh] px-2 py-1.5 sm:py-2.5 flex flex-col justify-between gap-1.5 overflow-hidden">
+
+        <!-- 1. PHẦN TRÊN: THANH MÁU BOSS, THIỆN CẢM & SPRITE BOSS CÚN BÔNG -->
+        <section class="shrink-0 flex flex-col gap-1">
+            <!-- Thanh Boss HP + Thiện cảm Mercy gọn trên 1 hộp -->
+            <div class="ut-box px-2.5 py-1.5 flex flex-col gap-1">
+                <div class="flex items-center justify-between gap-2 text-[11px] sm:text-xs font-extrabold">
+                    <div class="flex items-center gap-1.5 min-w-0">
+                        <span id="bossPhaseBadge" class="px-1.5 py-0.5 text-[10px] rounded bg-orange-600 text-white uppercase shrink-0">P1</span>
+                        <span class="truncate text-white tracking-wide">BOSS CÚN BÔNG 204</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <span id="hudPlaysBadge" class="hidden px-1.5 py-0.5 rounded bg-emerald-950/90 border border-emerald-400/70 text-emerald-200 text-[10px] font-bold whitespace-nowrap" title="Số lượt nhận thưởng còn lại hôm nay">🎲 3/3</span>
+                        <span class="text-gray-300 shrink-0">Lượt <span id="turnCountText" class="text-yellow-300 font-pixel-num text-base">1</span></span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 items-center">
+                    <!-- Boss HP -->
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-[10px] font-extrabold text-red-400 shrink-0">BOSS</span>
+                        <div class="flex-1 h-2.5 bg-red-950 border border-white/75 rounded-sm overflow-hidden">
+                            <div id="bossHpBar" class="h-full bg-gradient-to-r from-green-500 to-lime-400 transition-all duration-300" style="width: 100%;"></div>
+                        </div>
+                        <span id="bossHpText" class="font-pixel-num text-sm text-white shrink-0">100/100</span>
+                    </div>
+                    <!-- Thiện cảm / Mercy -->
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-[10px] font-extrabold text-pink-400 shrink-0">MERCY</span>
+                        <div class="flex-1 h-2.5 bg-gray-800 border border-white/75 rounded-sm overflow-hidden">
+                            <div id="mercyBar" class="h-full bg-gradient-to-r from-pink-500 to-yellow-300 transition-all duration-300" style="width: 0%;"></div>
+                        </div>
+                        <span id="mercyText" class="font-pixel-num text-sm text-yellow-300 shrink-0">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khu vực hình ảnh Boss Cún Bông + Bong bóng thoại -->
+            <div class="flex items-center justify-center gap-2.5 px-1 h-[90px] sm:h-[112px]">
+                <div id="bossWrap" class="relative w-[84px] h-[84px] sm:w-[106px] sm:h-[106px] flex items-center justify-center boss-idle shrink-0">
+                    <!-- Trạng thái VUI VẺ (SVG sắc nét trực tiếp) -->
+                    <div id="bossHappyContainer" class="w-full h-full flex items-center justify-center">
+                        <svg id="bossHappySvg" class="w-full h-full drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cún Bông Vui Vẻ">
+                            <g stroke="#ffffff" stroke-width="9" stroke-linejoin="round">
+                                <circle cx="56" cy="64" r="34" fill="#f7e6c9"/>
+                                <circle cx="164" cy="64" r="34" fill="#f7e6c9"/>
+                                <circle cx="110" cy="112" r="64" fill="#faecd2"/>
+                                <ellipse cx="64" cy="182" rx="34" ry="22" fill="#f7e6c9"/>
+                                <ellipse cx="156" cy="182" rx="34" ry="22" fill="#f7e6c9"/>
+                            </g>
+                            <circle cx="56" cy="64" r="34" fill="#f7e6c9"/>
+                            <circle cx="56" cy="66" r="19" fill="#eab3a6"/>
+                            <circle cx="164" cy="64" r="34" fill="#f7e6c9"/>
+                            <circle cx="164" cy="66" r="19" fill="#eab3a6"/>
+                            <circle cx="110" cy="112" r="64" fill="#faecd2"/>
+                            <ellipse cx="110" cy="128" rx="35" ry="26" fill="#fff6e6"/>
+                            <circle cx="86" cy="100" r="9" fill="#181515"/>
+                            <circle cx="83" cy="97" r="3" fill="#ffffff"/>
+                            <circle cx="134" cy="100" r="9" fill="#181515"/>
+                            <circle cx="131" cy="97" r="3" fill="#ffffff"/>
+                            <ellipse cx="110" cy="116" rx="11" ry="8" fill="#1d1818"/>
+                            <path d="M95 129 Q110 156 125 129 Z" fill="#6b1d28"/>
+                            <ellipse cx="110" cy="141" rx="10" ry="12" fill="#ff7392"/>
+                            <ellipse cx="64" cy="182" rx="34" ry="22" fill="#f7e6c9"/>
+                            <ellipse cx="156" cy="182" rx="34" ry="22" fill="#f7e6c9"/>
+                            <path d="M26 135 C20 124 8 128 11 139 C14 148 26 155 26 155 C26 155 38 148 41 139 C44 128 32 124 26 135 Z" fill="#ff6688" stroke="#4b2619" stroke-width="3"/>
+                        </svg>
+                    </div>
+
+                    <!-- Trạng thái TỨC GIẬN / TẤN CÔNG (SVG sắc nét trực tiếp) -->
+                    <div id="bossAngryContainer" class="hidden w-full h-full flex items-center justify-center">
+                        <svg id="bossAngrySvg" class="w-full h-full drop-shadow-[0_4px_14px_rgba(255,30,30,0.75)]" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cún Bông Tức Giận">
+                            <g stroke="#ffffff" stroke-width="9" stroke-linejoin="round">
+                                <circle cx="58" cy="58" r="35" fill="#f5e3c3"/>
+                                <circle cx="162" cy="58" r="35" fill="#f5e3c3"/>
+                                <circle cx="110" cy="112" r="65" fill="#f7e7cb"/>
+                                <path d="M44 198 Q110 165 176 198 Z" fill="#f5e3c3"/>
+                            </g>
+                            <circle cx="58" cy="58" r="35" fill="#f5e3c3"/>
+                            <circle cx="58" cy="60" r="19" fill="#e6a69a"/>
+                            <circle cx="162" cy="58" r="35" fill="#f5e3c3"/>
+                            <circle cx="162" cy="60" r="19" fill="#e6a69a"/>
+                            <circle cx="110" cy="112" r="65" fill="#f7e7cb"/>
+                            <ellipse cx="110" cy="128" rx="34" ry="26" fill="#fff4e0"/>
+                            <circle cx="85" cy="100" r="8.5" fill="#151212"/>
+                            <circle cx="135" cy="100" r="8.5" fill="#151212"/>
+                            <line x1="72" y1="88" x2="98" y2="97" stroke="#6c4d35" stroke-width="5" stroke-linecap="round"/>
+                            <line x1="148" y1="88" x2="122" y2="97" stroke="#6c4d35" stroke-width="5" stroke-linecap="round"/>
+                            <ellipse cx="110" cy="116" rx="11" ry="8" fill="#191515"/>
+                            <rect x="94" y="128" width="32" height="27" rx="11" fill="#5e1720"/>
+                            <ellipse cx="110" cy="144" rx="9" ry="9" fill="#d95b74"/>
+                            <polygon points="97,148 101,141 105,148" fill="#ffffff"/>
+                            <polygon points="115,148 119,141 123,148" fill="#ffffff"/>
+                            <!-- Dấu 💢 đỏ -->
+                            <g stroke="#d91a1a" stroke-width="6" stroke-linecap="round" fill="none">
+                                <path d="M148 48 Q158 58 148 68"/>
+                                <path d="M174 48 Q164 58 174 68"/>
+                                <path d="M152 44 Q161 53 170 44"/>
+                                <path d="M152 72 Q161 63 170 72"/>
+                            </g>
+                            <!-- Khói bốc 2 bên tai -->
+                            <path d="M18 112 C8 106 10 92 22 92 C28 84 42 88 42 100 C48 106 42 118 32 116" fill="#ffffff" stroke="#4a2819" stroke-width="3.5"/>
+                            <path d="M202 112 C212 106 210 92 198 92 C192 84 178 88 178 100 C172 106 178 118 188 116" fill="#ffffff" stroke="#4a2819" stroke-width="3.5"/>
+                        </svg>
+                    </div>
+
+                    <!-- Hiệu ứng chém & số sát thương -->
+                    <div id="bossFxLayer" class="absolute inset-0 pointer-events-none"></div>
+                </div>
+
+                <!-- Bong bóng thoại Boss -->
+                <div class="boss-bubble px-2.5 py-2 flex-1 max-w-[300px] text-[11px] sm:text-xs min-h-[48px] flex items-center">
+                    <span id="bossBubbleText">Gâu!! Ai cho vào Phòng 204 mà chưa nộp bánh thưởng?!</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. PHẦN GIỮA: KHUNG CHIẾN ĐẤU NỀN ĐEN VIỀN TRẮNG (CANVAS RESPONSIVE) -->
+        <section id="arenaBox" class="ut-box w-full flex-1 min-h-[155px] max-h-[265px] relative overflow-hidden">
+
+            <!-- CHẾ ĐỘ A: LỜI DẪN CHUYỆN GÕ TỪNG CHỮ -->
+            <div id="modeDialogue" class="w-full h-full p-3 sm:p-4 flex flex-col justify-between cursor-pointer" onclick="advanceDialogue()">
+                <div class="flex items-start gap-2 text-sm sm:text-base leading-relaxed font-semibold text-white">
+                    <span class="text-yellow-300 font-extrabold">*</span>
+                    <p id="dialogueText" class="whitespace-pre-line"></p>
+                </div>
+                <div id="dialogueContinueHint" class="hidden text-right text-[11px] sm:text-xs text-yellow-300 font-bold animate-pulse">
+                    ▶ Bấm nút [Z] hoặc chạm khung để tiếp tục...
+                </div>
+            </div>
+
+            <!-- CHẾ ĐỘ B: MENU CON (ACT / ITEM / MERCY) -->
+            <div id="modeSubmenu" class="hidden w-full h-full p-2.5 sm:p-3 flex flex-col justify-between">
+                <div class="flex items-center justify-between border-b border-white/25 pb-1 mb-1.5">
+                    <span id="submenuTitle" class="text-xs sm:text-sm font-extrabold text-yellow-300 uppercase">★ HÀNH ĐỘNG</span>
+                    <button type="button" onclick="backToMainMenu()" class="text-[11px] px-2 py-0.5 rounded bg-white/15 hover:bg-white/25 text-white font-bold cursor-pointer">
+                        ← Quay lại
+                    </button>
+                </div>
+                <div id="submenuGrid" class="grid grid-cols-2 gap-1.5 flex-1 content-start overflow-y-auto">
+                    <!-- Tạo động bằng JS -->
+                </div>
+                <div id="submenuHint" class="text-[10px] sm:text-[11px] text-gray-300 pt-1 truncate">
+                    Chọn một mục hoặc bấm nút [Z] để xác nhận.
+                </div>
+            </div>
+
+            <!-- CHẾ ĐỘ C: THANH CĂN LỰC CHÍ MẠNG (FIGHT BAR) -->
+            <div id="modeFight" class="hidden w-full h-full p-3 flex flex-col items-center justify-center gap-2 cursor-pointer" onclick="triggerFightStrike()">
+                <div class="text-[11px] sm:text-xs font-extrabold text-yellow-300 uppercase animate-pulse text-center">
+                    ⚔️ Bấm nút [Z] hoặc CHẠM ĐÚNG TÂM ĐỂ CHÍ MẠNG!
+                </div>
+                <div class="relative w-full h-20 sm:h-24 border-2 border-white/75 rounded overflow-hidden bg-black flex items-center justify-center">
+                    <div class="absolute inset-0 flex">
+                        <div class="w-[18%] h-full bg-red-900/50 border-r border-white/15"></div>
+                        <div class="w-[17%] h-full bg-orange-700/55 border-r border-white/20"></div>
+                        <div class="w-[11%] h-full bg-yellow-500/60 border-r border-white/30"></div>
+                        <div class="w-[8%] h-full bg-green-400/85 shadow-[0_0_20px_#22ee55] border-x-2 border-white"></div>
+                        <div class="w-[11%] h-full bg-yellow-500/60 border-l border-white/30"></div>
+                        <div class="w-[17%] h-full bg-orange-700/55 border-l border-white/20"></div>
+                        <div class="w-[18%] h-full bg-red-900/50 border-l border-white/15"></div>
+                    </div>
+                    <span class="relative z-10 text-[10px] font-extrabold text-black bg-white/90 px-1.5 py-0.5 rounded">CRIT</span>
+                    <div id="fightCursor" class="absolute top-0 bottom-0 w-3 bg-white border-x-2 border-black shadow-[0_0_14px_#ffffff] z-20" style="left: 0%;"></div>
+                </div>
+                <div class="text-[10px] sm:text-xs text-gray-300">Tâm xanh: <strong class="text-green-400">24–30 DMG</strong> • Rìa: <strong class="text-orange-400">8–18 DMG</strong></div>
+            </div>
+
+            <!-- CHẾ ĐỘ D: LƯỢT NÉ ĐẠN BULLET HELL (CANVAS 60FPS) -->
+            <div id="modeDodge" class="hidden w-full h-full relative">
+                <canvas id="battleCanvas"></canvas>
+                <div class="absolute top-1 left-1.5 right-1.5 flex items-center justify-between pointer-events-none z-10 text-[10px] sm:text-xs font-bold">
+                    <span id="attackNameTag" class="px-1.5 py-0.5 rounded bg-black/80 border border-white/30 text-yellow-300">🦴 Mưa Xương 204</span>
+                    <div class="flex items-center gap-1.5">
+                        <span id="slowModeIndicator" class="hidden px-1.5 py-0.5 rounded bg-cyan-500/90 text-black font-extrabold text-[10px]">NÉ CHẬM</span>
+                        <span id="attackTimerTag" class="px-1.5 py-0.5 rounded bg-black/80 border border-white/30 text-white font-pixel-num text-sm">7.0s</span>
+                    </div>
+                </div>
+                <div id="attackHintTag" class="hidden absolute bottom-1 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-black/85 border border-cyan-400 text-cyan-300 text-[10px] font-bold whitespace-nowrap pointer-events-none z-10">
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. THANH TRẠNG THÁI NGƯỜI CHƠI (SV 204 | LV 1 | HP 20/20 | ÂM THANH | ĐỘ NHẠY | ĐỔI TAY CẦM) -->
+        <section class="shrink-0 bg-black/90 border-2 border-white/35 rounded-lg px-2 py-1.5 flex items-center justify-between gap-1 text-[11px] sm:text-xs font-bold">
+            <div class="flex items-center gap-1 shrink-0 min-w-0">
+                <span id="hudPlayerName" class="text-white font-extrabold truncate max-w-[66px] sm:max-w-[92px]">SV 204</span>
+                <span class="text-yellow-300 font-pixel-num text-sm sm:text-base shrink-0">LV 1</span>
+            </div>
+
+            <!-- Thanh máu HP vàng/đỏ 20 / 20 -->
+            <div class="flex items-center gap-1 flex-1 justify-center min-w-[78px] max-w-[144px]">
+                <span class="text-red-400 font-extrabold text-[10px] sm:text-xs">HP</span>
+                <div class="flex-1 h-3 bg-red-600 border border-white/85 rounded-sm overflow-hidden">
+                    <div id="playerHpBar" class="h-full bg-yellow-400 transition-all duration-150" style="width: 100%;"></div>
+                </div>
+                <span id="playerHpText" class="font-pixel-num text-sm sm:text-base text-white shrink-0">20/20</span>
+            </div>
+
+            <!-- Nút bật/tắt 8-bit, đổi Độ nhạy (Cao 1.7x / Siêu 2.2x / Vừa 1.2x) & đổi Cần gạt / D-Pad -->
+            <div class="flex items-center gap-1 shrink-0">
+                <button id="musicToggleBtn" type="button" onclick="toggleAudio()" title="Bật/Tắt nhạc 8-bit"
+                        class="px-1.5 py-1 rounded bg-white/10 hover:bg-white/20 border border-white/40 text-white text-[11px] font-bold cursor-pointer">
+                    <span id="musicIcon">🔊</span>
+                </button>
+                <button id="sensSwitchBtn" type="button" onclick="cycleSensitivity()" title="Đổi độ nhạy cần gạt (Cao 1.7x / Siêu 2.2x / Vừa 1.2x)"
+                        class="px-1.5 py-1 rounded bg-amber-950/90 hover:bg-amber-800 border border-yellow-400/80 text-yellow-300 text-[10px] sm:text-[11px] font-extrabold cursor-pointer whitespace-nowrap">
+                    <span id="sensSwitchLabel">⚡ <span class="hidden sm:inline">NHẠY: </span>CAO 1.7x</span>
+                </button>
+                <button id="ctrlSwitchBtn" type="button" onclick="toggleControlMode()" title="Đổi Cần gạt 360° / D-Pad"
+                        class="px-1.5 py-1 rounded bg-indigo-950/90 hover:bg-indigo-800 border border-cyan-400/70 text-cyan-200 text-[10px] sm:text-[11px] font-extrabold cursor-pointer whitespace-nowrap">
+                    <span id="ctrlSwitchLabel">🕹️ 360°</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 4. BỐN NÚT HÀNH ĐỘNG KINH ĐIỂN KIỂU UNDERTALE -->
+        <nav id="actionBar" class="shrink-0 w-full grid grid-cols-4 gap-1.5">
+            <button id="btnFight" type="button" class="ut-action-btn selected text-xs sm:text-sm" onclick="selectMainAction(0)">
+                <span>⚔️</span><span>FIGHT</span>
+            </button>
+            <button id="btnAct" type="button" class="ut-action-btn text-xs sm:text-sm" onclick="selectMainAction(1)">
+                <span>💬</span><span>ACT</span>
+            </button>
+            <button id="btnItem" type="button" class="ut-action-btn text-xs sm:text-sm" onclick="selectMainAction(2)">
+                <span>🎒</span><span>ITEM</span>
+            </button>
+            <button id="btnMercy" type="button" class="ut-action-btn text-xs sm:text-sm" onclick="selectMainAction(3)">
+                <span>💛</span><span id="btnMercyLabel">MERCY</span>
+            </button>
+        </nav>
+
+        <!-- 5. CỤM TAY CẦM RETRO ARCADE CHO ĐIỆN THOẠI (CẦN GẠT 360° / D-PAD + NÉ CHẬM + CHỌN/ĐÁNH) -->
+        <section id="controllerDeck" class="arcade-deck shrink-0 w-full px-2 sm:px-5 py-1.5 flex items-center justify-between gap-1 h-[142px] sm:h-[148px]">
+
+            <!-- BÊN TRÁI: VÙNG NHẬN CHẠM MỞ RỘNG CHO CẦN GẠT ANALOG 360° HOẶC D-PAD 4 HƯỚNG -->
+            <div class="flex items-center justify-center w-[152px] h-[136px] -ml-1 sm:ml-0">
+                <!-- Chế độ 1: Cần gạt 360 độ siêu nhạy với vùng nhận chạm rộng hơn đế 120px -->
+                <div id="joystickHitZone" class="joystick-hit-zone" aria-label="Vùng điều khiển cần gạt 360 độ">
+                    <div id="joystickBase" class="joystick-base">
+                        <div id="joystickGlowArc" class="joystick-glow-arc"></div>
+                        <div class="joystick-ring"></div>
+                        <span id="joyArrUp" class="joy-arrow top-2 left-1/2 -translate-x-1/2">▲</span>
+                        <span id="joyArrDown" class="joy-arrow bottom-2 left-1/2 -translate-x-1/2">▼</span>
+                        <span id="joyArrLeft" class="joy-arrow left-2.5 top-1/2 -translate-y-1/2">◀</span>
+                        <span id="joyArrRight" class="joy-arrow right-2.5 top-1/2 -translate-y-1/2">▶</span>
+                        <!-- Núm gạt tròn màu đỏ có trái tim trắng ở giữa -->
+                        <div id="joystickKnob" class="joystick-knob spring-back">
+                            <svg viewBox="0 0 24 24" class="w-6 h-6 fill-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.65)]">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chế độ 2: Phím D-Pad 4 hướng (Ẩn mặc định, bật qua nút chuyển) -->
+                <div id="dpadContainer" class="hidden grid grid-cols-3 gap-1.5 w-[124px] h-[118px]">
+                    <div></div>
+                    <button type="button" class="dpad-btn" data-dir="up" aria-label="Lên">▲</button>
+                    <div></div>
+                    <button type="button" class="dpad-btn" data-dir="left" aria-label="Trái">◀</button>
+                    <div class="flex items-center justify-center rounded-full bg-white/5 border border-white/15">
+                        <span class="text-red-500 text-xs">❤</span>
+                    </div>
+                    <button type="button" class="dpad-btn" data-dir="right" aria-label="Phải">▶</button>
+                    <div></div>
+                    <button type="button" class="dpad-btn" data-dir="down" aria-label="Xuống">▼</button>
+                    <div></div>
+                </div>
+            </div>
+
+            <!-- NHÃN GIỮA TRANG TRÍ ARCADE -->
+            <div class="hidden sm:flex flex-col items-center justify-center text-center text-[10px] text-gray-400 px-1">
+                <span class="font-extrabold text-white/75 tracking-widest uppercase">204 PAD</span>
+                <span id="padStatusHint" class="text-yellow-300 font-bold mt-0.5">CAO 1.7x</span>
+            </div>
+
+            <!-- BÊN PHẢI: 2 NÚT PHỤ TRỢ CHO NGÓN CÁI PHẢI -->
+            <div class="flex items-center gap-3 sm:gap-4 pr-0.5">
+                <!-- Nút NÉ CHẬM (HOLD) màu xanh dương -->
+                <button id="btnSlowHold" type="button" class="arcade-thumb-btn btn-slow mt-4" aria-label="Giữ để né chậm">
+                    <span class="text-[11px] font-extrabold tracking-tight">NÉ CHẬM</span>
+                    <span class="text-[9px] text-cyan-100 opacity-90 mt-0.5">(HOLD)</span>
+                </button>
+
+                <!-- Nút CHỌN / ĐÁNH (Z) màu vàng cam -->
+                <button id="btnConfirmZ" type="button" class="arcade-thumb-btn btn-confirm -mt-4" aria-label="Chọn hoặc Đánh">
+                    <span class="text-lg font-black leading-none">Z</span>
+                    <span class="text-[9px] font-extrabold tracking-tight mt-0.5">CHỌN/ĐÁNH</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- MÀN HÌNH 3: KẾT THÚC (HÒA BÌNH / CHIẾN ĐẤU / GAME OVER)              -->
+    <!-- =================================================================== -->
+    <section id="endScreen" class="hidden scrollable-screen relative z-20 w-full max-w-lg px-4 py-4 flex flex-col items-center justify-center">
+        <div class="ut-box w-full p-5 sm:p-6 text-center flex flex-col items-center gap-3">
+            <div id="endVisual" class="w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center relative"></div>
+
+            <div>
+                <div id="endBadge" class="inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider mb-1.5"></div>
+                <h2 id="endTitle" class="font-retro text-2xl sm:text-3xl font-extrabold text-white"></h2>
+            </div>
+
+            <p id="endStory" class="text-xs sm:text-sm text-gray-200 leading-relaxed max-w-md"></p>
+
+            <!-- Bảng thưởng Secret Santa 204 (Thắng: 160–260 PTS | Thua an ủi >=1 lượt: 40–70 PTS) -->
+            <div id="rewardCard" class="hidden w-full bg-gradient-to-b from-red-950/90 to-black/95 border-2 border-yellow-400 rounded-xl p-3.5 shadow-[0_0_22px_rgba(255,230,0,0.25)]">
+                <div id="rewardCardTitle" class="text-xs font-bold text-yellow-300 uppercase tracking-wider mb-0.5">
+                    🎁 PHẦN THƯỞNG SECRET SANTA 204
+                </div>
+                <div class="flex items-baseline justify-center gap-2">
+                    <span class="text-4xl sm:text-5xl font-extrabold text-yellow-300 font-pixel-num" id="rewardTotalPoints">+200</span>
+                    <span id="rewardPointsUnit" class="text-sm sm:text-base font-bold text-white">PTS</span>
+                </div>
+                <div id="rewardSyncStatus" class="mt-1.5 px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold bg-white/10 border border-white/25 text-yellow-200">
+                    ⏳ Đang đồng bộ kết quả với Secret Santa 204...
+                </div>
+                <div id="rewardBreakdown" class="text-[11px] sm:text-xs text-gray-300 space-y-0.5 my-2 border-y border-white/15 py-1.5 text-left"></div>
+                <button id="copyRewardBtn" type="button" onclick="copyRewardSummary()" class="px-4 py-1.5 rounded-lg bg-yellow-400 hover:bg-yellow-300 text-black font-extrabold text-xs sm:text-sm cursor-pointer transition">
+                    📋 Sao chép chiến tích
+                </button>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-2 w-full mt-1">
+                <button id="restartBtn" type="button" onclick="restartBattle()"
+                        class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-orange-500 to-red-600 hover:from-yellow-400 hover:to-orange-500 hover:text-black text-white font-extrabold text-sm sm:text-base border-2 border-white shadow-lg transition cursor-pointer">
+                    🔄 CHƠI LẠI
+                </button>
+                <button id="endStartBtn" type="button" onclick="returnToStart()"
+                        class="px-3.5 py-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border-2 border-white/50 transition cursor-pointer">
+                    🏠 Màn hình đầu
+                </button>
+                <button id="endCloseBtn" type="button" onclick="closePart3Modal()"
+                        class="px-4 py-2.5 rounded-lg bg-emerald-700/90 hover:bg-emerald-600 text-white font-extrabold text-xs sm:text-sm border-2 border-emerald-300/80 transition cursor-pointer">
+                    ← Về Secret Santa 204
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- GAME ENGINE + PART 3 POSTMESSAGE BRIDGE + BULLET HELL 60FPS + AUDIO -->
+    <!-- =================================================================== -->
+    <script>
+        /* =====================================================================
+         * 0. CẦU NỐI POSTMESSAGE VỚI SECRET SANTA 204 (index.html)
+         * ===================================================================== */
+        const Part3Bridge = {
+            embedded: window.parent !== window,
+            initialized: false,
+            playerName: '',
+            mssv: '',
+            score: 0,
+            playsToday: 0,
+            maxPlays: 3,
+            winMin: 160,
+            winMax: 260,
+            defeatMin: 40,
+            defeatMax: 70,
+            resultSentForMatch: false,
+            lastResultPayload: null,
+            lastAppliedReward: null
+        };
+
+        function safeInt(val, fallback) {
+            const n = Number(val);
+            return Number.isFinite(n) ? Math.round(n) : fallback;
+        }
+
+        function escapeHtml(str) {
+            return String(str == null ? '' : str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function sendToParent(payload) {
+            if (window.parent && window.parent !== window) {
+                try {
+                    window.parent.postMessage(payload, '*');
+                    return true;
+                } catch (err) {
+                    console.warn('Part3Bridge postMessage failed:', err);
+                }
+            }
+            return false;
+        }
+
+        function formatShortPlayerName(name) {
+            const clean = String(name || '').trim();
+            if (!clean) return 'SV 204';
+            const parts = clean.split(/\s+/);
+            return parts.length > 2 ? parts.slice(-2).join(' ') : clean;
+        }
+
+        function updateBridgeUI() {
+            const winRangeText = `${Part3Bridge.winMin} – ${Part3Bridge.winMax} PTS`;
+            const defeatRangeText = `${Part3Bridge.defeatMin} – ${Part3Bridge.defeatMax} PTS`;
+
+            const startWinEl = document.getElementById('startWinRange');
+            const startDefeatEl = document.getElementById('startDefeatRange');
+            if (startWinEl) startWinEl.textContent = winRangeText;
+            if (startDefeatEl) startDefeatEl.textContent = defeatRangeText;
+
+            const remainingPlays = Math.max(0, Part3Bridge.maxPlays - Part3Bridge.playsToday);
+            const isCapped = Part3Bridge.initialized && Part3Bridge.playsToday >= Part3Bridge.maxPlays;
+
+            // Start Screen status bar
+            const startPlayerRow = document.getElementById('startPlayerRow');
+            const startPlayerName = document.getElementById('startPlayerName');
+            const startPlayerScore = document.getElementById('startPlayerScore');
+            const startPlaysBadge = document.getElementById('startPlaysBadge');
+            const startCapNotice = document.getElementById('startCapNotice');
+
+            if (Part3Bridge.initialized) {
+                if (startPlayerRow) startPlayerRow.classList.remove('hidden');
+                if (startPlayerName) {
+                    const label = Part3Bridge.playerName || 'SV 204';
+                    startPlayerName.textContent = Part3Bridge.mssv ? `${label} (${Part3Bridge.mssv})` : label;
+                }
+                if (startPlayerScore) startPlayerScore.textContent = Part3Bridge.score.toLocaleString('vi-VN');
+                if (startPlaysBadge) {
+                    if (isCapped) {
+                        startPlaysBadge.textContent = `🎲 Hết lượt (${Part3Bridge.playsToday}/${Part3Bridge.maxPlays})`;
+                        startPlaysBadge.className = 'px-2 py-0.5 rounded bg-red-950/90 border border-red-400/80 text-red-200 font-extrabold shrink-0';
+                    } else {
+                        startPlaysBadge.textContent = `🎲 Còn ${remainingPlays}/${Part3Bridge.maxPlays} lượt`;
+                        startPlaysBadge.className = 'px-2 py-0.5 rounded bg-emerald-950/90 border border-emerald-400/70 text-emerald-200 font-extrabold shrink-0';
+                    }
+                }
+                if (startCapNotice) startCapNotice.classList.toggle('hidden', !isCapped);
+            } else {
+                if (startPlayerRow) startPlayerRow.classList.add('hidden');
+                if (startCapNotice) startCapNotice.classList.add('hidden');
+            }
+
+            // Battle HUD remaining plays badge & player name
+            const hudPlaysBadge = document.getElementById('hudPlaysBadge');
+            const hudPlayerName = document.getElementById('hudPlayerName');
+
+            if (hudPlayerName) {
+                hudPlayerName.textContent = Part3Bridge.initialized
+                    ? formatShortPlayerName(Part3Bridge.playerName)
+                    : 'SV 204';
+                hudPlayerName.title = Part3Bridge.playerName
+                    ? (Part3Bridge.mssv ? `${Part3Bridge.playerName} (${Part3Bridge.mssv})` : Part3Bridge.playerName)
+                    : 'SV 204';
+            }
+
+            if (hudPlaysBadge) {
+                if (Part3Bridge.embedded && Part3Bridge.initialized) {
+                    hudPlaysBadge.classList.remove('hidden');
+                    if (isCapped) {
+                        hudPlaysBadge.textContent = `🎲 Hết lượt (${Part3Bridge.playsToday}/${Part3Bridge.maxPlays})`;
+                        hudPlaysBadge.className = 'px-1.5 py-0.5 rounded bg-red-950/90 border border-red-400/80 text-red-200 text-[10px] font-bold whitespace-nowrap';
+                    } else {
+                        hudPlaysBadge.textContent = `🎲 Còn ${remainingPlays}/${Part3Bridge.maxPlays}`;
+                        hudPlaysBadge.className = 'px-1.5 py-0.5 rounded bg-emerald-950/90 border border-emerald-400/70 text-emerald-200 text-[10px] font-bold whitespace-nowrap';
+                    }
+                } else {
+                    hudPlaysBadge.classList.add('hidden');
+                }
+            }
+        }
+
+        function handleParentMessage(event) {
+            const data = event && event.data;
+            if (!data || typeof data !== 'object' || typeof data.type !== 'string') return;
+
+            if (data.type === 'PART3_INIT') {
+                Part3Bridge.embedded = true;
+                Part3Bridge.initialized = true;
+                Part3Bridge.playerName = typeof data.playerName === 'string' ? data.playerName.trim() : '';
+                Part3Bridge.mssv = typeof data.mssv === 'string' ? data.mssv.trim() : '';
+                Part3Bridge.score = safeInt(data.score, 0);
+                Part3Bridge.playsToday = Math.max(0, safeInt(data.playsToday, 0));
+                Part3Bridge.maxPlays = Math.max(1, safeInt(data.maxPlays, 3));
+                Part3Bridge.winMin = safeInt(data.winMin, 160);
+                Part3Bridge.winMax = safeInt(data.winMax, 260);
+                Part3Bridge.defeatMin = safeInt(data.defeatMin, 40);
+                Part3Bridge.defeatMax = safeInt(data.defeatMax, 70);
+                updateBridgeUI();
+            } else if (data.type === 'PART3_REWARD_APPLIED') {
+                Part3Bridge.embedded = true;
+                Part3Bridge.initialized = true;
+                const earnedPts = Math.max(0, safeInt(data.earnedPts, 0));
+                const totalScore = safeInt(data.totalScore, Part3Bridge.score + earnedPts);
+                const playsToday = Math.max(0, safeInt(data.playsToday, Part3Bridge.playsToday));
+                const maxPlays = Math.max(1, safeInt(data.maxPlays, Part3Bridge.maxPlays));
+                const capped = Boolean(data.capped);
+                const reason = typeof data.reason === 'string' ? data.reason.trim() : '';
+
+                Part3Bridge.score = totalScore;
+                Part3Bridge.playsToday = playsToday;
+                Part3Bridge.maxPlays = maxPlays;
+                Part3Bridge.lastAppliedReward = {
+                    earnedPts,
+                    totalScore,
+                    playsToday,
+                    maxPlays,
+                    capped,
+                    reason
+                };
+
+                updateBridgeUI();
+                applyParentRewardToEndScreen(Part3Bridge.lastAppliedReward);
+            }
+        }
+
+        window.addEventListener('message', handleParentMessage);
+
+        function initPart3Bridge() {
+            Part3Bridge.embedded = Boolean(window.parent && window.parent !== window);
+            updateBridgeUI();
+            if (Part3Bridge.embedded) {
+                sendToParent({ type: 'PART3_READY' });
+            }
+        }
+
+        function postPart3Result(resultPayload) {
+            if (Part3Bridge.resultSentForMatch) return false;
+            Part3Bridge.resultSentForMatch = true;
+            Part3Bridge.lastResultPayload = resultPayload;
+            return sendToParent(resultPayload);
+        }
+
+        function closePart3Modal() {
+            stopBulletHell();
+            cancelFightBar();
+            clearInterval(GameState.dialogueTimer);
+            GameState.dialogueTimer = null;
+            JoystickController.reset();
+            setSlowFocus(false);
+            SoundEngine.stopBgm();
+            document.body.classList.remove('phase2-active');
+
+            if (window.parent && window.parent !== window) {
+                sendToParent({ type: 'PART3_CLOSE' });
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function calculateLocalPreviewReward(payload) {
+            const winMin = Part3Bridge.winMin;
+            const winMax = Part3Bridge.winMax;
+            const defeatMin = Part3Bridge.defeatMin;
+            const defeatMax = Part3Bridge.defeatMax;
+
+            if (payload.outcome === 'fight' || payload.outcome === 'mercy') {
+                const hpRatio = payload.maxHp > 0 ? Math.max(0, Math.min(1, payload.hpLeft / payload.maxHp)) : 0;
+                const mercyWeight = payload.outcome === 'mercy' ? 0.25 : 0;
+                const hpWeight = hpRatio * 0.45;
+                const randWeight = Math.random() * 0.30;
+                const factor = Math.min(1, Math.max(0, mercyWeight + hpWeight + randWeight));
+                const pts = Math.round(winMin + factor * (winMax - winMin));
+                return Math.min(winMax, Math.max(winMin, pts));
+            }
+
+            if (payload.turns < 1) return 0;
+            const progress = Math.min(1, ((payload.turns - 1) * 0.16) + ((payload.mercyPct || 0) / 220) + ((100 - (payload.bossHpLeft || 100)) / 220));
+            const factor = Math.min(1, Math.max(0, progress * 0.55 + Math.random() * 0.45));
+            const pts = Math.round(defeatMin + factor * (defeatMax - defeatMin));
+            return Math.min(defeatMax, Math.max(defeatMin, pts));
+        }
+
+        function getOutcomeLabel(outcome) {
+            if (outcome === 'mercy') return 'Kết Thúc Hòa Bình (MERCY)';
+            if (outcome === 'fight') return 'Kết Thúc Chiến Đấu (FIGHT)';
+            return 'Thua Boss (Game Over)';
+        }
+
+        function applyParentRewardToEndScreen(reward) {
+            if (GameState.screen !== 'end') return;
+            const rewardCard = document.getElementById('rewardCard');
+            const titleEl = document.getElementById('rewardCardTitle');
+            const pointsEl = document.getElementById('rewardTotalPoints');
+            const unitEl = document.getElementById('rewardPointsUnit');
+            const syncEl = document.getElementById('rewardSyncStatus');
+            const breakdownEl = document.getElementById('rewardBreakdown');
+            const payload = Part3Bridge.lastResultPayload || {
+                outcome: 'defeat',
+                turns: GameState.turn,
+                hpLeft: GameState.playerHp,
+                maxHp: GameState.playerMaxHp,
+                mercyPct: GameState.mercy,
+                bossHpLeft: GameState.bossHp
+            };
+
+            const routeText = getOutcomeLabel(payload.outcome);
+            const remainingPlays = Math.max(0, reward.maxPlays - reward.playsToday);
+            rewardCard.classList.remove('hidden');
+            unitEl.textContent = 'PTS';
+
+            if (reward.capped) {
+                titleEl.textContent = '🎟️ HẾT LƯỢT NHẬN THƯỞNG HÔM NAY';
+                pointsEl.textContent = '+0';
+                pointsEl.className = 'text-4xl sm:text-5xl font-extrabold text-amber-300 font-pixel-num';
+                syncEl.className = 'mt-1.5 px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold bg-amber-950/90 border border-amber-400 text-amber-200';
+                const capText = 'Đã hết lượt nhận thưởng hôm nay — hãy làm nhiệm vụ để nhận thêm lượt!';
+                syncEl.textContent = reward.reason && !reward.reason.includes('nhiệm vụ')
+                    ? `⚠️ ${capText} (${reward.reason})`
+                    : `⚠️ ${capText}`;
+                showToast('⚠️ Đã hết lượt nhận thưởng hôm nay!');
+            } else if (reward.earnedPts > 0) {
+                titleEl.textContent = payload.outcome === 'defeat'
+                    ? '💝 ĐIỂM AN ỦI SECRET SANTA 204'
+                    : '🎁 PHẦN THƯỞNG SECRET SANTA 204';
+                pointsEl.textContent = `+${reward.earnedPts}`;
+                pointsEl.className = 'text-4xl sm:text-5xl font-extrabold text-yellow-300 font-pixel-num';
+                syncEl.className = 'mt-1.5 px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold bg-emerald-950/90 border border-emerald-400 text-emerald-200';
+                syncEl.textContent = reward.reason
+                    ? `✅ ${reward.reason}`
+                    : `✅ Đã cộng +${reward.earnedPts} PTS vào tài khoản Secret Santa 204!`;
+                showToast(`🎉 +${reward.earnedPts} PTS đã được lưu vào Secret Santa 204!`);
+            } else {
+                titleEl.textContent = '📋 KẾT QUẢ TRẬN ĐẤU PART 3';
+                pointsEl.textContent = '+0';
+                pointsEl.className = 'text-4xl sm:text-5xl font-extrabold text-gray-300 font-pixel-num';
+                syncEl.className = 'mt-1.5 px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold bg-white/10 border border-white/30 text-gray-200';
+                syncEl.textContent = reward.reason
+                    ? `ℹ️ ${reward.reason}`
+                    : 'ℹ️ Trận đấu này không được cộng điểm thưởng.';
+            }
+
+            breakdownEl.innerHTML = `
+                <div>• Kết quả: <strong class="text-yellow-300">${escapeHtml(routeText)}</strong></div>
+                <div>• HP còn lại: <strong class="text-green-400">${payload.hpLeft}/${payload.maxHp} HP</strong> • Số lượt: <strong>${payload.turns}</strong> • Thiện cảm: <strong class="text-pink-300">${payload.mercyPct}%</strong></div>
+                <div>• Tổng điểm Secret Santa 204: <strong class="text-yellow-300">${reward.totalScore.toLocaleString('vi-VN')} PTS</strong> • Lượt thưởng hôm nay: <strong class="text-cyan-300">${reward.playsToday}/${reward.maxPlays}</strong> (còn ${remainingPlays})</div>
+            `;
+
+            GameState.lastRewardSummary = `[Secret Santa 204 - Part 3] UNDERTALE 204: Boss Cún Bông | ${routeText} | HP: ${payload.hpLeft}/${payload.maxHp} | Lượt: ${payload.turns} | Điểm nhận: +${reward.earnedPts} PTS (Tổng: ${reward.totalScore} PTS)`;
+        }
+
+        function getBossEndSvgMarkup(variant) {
+            if (variant === 'mercy') {
+                return `
+                    <svg class="w-full h-full boss-idle drop-shadow-[0_0_20px_rgba(255,230,0,0.75)]" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cún Bông Hạnh Phúc">
+                        <g stroke="#ffffff" stroke-width="9" stroke-linejoin="round">
+                            <circle cx="56" cy="64" r="34" fill="#f7e6c9"/>
+                            <circle cx="164" cy="64" r="34" fill="#f7e6c9"/>
+                            <circle cx="110" cy="112" r="64" fill="#faecd2"/>
+                            <ellipse cx="64" cy="182" rx="34" ry="22" fill="#f7e6c9"/>
+                            <ellipse cx="156" cy="182" rx="34" ry="22" fill="#f7e6c9"/>
+                        </g>
+                        <circle cx="56" cy="64" r="34" fill="#f7e6c9"/>
+                        <circle cx="56" cy="66" r="19" fill="#eab3a6"/>
+                        <circle cx="164" cy="64" r="34" fill="#f7e6c9"/>
+                        <circle cx="164" cy="66" r="19" fill="#eab3a6"/>
+                        <circle cx="110" cy="112" r="64" fill="#faecd2"/>
+                        <ellipse cx="110" cy="128" rx="35" ry="26" fill="#fff6e6"/>
+                        <path d="M74 102 Q86 88 98 102" fill="none" stroke="#181515" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M122 102 Q134 88 146 102" fill="none" stroke="#181515" stroke-width="6" stroke-linecap="round"/>
+                        <circle cx="72" cy="118" r="9" fill="#ff99b8" opacity="0.65"/>
+                        <circle cx="148" cy="118" r="9" fill="#ff99b8" opacity="0.65"/>
+                        <ellipse cx="110" cy="116" rx="11" ry="8" fill="#1d1818"/>
+                        <path d="M95 129 Q110 156 125 129 Z" fill="#6b1d28"/>
+                        <ellipse cx="110" cy="141" rx="10" ry="12" fill="#ff7392"/>
+                        <ellipse cx="64" cy="182" rx="34" ry="22" fill="#f7e6c9"/>
+                        <ellipse cx="156" cy="182" rx="34" ry="22" fill="#f7e6c9"/>
+                        <path d="M26 135 C20 124 8 128 11 139 C14 148 26 155 26 155 C26 155 38 148 41 139 C44 128 32 124 26 135 Z" fill="#ffe600" stroke="#996300" stroke-width="3"/>
+                        <path d="M192 48 C186 37 174 41 177 52 C180 61 192 68 192 68 C192 68 204 61 207 52 C210 41 198 37 192 48 Z" fill="#ff6688" stroke="#6b1d28" stroke-width="3"/>
+                    </svg>
+                `;
+            }
+            return `
+                <svg class="w-full h-full drop-shadow-[0_0_18px_rgba(255,110,40,0.75)]" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Boss Cún Bông Chịu Thua">
+                    <g stroke="#ffffff" stroke-width="9" stroke-linejoin="round">
+                        <circle cx="58" cy="64" r="34" fill="#f5e3c3"/>
+                        <circle cx="162" cy="64" r="34" fill="#f5e3c3"/>
+                        <circle cx="110" cy="116" r="64" fill="#f7e7cb"/>
+                        <ellipse cx="64" cy="184" rx="34" ry="20" fill="#f5e3c3"/>
+                        <ellipse cx="156" cy="184" rx="34" ry="20" fill="#f5e3c3"/>
+                    </g>
+                    <circle cx="58" cy="64" r="34" fill="#f5e3c3"/>
+                    <circle cx="58" cy="66" r="18" fill="#e6a69a"/>
+                    <circle cx="162" cy="64" r="34" fill="#f5e3c3"/>
+                    <circle cx="162" cy="66" r="18" fill="#e6a69a"/>
+                    <circle cx="110" cy="116" r="64" fill="#f7e7cb"/>
+                    <ellipse cx="110" cy="132" rx="34" ry="25" fill="#fff4e0"/>
+                    <!-- Mắt X choáng váng -->
+                    <g stroke="#1b1616" stroke-width="5.5" stroke-linecap="round">
+                        <line x1="76" y1="95" x2="94" y2="113"/>
+                        <line x1="94" y1="95" x2="76" y2="113"/>
+                        <line x1="126" y1="95" x2="144" y2="113"/>
+                        <line x1="144" y1="95" x2="126" y2="113"/>
+                    </g>
+                    <ellipse cx="110" cy="122" rx="11" ry="8" fill="#191515"/>
+                    <path d="M98 142 Q110 134 122 142" fill="none" stroke="#5e1720" stroke-width="4.5" stroke-linecap="round"/>
+                    <!-- Sao quay trên đầu -->
+                    <polygon points="82,28 86,38 96,38 88,44 91,54 82,48 73,54 76,44 68,38 78,38" fill="#ffe600" stroke="#b45309" stroke-width="2"/>
+                    <polygon points="138,24 142,34 152,34 144,40 147,50 138,44 129,50 132,40 124,34 134,34" fill="#ffe600" stroke="#b45309" stroke-width="2"/>
+                </svg>
+            `;
+        }
+
+        /* =====================================================================
+         * 1. ÂM THANH 8-BIT TỔNG HỢP 100% BẰNG WEB AUDIO API (KHÔNG DÙNG URL)
+         * ===================================================================== */
+        const SoundEngine = {
+            ctx: null,
+            enabled: true,
+            bgmTimer: null,
+            bgmStep: 0,
+            bgmMode: 'none',
+
+            init() {
+                try {
+                    if (!this.ctx) {
+                        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                        if (AudioCtx) this.ctx = new AudioCtx();
+                    }
+                    if (this.ctx && this.ctx.state === 'suspended') {
+                        this.ctx.resume();
+                    }
+                } catch (err) {
+                    console.warn('Web Audio init skipped:', err);
+                }
+            },
+
+            tone(freq, duration, type = 'square', volume = 0.08, delay = 0, slideTo = null) {
+                if (!this.enabled || !this.ctx) return;
+                try {
+                    const now = this.ctx.currentTime + delay;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, now);
+                    if (slideTo !== null) {
+                        osc.frequency.exponentialRampToValueAtTime(Math.max(20, slideTo), now + duration);
+                    }
+                    gain.gain.setValueAtTime(0.0001, now);
+                    gain.gain.linearRampToValueAtTime(volume, now + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + duration + 0.02);
+                } catch (e) {}
+            },
+
+            noise(duration, volume = 0.09, delay = 0) {
+                if (!this.enabled || !this.ctx) return;
+                try {
+                    const bufferSize = Math.floor(this.ctx.sampleRate * duration);
+                    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+                    const src = this.ctx.createBufferSource();
+                    src.buffer = buffer;
+
+                    const filter = this.ctx.createBiquadFilter();
+                    filter.type = 'bandpass';
+                    filter.frequency.value = 1100;
+
+                    const gain = this.ctx.createGain();
+                    const now = this.ctx.currentTime + delay;
+                    gain.gain.setValueAtTime(volume, now);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+                    src.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    src.start(now);
+                    src.stop(now + duration + 0.02);
+                } catch (e) {}
+            },
+
+            playMenuMove() { this.tone(520, 0.05, 'square', 0.05); },
+            playMenuSelect() {
+                this.tone(660, 0.055, 'square', 0.06, 0);
+                this.tone(990, 0.085, 'square', 0.06, 0.045);
+            },
+            playTextBlip() { this.tone(250 + Math.random() * 55, 0.028, 'triangle', 0.04); },
+            playDogBark() {
+                this.tone(440, 0.085, 'sawtooth', 0.09, 0, 195);
+                this.tone(540, 0.08, 'square', 0.075, 0.075, 250);
+            },
+            playSlash(isCrit) {
+                this.noise(0.13, isCrit ? 0.16 : 0.1);
+                this.tone(920, 0.12, 'sawtooth', 0.09, 0, 140);
+                if (isCrit) {
+                    this.tone(180, 0.22, 'square', 0.12, 0.07, 55);
+                    this.tone(1280, 0.15, 'triangle', 0.09, 0.05);
+                }
+            },
+            playHurt() {
+                this.tone(175, 0.16, 'sawtooth', 0.12, 0, 62);
+                this.noise(0.1, 0.1, 0.02);
+            },
+            playHeal() {
+                [523, 659, 784, 1046].forEach((n, idx) => this.tone(n, 0.11, 'triangle', 0.08, idx * 0.055));
+            },
+            playGuitar() {
+                [330, 392, 494, 659, 784, 659].forEach((n, idx) => this.tone(n, 0.17, 'triangle', 0.08, idx * 0.07));
+            },
+            playWarnBeep() { this.tone(880, 0.065, 'square', 0.048); },
+            playSlam() {
+                this.tone(130, 0.17, 'triangle', 0.13, 0, 42);
+                this.noise(0.13, 0.11);
+            },
+            playHeartBreak() {
+                this.tone(260, 0.18, 'sawtooth', 0.1, 0, 120);
+                this.noise(0.24, 0.12, 0.14);
+                this.tone(120, 0.34, 'square', 0.09, 0.2, 48);
+            },
+            playVictoryFanfare(isPacifist) {
+                this.stopBgm();
+                const seq = isPacifist
+                    ? [523, 659, 784, 1046, 987, 1046, 1318]
+                    : [440, 554, 659, 880, 784, 880];
+                seq.forEach((n, i) => {
+                    this.tone(n, i === seq.length - 1 ? 0.42 : 0.13, 'square', 0.075, i * 0.115);
+                    this.tone(n / 2, i === seq.length - 1 ? 0.42 : 0.13, 'triangle', 0.06, i * 0.115);
+                });
+            },
+
+            startBgm(mode = 'battle') {
+                if (this.bgmMode === mode && this.bgmTimer) return;
+                this.stopBgm();
+                this.bgmMode = mode;
+                if (!this.enabled) return;
+
+                const leadP1 = [587, 587, 1175, 0, 880, 0, 831, 784, 698, 587, 698, 784, 523, 523, 1046, 0];
+                const bassP1 = [147, 0, 147, 220, 175, 0, 175, 220, 131, 0, 131, 196, 147, 165, 175, 196];
+                const leadP2 = [659, 659, 1318, 988, 932, 880, 784, 659, 784, 880, 587, 587, 1175, 988, 880, 784];
+                const bassP2 = [165, 165, 247, 165, 147, 147, 220, 147, 131, 131, 196, 131, 147, 165, 196, 220];
+
+                const tempoMs = mode === 'phase2' ? 124 : 150;
+                this.bgmStep = 0;
+
+                this.bgmTimer = setInterval(() => {
+                    if (!this.enabled || !this.ctx) return;
+                    const step = this.bgmStep % 16;
+                    const lead = mode === 'phase2' ? leadP2[step] : leadP1[step];
+                    const bass = mode === 'phase2' ? bassP2[step] : bassP1[step];
+                    if (lead > 0) this.tone(lead, 0.1, 'square', 0.03);
+                    if (bass > 0) this.tone(bass, 0.12, 'triangle', 0.042);
+                    if (step % 4 === 2) this.noise(0.03, 0.022);
+                    this.bgmStep++;
+                }, tempoMs);
+            },
+
+            stopBgm() {
+                if (this.bgmTimer) {
+                    clearInterval(this.bgmTimer);
+                    this.bgmTimer = null;
+                }
+                this.bgmMode = 'none';
+            }
+        };
+
+        function toggleAudio() {
+            SoundEngine.init();
+            SoundEngine.enabled = !SoundEngine.enabled;
+            document.getElementById('musicIcon').textContent = SoundEngine.enabled ? '🔊' : '🔇';
+            if (SoundEngine.enabled) {
+                if (GameState.screen === 'battle') {
+                    SoundEngine.startBgm(GameState.phase === 2 ? 'phase2' : 'battle');
+                }
+                SoundEngine.playMenuSelect();
+                showToast('🔊 Đã bật âm thanh 8-bit');
+            } else {
+                SoundEngine.stopBgm();
+                showToast('🔇 Đã tắt âm thanh');
+            }
+        }
+
+        /* =====================================================================
+         * 2. THÔNG BÁO TOAST, DANH SÁCH VẬT PHẨM, HÀNH ĐỘNG & TRẠNG THÁI GAME
+         * ===================================================================== */
+        let toastTimer = null;
+        function showToast(msg) {
+            const box = document.getElementById('toastBox');
+            if (!box) return;
+            box.textContent = msg;
+            box.classList.remove('hidden');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => box.classList.add('hidden'), 2400);
+        }
+
+        const INITIAL_ITEMS = [
+            { id: 'milktea', name: 'Trà sữa 204', heal: 10, desc: 'Trà sữa trân châu đường đen trên bàn họp. Hồi +10 HP!' },
+            { id: 'cookie', name: 'Bánh quy Noel', heal: 8, desc: 'Bánh quy gừng thơm lừng mùi Giáng Sinh. Hồi +8 HP!' },
+            { id: 'candy', name: 'Kẹo gậy bạc hà', heal: 6, desc: 'Kẹo gậy Secret Santa ngọt mát. Hồi +6 HP!' },
+            { id: 'water', name: 'Nước suối mát', heal: 5, desc: 'Nước suối tiếp sức chạy deadline Phòng 204. Hồi +5 HP!' }
+        ];
+
+        const ACT_OPTIONS = [
+            { id: 'check', name: 'Kiểm tra', tag: 'Xem chỉ số', desc: 'Quan sát Boss Cún Bông Phòng 204 để nắm điểm yếu.' },
+            { id: 'pet', name: 'Xoa đầu', tag: '+25% MERCY', desc: 'Xoa nhẹ sau tai giúp Cún Bông dịu đòn đánh lượt sau.' },
+            { id: 'treat', name: 'Cho bánh thưởng', tag: '+35% MERCY', desc: 'Tung bánh thưởng gà phô mai yêu thích của Cún Bông!' },
+            { id: 'guitar', name: 'Gảy đàn Yamaha', tag: '+30% MERCY', desc: 'Đánh một khúc Noel bằng cây đàn góc Phòng 204.' }
+        ];
+
+        const SENSITIVITY_LEVELS = [
+            {
+                id: 'high',
+                shortLabel: 'CAO 1.7x',
+                fullLabel: 'NHẠY: CAO (1.7x)',
+                mult: 1.7,
+                btnClass: 'px-1.5 py-1 rounded bg-amber-950/90 hover:bg-amber-800 border border-yellow-400/80 text-yellow-300 text-[10px] sm:text-[11px] font-extrabold cursor-pointer whitespace-nowrap'
+            },
+            {
+                id: 'ultra',
+                shortLabel: 'SIÊU 2.2x',
+                fullLabel: 'SIÊU NHẠY (2.2x)',
+                mult: 2.2,
+                btnClass: 'px-1.5 py-1 rounded bg-red-950/95 hover:bg-red-800 border border-red-400 text-red-200 text-[10px] sm:text-[11px] font-extrabold cursor-pointer whitespace-nowrap'
+            },
+            {
+                id: 'medium',
+                shortLabel: 'VỪA 1.2x',
+                fullLabel: 'NHẠY: VỪA (1.2x)',
+                mult: 1.2,
+                btnClass: 'px-1.5 py-1 rounded bg-emerald-950/90 hover:bg-emerald-800 border border-emerald-400/80 text-emerald-200 text-[10px] sm:text-[11px] font-extrabold cursor-pointer whitespace-nowrap'
+            }
+        ];
+
+        const GameState = {
+            screen: 'start',      // 'start' | 'battle' | 'end'
+            mode: 'dialogue',     // 'dialogue' | 'menu' | 'submenu' | 'fight' | 'dodge'
+            submenuType: null,
+            selectedMain: 0,
+            selectedSub: 0,
+            controlMode: 'joystick', // 'joystick' | 'dpad'
+            sensitivityIndex: 0,     // 0: CAO 1.7x (mặc định) | 1: SIÊU NHẠY 2.2x | 2: VỪA 1.2x
+
+            playerHp: 20,
+            playerMaxHp: 20,
+            bossHp: 100,
+            bossMaxHp: 100,
+            mercy: 0,
+            turn: 1,
+            phase: 1,
+            calmNextTurn: false,
+            attackIndex: 0,
+            items: [],
+
+            dialogueFull: '',
+            dialogueIndex: 0,
+            dialogueTimer: null,
+            dialogueCallback: null,
+
+            fightActive: false,
+            fightPos: 0,
+            fightRaf: null,
+            lastRewardSummary: ''
+        };
+
+        /* =====================================================================
+         * 3. CHUYỂN ĐỔI ĐỘ NHẠY & CHẾ ĐỘ CẦN GẠT 360° / PHÍM D-PAD 4 HƯỚNG
+         * ===================================================================== */
+        function getCurrentSensitivity() {
+            return SENSITIVITY_LEVELS[GameState.sensitivityIndex] || SENSITIVITY_LEVELS[0];
+        }
+
+        function updateSensitivityUI() {
+            const cfg = getCurrentSensitivity();
+            const btn = document.getElementById('sensSwitchBtn');
+            const label = document.getElementById('sensSwitchLabel');
+            const statusHint = document.getElementById('padStatusHint');
+            if (btn) btn.className = cfg.btnClass;
+            if (label) label.innerHTML = `⚡ <span class="hidden sm:inline">NHẠY: </span>${cfg.shortLabel}`;
+            if (statusHint && GameState.controlMode === 'joystick') {
+                statusHint.textContent = cfg.shortLabel;
+            }
+        }
+
+        function cycleSensitivity() {
+            SoundEngine.init();
+            SoundEngine.playMenuSelect();
+            GameState.sensitivityIndex = (GameState.sensitivityIndex + 1) % SENSITIVITY_LEVELS.length;
+            const cfg = getCurrentSensitivity();
+            updateSensitivityUI();
+            showToast(`⚡ Độ nhạy cần gạt: ${cfg.fullLabel}`);
+        }
+
+        function toggleControlMode() {
+            SoundEngine.init();
+            SoundEngine.playMenuSelect();
+            const isJoy = GameState.controlMode === 'joystick';
+            GameState.controlMode = isJoy ? 'dpad' : 'joystick';
+
+            const joyHitEl = document.getElementById('joystickHitZone');
+            const dpadEl = document.getElementById('dpadContainer');
+            const labelEl = document.getElementById('ctrlSwitchLabel');
+            const statusHint = document.getElementById('padStatusHint');
+
+            // Reset đầu vào khi đổi chế độ để tránh kẹt hướng
+            JoystickController.reset();
+            BulletEngine.dpadKeys = { up: false, down: false, left: false, right: false };
+
+            if (GameState.controlMode === 'joystick') {
+                joyHitEl.classList.remove('hidden');
+                dpadEl.classList.add('hidden');
+                labelEl.textContent = '🕹️ 360°';
+                if (statusHint) statusHint.textContent = getCurrentSensitivity().shortLabel;
+                showToast(`🕹️ Cần gạt 360° (${getCurrentSensitivity().fullLabel})`);
+            } else {
+                joyHitEl.classList.add('hidden');
+                dpadEl.classList.remove('hidden');
+                labelEl.textContent = '✚ D-Pad';
+                if (statusHint) statusHint.textContent = 'D-Pad 4 hướng';
+                showToast('✚ Chế độ: Phím D-Pad 4 hướng');
+            }
+        }
+
+        /* =====================================================================
+         * 4. HIỆU ỨNG BOSS, HUD & HỘP THOẠI
+         * ===================================================================== */
+        function setBossMood(mood, bubbleText = null) {
+            const happyEl = document.getElementById('bossHappyContainer');
+            const angryEl = document.getElementById('bossAngryContainer');
+            const wrap = document.getElementById('bossWrap');
+
+            wrap.classList.remove('boss-idle', 'boss-angry-idle', 'boss-charge', 'boss-phase2-tremble');
+            if (mood === 'happy') {
+                happyEl.classList.remove('hidden');
+                angryEl.classList.add('hidden');
+                wrap.classList.add('boss-idle');
+            } else if (mood === 'charge') {
+                happyEl.classList.add('hidden');
+                angryEl.classList.remove('hidden');
+                wrap.classList.add(GameState.phase === 2 ? 'boss-phase2-tremble' : 'boss-charge');
+            } else {
+                happyEl.classList.add('hidden');
+                angryEl.classList.remove('hidden');
+                wrap.classList.add(GameState.phase === 2 ? 'boss-phase2-tremble' : 'boss-angry-idle');
+            }
+
+            if (bubbleText !== null) {
+                document.getElementById('bossBubbleText').textContent = bubbleText;
+            }
+        }
+
+        function triggerBossEffect(type, popText = '', popColor = '#ff3333') {
+            const wrap = document.getElementById('bossWrap');
+            const fxLayer = document.getElementById('bossFxLayer');
+
+            if (type === 'hit') {
+                wrap.classList.remove('boss-hit');
+                void wrap.offsetWidth;
+                wrap.classList.add('boss-hit');
+                setTimeout(() => wrap.classList.remove('boss-hit'), 420);
+
+                const slash = document.createElement('div');
+                slash.className = 'slash-fx';
+                slash.innerHTML = '<div class="slash-line"></div>';
+                fxLayer.appendChild(slash);
+                setTimeout(() => slash.remove(), 380);
+            }
+
+            if (popText) {
+                const pop = document.createElement('div');
+                pop.className = 'float-pop text-lg sm:text-2xl';
+                pop.style.color = popColor;
+                pop.textContent = popText;
+                fxLayer.appendChild(pop);
+                setTimeout(() => pop.remove(), 1000);
+            }
+        }
+
+        function triggerScreenShake() {
+            const el = document.getElementById('battleScreen');
+            el.classList.remove('screen-shake');
+            void el.offsetWidth;
+            el.classList.add('screen-shake');
+            setTimeout(() => el.classList.remove('screen-shake'), 260);
+        }
+
+        function updateHUD() {
+            // Player HP (20/20)
+            const pPct = Math.max(0, (GameState.playerHp / GameState.playerMaxHp) * 100);
+            document.getElementById('playerHpBar').style.width = pPct + '%';
+            document.getElementById('playerHpText').textContent = `${GameState.playerHp}/${GameState.playerMaxHp}`;
+
+            // Boss HP (100/100)
+            const bPct = Math.max(0, (GameState.bossHp / GameState.bossMaxHp) * 100);
+            const bossBar = document.getElementById('bossHpBar');
+            bossBar.style.width = bPct + '%';
+            bossBar.className = bPct < 50
+                ? 'h-full bg-gradient-to-r from-red-600 to-orange-400 transition-all duration-300'
+                : 'h-full bg-gradient-to-r from-green-500 to-lime-400 transition-all duration-300';
+            document.getElementById('bossHpText').textContent = `${GameState.bossHp}/${GameState.bossMaxHp}`;
+
+            // Turn & Phase 2
+            document.getElementById('turnCountText').textContent = GameState.turn;
+            const phaseBadge = document.getElementById('bossPhaseBadge');
+            if (GameState.phase === 2) {
+                document.body.classList.add('phase2-active');
+                phaseBadge.textContent = '🔥 P2 QUẠU';
+                phaseBadge.className = 'px-1.5 py-0.5 text-[10px] rounded bg-red-600 text-yellow-200 uppercase shrink-0 animate-pulse';
+            } else {
+                document.body.classList.remove('phase2-active');
+                phaseBadge.textContent = 'P1';
+                phaseBadge.className = 'px-1.5 py-0.5 text-[10px] rounded bg-orange-600 text-white uppercase shrink-0';
+            }
+
+            // Mercy bar & glowing MERCY button
+            const mPct = Math.min(100, Math.max(0, GameState.mercy));
+            document.getElementById('mercyBar').style.width = mPct + '%';
+            document.getElementById('mercyText').textContent = mPct + '%';
+
+            const btnMercy = document.getElementById('btnMercy');
+            const mercyLabel = document.getElementById('btnMercyLabel');
+            if (mPct >= 100) {
+                btnMercy.classList.add('mercy-ready');
+                mercyLabel.textContent = 'THA THỨ';
+            } else {
+                btnMercy.classList.remove('mercy-ready');
+                mercyLabel.textContent = 'MERCY';
+            }
+        }
+
+        function setBoxMode(mode) {
+            GameState.mode = mode;
+            ['modeDialogue', 'modeSubmenu', 'modeFight', 'modeDodge'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+
+            const actionBtns = document.querySelectorAll('#actionBar button');
+            const enableMain = (mode === 'menu');
+            actionBtns.forEach((btn, i) => {
+                btn.disabled = !enableMain;
+                btn.classList.toggle('selected', enableMain && i === GameState.selectedMain);
+            });
+
+            if (mode === 'dodge') {
+                document.getElementById('modeDodge').classList.remove('hidden');
+            } else if (mode === 'dialogue' || mode === 'menu') {
+                document.getElementById('modeDialogue').classList.remove('hidden');
+            } else if (mode === 'submenu') {
+                document.getElementById('modeSubmenu').classList.remove('hidden');
+            } else if (mode === 'fight') {
+                document.getElementById('modeFight').classList.remove('hidden');
+            }
+        }
+
+        function showDialogue(text, callback = null, allowMenuImmediately = false) {
+            clearInterval(GameState.dialogueTimer);
+            GameState.dialogueFull = text;
+            GameState.dialogueIndex = 0;
+            GameState.dialogueCallback = callback;
+
+            const textEl = document.getElementById('dialogueText');
+            const hintEl = document.getElementById('dialogueContinueHint');
+            textEl.textContent = '';
+            hintEl.classList.add('hidden');
+
+            setBoxMode(allowMenuImmediately ? 'menu' : 'dialogue');
+
+            GameState.dialogueTimer = setInterval(() => {
+                if (GameState.dialogueIndex < GameState.dialogueFull.length) {
+                    const ch = GameState.dialogueFull[GameState.dialogueIndex];
+                    textEl.textContent += ch;
+                    if (ch !== ' ' && GameState.dialogueIndex % 2 === 0) SoundEngine.playTextBlip();
+                    GameState.dialogueIndex++;
+                } else {
+                    clearInterval(GameState.dialogueTimer);
+                    GameState.dialogueTimer = null;
+                    if (!allowMenuImmediately && GameState.dialogueCallback) {
+                        hintEl.classList.remove('hidden');
+                    }
+                }
+            }, 20);
+        }
+
+        function advanceDialogue() {
+            if (GameState.mode !== 'dialogue') return;
+            if (GameState.dialogueTimer) {
+                clearInterval(GameState.dialogueTimer);
+                GameState.dialogueTimer = null;
+                document.getElementById('dialogueText').textContent = GameState.dialogueFull;
+                if (GameState.dialogueCallback) {
+                    document.getElementById('dialogueContinueHint').classList.remove('hidden');
+                }
+            } else if (GameState.dialogueCallback) {
+                const cb = GameState.dialogueCallback;
+                GameState.dialogueCallback = null;
+                SoundEngine.playMenuSelect();
+                cb();
+            }
+        }
+
+        /* =====================================================================
+         * 5. KHỞI ĐỘNG & CHƠI LẠI TRẬN ĐẤU
+         * ===================================================================== */
+        function startGame() {
+            SoundEngine.init();
+            SoundEngine.playMenuSelect();
+
+            clearInterval(GameState.dialogueTimer);
+            GameState.dialogueTimer = null;
+            stopBulletHell();
+            cancelFightBar();
+
+            // Reset cờ gửi kết quả cho ván đấu mới (chống gửi trùng PART3_RESULT)
+            Part3Bridge.resultSentForMatch = false;
+            Part3Bridge.lastResultPayload = null;
+            Part3Bridge.lastAppliedReward = null;
+
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('endScreen').classList.add('hidden');
+            document.getElementById('battleScreen').classList.remove('hidden');
+
+            GameState.screen = 'battle';
+            GameState.playerHp = 20;
+            GameState.bossHp = 100;
+            GameState.mercy = 0;
+            GameState.turn = 1;
+            GameState.phase = 1;
+            GameState.calmNextTurn = false;
+            GameState.attackIndex = 0;
+            GameState.selectedMain = 0;
+            GameState.items = INITIAL_ITEMS.map(it => ({ ...it, used: false }));
+
+            JoystickController.reset();
+            setSlowFocus(false);
+            updateHUD();
+            updateBridgeUI();
+            setBossMood('happy', 'Ư ử... Ai vào Phòng 204 mà không mang bánh thưởng thế kia?!');
+            SoundEngine.startBgm('battle');
+
+            showDialogue(
+                'Boss Cún Bông Phòng 204 chặn ngay trước bàn họp lớn!\nChọn FIGHT, ACT, ITEM hoặc MERCY bên dưới nhé.',
+                null,
+                true
+            );
+        }
+
+        function restartBattle() {
+            stopBulletHell();
+            cancelFightBar();
+            startGame();
+        }
+
+        function returnToStart() {
+            stopBulletHell();
+            cancelFightBar();
+            clearInterval(GameState.dialogueTimer);
+            GameState.dialogueTimer = null;
+            SoundEngine.stopBgm();
+            document.body.classList.remove('phase2-active');
+            GameState.screen = 'start';
+            document.getElementById('battleScreen').classList.add('hidden');
+            document.getElementById('endScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+            updateBridgeUI();
+        }
+
+        /* =====================================================================
+         * 6. MENU HÀNH ĐỘNG CHÍNH & MENU CON (FIGHT / ACT / ITEM / MERCY)
+         * ===================================================================== */
+        function highlightMainAction(index) {
+            GameState.selectedMain = (index + 4) % 4;
+            document.querySelectorAll('#actionBar button').forEach((btn, i) => {
+                btn.classList.toggle('selected', i === GameState.selectedMain);
+            });
+            SoundEngine.playMenuMove();
+        }
+
+        function selectMainAction(index) {
+            if (GameState.mode !== 'menu') return;
+            GameState.selectedMain = index;
+            SoundEngine.playMenuSelect();
+
+            if (index === 0) startFightBar();
+            else if (index === 1) openSubmenu('act');
+            else if (index === 2) openSubmenu('item');
+            else if (index === 3) openSubmenu('mercy');
+        }
+
+        function backToMainMenu() {
+            if (GameState.mode !== 'submenu') return;
+            SoundEngine.playMenuMove();
+            setBoxMode('menu');
+            document.getElementById('dialogueText').textContent = GameState.mercy >= 100
+                ? 'Boss Cún Bông đang vẫy đuôi tít mù! Bạn có thể chọn MERCY ngay bây giờ!'
+                : 'Chọn hành động của bạn trước khi Boss Cún Bông nổi quạu hơn...';
+        }
+
+        function openSubmenu(type) {
+            GameState.submenuType = type;
+            GameState.selectedSub = 0;
+            setBoxMode('submenu');
+
+            const titleEl = document.getElementById('submenuTitle');
+            const gridEl = document.getElementById('submenuGrid');
+            const hintEl = document.getElementById('submenuHint');
+            gridEl.innerHTML = '';
+
+            if (type === 'act') {
+                titleEl.textContent = '💬 HÀNH ĐỘNG (ACT)';
+                ACT_OPTIONS.forEach((act, idx) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = `sub-option ${idx === 0 ? 'active' : ''}`;
+                    btn.innerHTML = `
+                        <span class="text-red-500 font-bold text-xs">❤</span>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-xs font-bold truncate">${act.name}</div>
+                            <div class="text-[10px] text-pink-300 truncate">${act.tag}</div>
+                        </div>
+                    `;
+                    btn.onmouseenter = () => setSubSelection(idx, act.desc);
+                    btn.onclick = () => executeAct(act.id);
+                    gridEl.appendChild(btn);
+                });
+                hintEl.textContent = ACT_OPTIONS[0].desc;
+            } else if (type === 'item') {
+                titleEl.textContent = '🎒 TÚI ĐỒ 204 (ITEM)';
+                const available = GameState.items.filter(it => !it.used);
+                if (available.length === 0) {
+                    gridEl.innerHTML = `<div class="col-span-2 text-center text-gray-400 py-6 text-xs">Túi đồ đã trống trơn! Bạn đã dùng hết đồ ăn vặt Phòng 204 rồi.</div>`;
+                    hintEl.textContent = 'Bấm Quay lại để chọn hành động khác.';
+                } else {
+                    const firstAvail = GameState.items.findIndex(x => !x.used);
+                    GameState.selectedSub = Math.max(0, firstAvail);
+                    GameState.items.forEach((it, idx) => {
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = `sub-option ${!it.used && idx === firstAvail ? 'active' : ''}`;
+                        btn.disabled = it.used;
+                        btn.innerHTML = `
+                            <span class="text-green-400 font-bold text-xs">✦</span>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-xs font-bold truncate">${it.name}</div>
+                                <div class="text-[10px] text-green-300">${it.used ? 'Đã dùng' : '+' + it.heal + ' HP'}</div>
+                            </div>
+                        `;
+                        btn.onmouseenter = () => setSubSelection(idx, it.desc);
+                        btn.onclick = () => executeItem(it.id);
+                        gridEl.appendChild(btn);
+                    });
+                    hintEl.textContent = GameState.items[GameState.selectedSub].desc;
+                }
+            } else if (type === 'mercy') {
+                titleEl.textContent = '💛 THA THỨ (MERCY)';
+                const ready = GameState.mercy >= 100;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `sub-option active col-span-2 ${ready ? 'border-yellow-400 bg-yellow-500/15' : ''}`;
+                btn.innerHTML = `
+                    <span class="text-lg">${ready ? '🌟' : '🐾'}</span>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs sm:text-sm font-extrabold ${ready ? 'text-yellow-300' : 'text-white'}">
+                            ${ready ? '★ THA THỨ & KẾT BẠN VỚI CÚN BÔNG ★' : 'Tha thứ (Chưa đủ 100% Thiện cảm)'}
+                        </div>
+                        <div class="text-[10px] sm:text-xs text-gray-300">
+                            ${ready ? 'Cún Bông đã nguôi giận hoàn toàn! Mở Kết Thúc Hòa Bình.' : `Hiện tại ${GameState.mercy}%/100%. Hãy dùng mục ACT thêm nhé!`}
+                        </div>
+                    </div>
+                `;
+                btn.onclick = () => executeMercy();
+                gridEl.appendChild(btn);
+                hintEl.textContent = ready ? 'Bấm [Z] hoặc chạm để mở Kết Thúc Hòa Bình!' : 'Dùng Xoa đầu / Bánh thưởng / Đàn Yamaha để lên 100%.';
+            }
+        }
+
+        function setSubSelection(idx, desc = '') {
+            const buttons = document.querySelectorAll('#submenuGrid .sub-option');
+            if (!buttons.length) return;
+            GameState.selectedSub = idx;
+            buttons.forEach((b, i) => b.classList.toggle('active', i === idx));
+            if (desc) document.getElementById('submenuHint').textContent = desc;
+        }
+
+        /* --- FIGHT BAR --- */
+        function startFightBar() {
+            setBoxMode('fight');
+            GameState.fightActive = true;
+            GameState.fightPos = 0;
+
+            const cursor = document.getElementById('fightCursor');
+            let lastTs = performance.now();
+            const speed = GameState.phase === 2 ? 118 : 92;
+
+            function step(ts) {
+                if (!GameState.fightActive) return;
+                const dt = Math.min((ts - lastTs) / 1000, 0.05);
+                lastTs = ts;
+                GameState.fightPos += speed * dt;
+                if (GameState.fightPos >= 98) {
+                    GameState.fightActive = false;
+                    resolveFightDamage(null);
+                    return;
+                }
+                cursor.style.left = GameState.fightPos + '%';
+                GameState.fightRaf = requestAnimationFrame(step);
+            }
+            GameState.fightRaf = requestAnimationFrame(step);
+        }
+
+        function cancelFightBar() {
+            GameState.fightActive = false;
+            if (GameState.fightRaf) {
+                cancelAnimationFrame(GameState.fightRaf);
+                GameState.fightRaf = null;
+            }
+        }
+
+        function triggerFightStrike() {
+            if (!GameState.fightActive || GameState.mode !== 'fight') return;
+            cancelFightBar();
+            resolveFightDamage(GameState.fightPos);
+        }
+
+        function resolveFightDamage(pos) {
+            if (pos === null) {
+                setBossMood('angry', 'Gâu haha! Chém hụt không khí rồi kìa!');
+                triggerBossEffect('none', 'TRƯỢT!', '#cccccc');
+                showDialogue('Bạn vung tay quá chậm! Boss Cún Bông né cái vèo đầy đắc ý.', () => prepareBossTurn());
+                return;
+            }
+
+            const dist = Math.abs(pos - 49);
+            let dmg = 0;
+            let isCrit = false;
+            if (dist <= 4.8) {
+                dmg = 24 + Math.floor(Math.random() * 7); // 24-30 CRIT
+                isCrit = true;
+            } else if (dist <= 16) {
+                dmg = 16 + Math.floor(Math.random() * 6);
+            } else if (dist <= 30) {
+                dmg = 11 + Math.floor(Math.random() * 5);
+            } else {
+                dmg = 7 + Math.floor(Math.random() * 4);
+            }
+
+            GameState.bossHp = Math.max(0, GameState.bossHp - dmg);
+            if (GameState.mercy < 100 && GameState.mercy > 0) {
+                GameState.mercy = Math.max(0, GameState.mercy - 10);
+            }
+
+            SoundEngine.playSlash(isCrit);
+            setBossMood('angry', isCrit ? 'ÁU!! Đau quá!! Dám chọc cún đẹp trai Phòng 204 à?!' : 'Gừừừ! Bộ lông kem của tui không dễ bắt nạt đâu!');
+            triggerBossEffect('hit', isCrit ? `CRIT -${dmg}!` : `-${dmg}`, isCrit ? '#ffe600' : '#ff4444');
+            triggerScreenShake();
+            updateHUD();
+
+            if (GameState.bossHp <= 0) {
+                showDialogue(`Cú đánh chuẩn xác gây ${dmg} sát thương! Boss Cún Bông choáng váng xù cả bộ lông...`, () => finishGame('fight'));
+                return;
+            }
+
+            showDialogue(
+                isCrit ? `💥 CHÍ MẠNG! Bạn gây hẳn ${dmg} sát thương lên Boss Cún Bông!` : `Bạn tấn công gây ${dmg} sát thương. Boss Cún Bông bốc khói hai bên tai!`,
+                () => prepareBossTurn()
+            );
+        }
+
+        /* --- ACT / ITEM / MERCY --- */
+        function executeAct(actId) {
+            SoundEngine.playMenuSelect();
+            if (actId === 'check') {
+                setBossMood('angry', 'Nhìn gì mà nhìn? Tui là bảo vệ trưởng Phòng 204 đó!');
+                showDialogue('BOSS CÚN BÔNG 204 — ATK 4 | DEF 2\nChú cún lông xù siêu đáng yêu nhưng rất dễ quạu khi đói. Mê xoa đầu, bánh thưởng và đàn Yamaha!', () => prepareBossTurn());
+            } else if (actId === 'pet') {
+                GameState.mercy = Math.min(100, GameState.mercy + 25);
+                GameState.calmNextTurn = true;
+                SoundEngine.playHeal();
+                setBossMood('happy', 'Hí hí... Xoa ngay sau tai êm quá đi mất! Đỡ quạu hơn xíu rồi~');
+                triggerBossEffect('none', '+25% MERCY ❤', '#ff88cc');
+                updateHUD();
+                showDialogue('Bạn nhẹ nhàng xoa đầu Boss Cún Bông! Thiện cảm tăng +25% và đòn đánh sắp tới sẽ dịu nhẹ hơn!', () => prepareBossTurn());
+            } else if (actId === 'treat') {
+                GameState.mercy = Math.min(100, GameState.mercy + 35);
+                SoundEngine.playHeal();
+                setBossMood('happy', 'Măm măm! Bánh thưởng vị gà phô mai!! Bạn là SV 204 tuyệt vời nhất!');
+                triggerBossEffect('none', '+35% MERCY 🦴', '#ffe600');
+                updateHUD();
+                showDialogue('Bạn tung bánh thưởng giòn rụm! Boss Cún Bông đớp gọn và cười tít mắt. Thiện cảm tăng vọt +35%!', () => prepareBossTurn());
+            } else if (actId === 'guitar') {
+                GameState.mercy = Math.min(100, GameState.mercy + 30);
+                SoundEngine.playGuitar();
+                setBossMood('happy', 'Gâu~ ♪ Tiếng đàn Yamaha góc Phòng 204 nghe chill quá đi!');
+                triggerBossEffect('none', '+30% MERCY 🎸', '#66eeff');
+                updateHUD();
+                showDialogue('Bạn gảy một khúc Noel bằng cây đàn Yamaha góc Phòng 204. Cún Bông lắc lư cái đầu theo nhịp! (+30% Thiện cảm)', () => prepareBossTurn());
+            }
+        }
+
+        function executeItem(itemId) {
+            const item = GameState.items.find(i => i.id === itemId);
+            if (!item || item.used) return;
+            item.used = true;
+
+            const prevHp = GameState.playerHp;
+            GameState.playerHp = Math.min(GameState.playerMaxHp, GameState.playerHp + item.heal);
+            const gained = GameState.playerHp - prevHp;
+
+            SoundEngine.playHeal();
+            setBossMood('happy', `Ủa thưởng thức ${item.name} mà không chừa tui một miếng nào hả?!`);
+            updateHUD();
+            showDialogue(`Bạn dùng ${item.name}! ${gained > 0 ? `Hồi phục +${gained} HP.` : 'HP của bạn đã đầy 20/20!'}`, () => prepareBossTurn());
+        }
+
+        function executeMercy() {
+            if (GameState.mercy >= 100) {
+                SoundEngine.playHeal();
+                setBossMood('happy', 'Gâu gâu ❤ Từ nay chúng ta là đôi bạn thân nhất Phòng 204 nha!!');
+                showDialogue('Bạn chọn THA THỨ! Boss Cún Bông nhảy tót lên bàn họp, dụi đầu vào tay bạn và vẫy đuôi mừng rỡ!', () => finishGame('mercy'));
+            } else {
+                SoundEngine.playDogBark();
+                setBossMood('angry', 'GÂU!! Chưa xoa đầu, chưa cho bánh đủ mà đòi hòa à?! Mơ đi nha!');
+                triggerBossEffect('none', 'CHƯA ĐỦ!', '#ff6666');
+                showDialogue(`Boss Cún Bông vẫn còn dỗi (${GameState.mercy}%/100%). Hãy dùng các lệnh trong ACT trước nhé!`, () => prepareBossTurn());
+            }
+        }
+
+        /* =====================================================================
+         * 7. ĐỘNG CƠ BULLET HELL 60FPS + 5 DẠNG ĐÒN + PHASE 2 (< 50% BOSS HP)
+         * ===================================================================== */
+        function prepareBossTurn() {
+            // Kích hoạt Phase 2 khi Boss còn dưới 50% HP
+            if (GameState.bossHp < 50 && GameState.phase === 1) {
+                GameState.phase = 2;
+                updateHUD();
+                SoundEngine.playDogBark();
+                SoundEngine.startBgm('phase2');
+                setBossMood('angry', 'GÂU GÂU GÂU!! BẬT MODE "SIÊU QUẠU PHÒNG 204"!! CHUẨN BỊ NÉ ĐẠN ĐI!');
+                triggerBossEffect('none', '🔥 PHASE 2!', '#ff2222');
+                triggerScreenShake();
+                showDialogue('🔥 Boss Cún Bông dưới 50% HP đã nổi quạu cực độ! Cả Phòng 204 nhuốm sắc đỏ, đạn sẽ bay nhanh hơn!', () => startBulletHell());
+                return;
+            }
+            startBulletHell();
+        }
+
+        const BulletEngine = {
+            running: false,
+            rafId: null,
+            canvas: null,
+            ctx: null,
+            cw: 480,
+            ch: 210,
+            lastTime: 0,
+            elapsed: 0,
+            duration: 7.0,
+            pattern: 'bones',
+            spawnTimer: 0,
+            waveCount: 0,
+
+            heart: {
+                x: 240,
+                y: 110,
+                size: 9.5,
+                baseSpeed: 215,
+                invuln: 0,
+                moved: false
+            },
+
+            // Tổng hợp đầu vào: Phím PC + D-Pad ảo + Cần gạt Analog 360° + Kéo trực tiếp + Chế độ Né Chậm (HOLD/Shift)
+            kbKeys: { up: false, down: false, left: false, right: false },
+            dpadKeys: { up: false, down: false, left: false, right: false },
+            joyX: 0,
+            joyY: 0,
+            dragDeltaX: 0,
+            dragDeltaY: 0,
+            slowKey: false,
+            slowBtn: false,
+
+            bullets: [],
+            warnings: [],
+            popups: []
+        };
+
+        const ATTACK_CATALOG = [
+            {
+                id: 'bones',
+                name: '🦴 Mưa Xương Phòng 204',
+                bossLine: 'Gâu! Né xương trắng đi, còn xương xanh dương thì ĐỨNG YÊN nha!',
+                hint: '💡 XƯƠNG XANH DƯƠNG: ĐỨNG YÊN sẽ KHÔNG mất máu!',
+                duration: 7.2
+            },
+            {
+                id: 'paws',
+                name: '🐾 Dấu Chân Cún Đập Bàn',
+                bossLine: 'BỊCH! BỊCH! Giữ cần gạt né nhanh khỏi khung cảnh báo đỏ đi!',
+                hint: '⚠️ Né nhanh khỏi vòng cảnh báo đỏ trước khi chân cún giáng xuống!',
+                duration: 7.0
+            },
+            {
+                id: 'barks',
+                name: '📢 Sóng Sủa "GÂU!"',
+                bossLine: 'GÂU!! GÂU!! Sóng âm cực đại vang khắp Phòng 204 nè!',
+                hint: '🔊 Giữ nút NÉ CHẬM để luồn qua vòng sóng âm & chữ GÂU!',
+                duration: 7.2
+            },
+            {
+                id: 'fury',
+                name: '💢 Cơn Thịnh Nộ Đỏ',
+                bossLine: 'TỨC QUÁ ĐI!! Dấu giận nảy tường kèm tia laser cắt ngang!',
+                hint: '💢 Né dấu giận nảy tường và tia laser cảnh báo ngang/dọc!',
+                duration: 7.4
+            },
+            {
+                id: 'gifts',
+                name: '🎁 Mưa Quà Secret Santa',
+                bossLine: 'Quà Noel rơi lả tả! Né hộp quà đỏ, ăn trái tim xanh lá hồi +3 HP!',
+                hint: '💚 Ăn TRÁI TIM XANH LÁ (+3 HP)! Né hộp quà đỏ!',
+                duration: 7.3
+            }
+        ];
+
+        function resizeBattleCanvas() {
+            const canvas = document.getElementById('battleCanvas');
+            const parent = document.getElementById('modeDodge');
+            if (!canvas || !parent) return;
+
+            const rect = parent.getBoundingClientRect();
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            BulletEngine.cw = Math.max(240, rect.width);
+            BulletEngine.ch = Math.max(145, rect.height);
+            canvas.width = Math.floor(BulletEngine.cw * dpr);
+            canvas.height = Math.floor(BulletEngine.ch * dpr);
+
+            const ctx = canvas.getContext('2d');
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            BulletEngine.canvas = canvas;
+            BulletEngine.ctx = ctx;
+
+            BulletEngine.heart.x = Math.min(Math.max(BulletEngine.heart.x, 14), BulletEngine.cw - 14);
+            BulletEngine.heart.y = Math.min(Math.max(BulletEngine.heart.y, 24), BulletEngine.ch - 14);
+        }
+
+        function startBulletHell() {
+            setBoxMode('dodge');
+            resizeBattleCanvas();
+
+            const atk = ATTACK_CATALOG[GameState.attackIndex % ATTACK_CATALOG.length];
+            GameState.attackIndex++;
+
+            BulletEngine.pattern = atk.id;
+            BulletEngine.elapsed = 0;
+            BulletEngine.duration = GameState.phase === 2 ? atk.duration + 0.7 : atk.duration;
+            BulletEngine.spawnTimer = 0.25;
+            BulletEngine.waveCount = 0;
+            BulletEngine.bullets = [];
+            BulletEngine.warnings = [];
+            BulletEngine.popups = [];
+
+            BulletEngine.heart.x = BulletEngine.cw / 2;
+            BulletEngine.heart.y = BulletEngine.ch / 2 + 8;
+            BulletEngine.heart.invuln = 0.45;
+            BulletEngine.heart.moved = false;
+            BulletEngine.dragDeltaX = 0;
+            BulletEngine.dragDeltaY = 0;
+
+            document.getElementById('attackNameTag').textContent = atk.name;
+            const hintTag = document.getElementById('attackHintTag');
+            hintTag.textContent = atk.hint;
+            hintTag.classList.remove('hidden');
+
+            if (GameState.calmNextTurn) {
+                setBossMood('happy', 'Nhờ bạn vừa xoa đầu nên tui ra đòn dịu nhẹ hơn xíu đó~');
+            } else {
+                setBossMood('charge', atk.bossLine);
+                SoundEngine.playDogBark();
+            }
+
+            BulletEngine.running = true;
+            BulletEngine.lastTime = performance.now();
+            BulletEngine.rafId = requestAnimationFrame(bulletHellLoop);
+        }
+
+        function stopBulletHell() {
+            BulletEngine.running = false;
+            if (BulletEngine.rafId) {
+                cancelAnimationFrame(BulletEngine.rafId);
+                BulletEngine.rafId = null;
+            }
+        }
+
+        function endBulletHellTurn() {
+            stopBulletHell();
+            GameState.calmNextTurn = false;
+
+            if (GameState.playerHp <= 0) {
+                finishGame('defeat');
+                return;
+            }
+
+            GameState.turn++;
+            updateHUD();
+
+            if (GameState.mercy >= 100) {
+                setBossMood('happy', 'Hì hì, bạn né siêu quá! Chọn MERCY để kết bạn với tui ngay đi!');
+            } else if (GameState.phase === 2) {
+                setBossMood('angry', 'Hừm! Dai sức phết, tiếp chiêu đi SV 204!');
+            } else {
+                setBossMood('happy', 'Gâu! Tới lượt bạn đó, có bánh thưởng không nào?');
+            }
+
+            const flavor = [
+                'Boss Cún Bông khịt mũi đánh hơi mùi trà sữa trên bàn họp 204.',
+                'Đồng hồ Phòng 204 tích tắc... Cún Bông đang lườm bạn!',
+                'Cây đàn Yamaha góc phòng dường như đang gọi tên bạn.',
+                'Boss Cún Bông vẫy cái tai bông xù trông cực kỳ muốn được xoa đầu.'
+            ];
+            showDialogue(
+                GameState.mercy >= 100
+                    ? '★ Thiện cảm đạt 100%! Nút MERCY đang phát sáng vàng — bấm để mở Kết Thúc Hòa Bình!'
+                    : flavor[GameState.turn % flavor.length],
+                null,
+                true
+            );
+        }
+
+        function bulletHellLoop(ts) {
+            if (!BulletEngine.running) return;
+            const dt = Math.min((ts - BulletEngine.lastTime) / 1000, 0.05);
+            BulletEngine.lastTime = ts;
+            BulletEngine.elapsed += dt;
+
+            const remaining = Math.max(0, BulletEngine.duration - BulletEngine.elapsed);
+            document.getElementById('attackTimerTag').textContent = remaining.toFixed(1) + 's';
+
+            updateHeart(dt);
+            updatePatternSpawner(dt);
+            updateEntities(dt);
+            renderBattleCanvas();
+
+            if (GameState.playerHp <= 0) {
+                stopBulletHell();
+                finishGame('defeat');
+                return;
+            }
+
+            if (BulletEngine.elapsed >= BulletEngine.duration) {
+                endBulletHellTurn();
+                return;
+            }
+
+            BulletEngine.rafId = requestAnimationFrame(bulletHellLoop);
+        }
+
+        function isSlowFocusActive() {
+            return BulletEngine.slowKey || BulletEngine.slowBtn;
+        }
+
+        function setSlowFocus(active) {
+            BulletEngine.slowBtn = active;
+            document.getElementById('btnSlowHold').classList.toggle('active', isSlowFocusActive());
+            document.getElementById('slowModeIndicator').classList.toggle('hidden', !isSlowFocusActive());
+        }
+
+        function updateHeart(dt) {
+            const h = BulletEngine.heart;
+            const prevX = h.x;
+            const prevY = h.y;
+
+            // 1. Lấy vector 360° đã áp dụng đường cong độ nhạy cao từ Cần gạt Analog
+            let vx = BulletEngine.joyX;
+            let vy = BulletEngine.joyY;
+
+            // 2. Kết hợp bàn phím PC & D-Pad ảo nếu đang bấm
+            let kdx = 0;
+            let kdy = 0;
+            if (BulletEngine.kbKeys.left || BulletEngine.dpadKeys.left) kdx -= 1;
+            if (BulletEngine.kbKeys.right || BulletEngine.dpadKeys.right) kdx += 1;
+            if (BulletEngine.kbKeys.up || BulletEngine.dpadKeys.up) kdy -= 1;
+            if (BulletEngine.kbKeys.down || BulletEngine.dpadKeys.down) kdy += 1;
+
+            if (kdx !== 0 || kdy !== 0) {
+                const len = Math.hypot(kdx, kdy);
+                vx = kdx / len;
+                vy = kdy / len;
+            }
+
+            // Giảm tốc xuống ~42% khi giữ nút NÉ CHẬM (HOLD) hoặc phím Shift
+            const slowMult = isSlowFocusActive() ? 0.42 : 1.0;
+            h.x += vx * h.baseSpeed * slowMult * dt;
+            h.y += vy * h.baseSpeed * slowMult * dt;
+
+            // 3. Áp dụng kéo trực tiếp trong khung đấu (nếu người chơi chạm kéo trên canvas)
+            if (BulletEngine.dragDeltaX !== 0 || BulletEngine.dragDeltaY !== 0) {
+                h.x += BulletEngine.dragDeltaX * slowMult;
+                h.y += BulletEngine.dragDeltaY * slowMult;
+                BulletEngine.dragDeltaX = 0;
+                BulletEngine.dragDeltaY = 0;
+            }
+
+            // Giới hạn trong khung viền trắng
+            const pad = h.size + 4;
+            h.x = Math.min(Math.max(h.x, pad), BulletEngine.cw - pad);
+            h.y = Math.min(Math.max(h.y, pad + 18), BulletEngine.ch - pad);
+
+            // Kiểm tra đứng yên cho cơ chế Xương Xanh Dương
+            h.moved = Math.hypot(h.x - prevX, h.y - prevY) > 0.5;
+            if (h.invuln > 0) h.invuln = Math.max(0, h.invuln - dt);
+        }
+
+        /* --- BỘ SINH 5 DẠNG ĐÒN BULLET HELL --- */
+        function updatePatternSpawner(dt) {
+            BulletEngine.spawnTimer -= dt;
+            if (BulletEngine.spawnTimer > 0) return;
+
+            const isP2 = GameState.phase === 2;
+            const isCalm = GameState.calmNextTurn;
+            const speedMult = (isP2 ? 1.25 : 1.0) * (isCalm ? 0.8 : 1.0);
+            const rateMult = (isP2 ? 0.8 : 1.0) * (isCalm ? 1.25 : 1.0);
+            const cw = BulletEngine.cw;
+            const ch = BulletEngine.ch;
+            BulletEngine.waveCount++;
+
+            // 1. Mưa Xương Phòng 204 (Xương trắng né + Xương xanh dương đứng yên)
+            if (BulletEngine.pattern === 'bones') {
+                BulletEngine.spawnTimer = 0.74 * rateMult;
+                const fromLeft = BulletEngine.waveCount % 2 === 0;
+                const isBlue = BulletEngine.waveCount % 3 === 0;
+
+                if (isBlue) {
+                    BulletEngine.bullets.push({
+                        kind: 'bone',
+                        color: 'blue',
+                        x: fromLeft ? -16 : cw + 16,
+                        y: ch / 2 + 8,
+                        w: 15,
+                        h: ch - 34,
+                        vx: (fromLeft ? 1 : -1) * 175 * speedMult,
+                        vy: 0
+                    });
+                } else {
+                    const gapY = 52 + Math.random() * Math.max(30, ch - 104);
+                    const gapSize = isP2 ? 58 : 72;
+                    const topH = Math.max(20, gapY - gapSize / 2 - 20);
+                    const botStart = gapY + gapSize / 2;
+                    const botH = Math.max(20, ch - botStart - 6);
+
+                    BulletEngine.bullets.push({
+                        kind: 'bone', color: 'white',
+                        x: fromLeft ? -16 : cw + 16, y: 20 + topH / 2,
+                        w: 14, h: topH,
+                        vx: (fromLeft ? 1 : -1) * 185 * speedMult, vy: 0
+                    });
+                    BulletEngine.bullets.push({
+                        kind: 'bone', color: 'white',
+                        x: fromLeft ? -16 : cw + 16, y: botStart + botH / 2,
+                        w: 14, h: botH,
+                        vx: (fromLeft ? 1 : -1) * 185 * speedMult, vy: 0
+                    });
+                }
+            }
+
+            // 2. Dấu Chân Cún Đập Bàn (Cảnh báo khung đỏ nhấp nháy -> Dấu chân cún)
+            else if (BulletEngine.pattern === 'paws') {
+                BulletEngine.spawnTimer = 0.92 * rateMult;
+                const count = isP2 ? 2 : 1;
+                for (let k = 0; k < count; k++) {
+                    const tx = (k === 0 && BulletEngine.waveCount % 2 === 0)
+                        ? BulletEngine.heart.x
+                        : 48 + Math.random() * (cw - 96);
+                    const ty = (k === 0 && BulletEngine.waveCount % 2 === 0)
+                        ? BulletEngine.heart.y
+                        : 48 + Math.random() * (ch - 82);
+                    SoundEngine.playWarnBeep();
+                    BulletEngine.warnings.push({
+                        kind: 'pawWarn', x: tx, y: ty,
+                        r: isP2 ? 38 : 34,
+                        timer: isP2 ? 0.68 : 0.82
+                    });
+                }
+            }
+
+            // 3. Sóng Sủa "GÂU!" (Chữ GÂU! và vòng sóng âm tỏa ra từ phía trên)
+            else if (BulletEngine.pattern === 'barks') {
+                BulletEngine.spawnTimer = 0.82 * rateMult;
+                const ox = BulletEngine.waveCount % 2 === 0 ? cw * 0.28 : cw * 0.72;
+                const oy = 26;
+                const rays = isP2 ? 6 : 5;
+                const baseAngle = Math.atan2(BulletEngine.heart.y - oy, BulletEngine.heart.x - ox);
+                if (BulletEngine.waveCount % 2 === 1) SoundEngine.playDogBark();
+
+                for (let i = 0; i < rays; i++) {
+                    const ang = baseAngle + (i - (rays - 1) / 2) * 0.34;
+                    const spd = (135 + (i % 2) * 26) * speedMult;
+                    BulletEngine.bullets.push({
+                        kind: i % 2 === 0 ? 'barkText' : 'soundWave',
+                        x: ox, y: oy,
+                        r: i % 2 === 0 ? 12 : 10,
+                        vx: Math.cos(ang) * spd,
+                        vy: Math.sin(ang) * spd,
+                        rot: ang
+                    });
+                }
+            }
+
+            // 4. Cơn Thịnh Nộ Đỏ (💢 nảy tường + tia laser cảnh báo ngang/dọc)
+            else if (BulletEngine.pattern === 'fury') {
+                BulletEngine.spawnTimer = 1.05 * rateMult;
+                const furyCount = BulletEngine.bullets.filter(b => b.kind === 'anger').length;
+                if (furyCount < (isP2 ? 6 : 4)) {
+                    const ang = Math.random() * Math.PI * 2;
+                    const spd = 148 * speedMult;
+                    const leftSide = BulletEngine.waveCount % 2 === 0;
+                    BulletEngine.bullets.push({
+                        kind: 'anger',
+                        x: leftSide ? 24 : cw - 24,
+                        y: 34 + Math.random() * Math.max(40, ch - 56),
+                        r: 12,
+                        vx: Math.cos(ang) * spd || 105,
+                        vy: Math.sin(ang) * spd || 105,
+                        bounces: 4
+                    });
+                }
+                if (BulletEngine.waveCount % 2 === 0) {
+                    const horizontal = BulletEngine.waveCount % 4 === 0;
+                    SoundEngine.playWarnBeep();
+                    BulletEngine.warnings.push({
+                        kind: 'laserWarn',
+                        horizontal,
+                        pos: horizontal
+                            ? Math.min(Math.max(BulletEngine.heart.y, 40), ch - 26)
+                            : Math.min(Math.max(BulletEngine.heart.x, 36), cw - 36),
+                        thickness: isP2 ? 22 : 18,
+                        timer: isP2 ? 0.66 : 0.8
+                    });
+                }
+            }
+
+            // 5. Mưa Quà Secret Santa (Hộp quà đỏ né + Trái Tim Xanh Lá hồi +3 HP)
+            else if (BulletEngine.pattern === 'gifts') {
+                BulletEngine.spawnTimer = 0.35 * rateMult;
+                const isHeal = BulletEngine.waveCount % 5 === 0;
+                BulletEngine.bullets.push({
+                    kind: isHeal ? 'greenHeart' : 'giftHazard',
+                    x: 22 + Math.random() * (cw - 44),
+                    y: 12,
+                    r: isHeal ? 10.5 : 11.5,
+                    vx: (Math.random() - 0.5) * 44 * speedMult,
+                    vy: (118 + Math.random() * 58) * speedMult,
+                    sway: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        function updateEntities(dt) {
+            const cw = BulletEngine.cw;
+            const ch = BulletEngine.ch;
+            const h = BulletEngine.heart;
+
+            // Cảnh báo -> kích hoạt đòn thật
+            for (let i = BulletEngine.warnings.length - 1; i >= 0; i--) {
+                const w = BulletEngine.warnings[i];
+                w.timer -= dt;
+                if (w.timer <= 0) {
+                    if (w.kind === 'pawWarn') {
+                        SoundEngine.playSlam();
+                        triggerScreenShake();
+                        BulletEngine.bullets.push({ kind: 'pawSlam', x: w.x, y: w.y, r: w.r, life: 0.34, maxLife: 0.34 });
+                    } else if (w.kind === 'laserWarn') {
+                        SoundEngine.playSlam();
+                        BulletEngine.bullets.push({
+                            kind: 'laserBeam', horizontal: w.horizontal, pos: w.pos,
+                            thickness: w.thickness, life: 0.26, maxLife: 0.26
+                        });
+                    }
+                    BulletEngine.warnings.splice(i, 1);
+                }
+            }
+
+            // Cập nhật đạn & va chạm
+            for (let i = BulletEngine.bullets.length - 1; i >= 0; i--) {
+                const b = BulletEngine.bullets[i];
+
+                if (b.kind === 'pawSlam' || b.kind === 'laserBeam') {
+                    b.life -= dt;
+                    if (b.life <= 0) { BulletEngine.bullets.splice(i, 1); continue; }
+                } else {
+                    b.x += (b.vx || 0) * dt;
+                    b.y += (b.vy || 0) * dt;
+
+                    if (b.kind === 'giftHazard' || b.kind === 'greenHeart') {
+                        b.sway += dt * 4;
+                        b.x += Math.sin(b.sway) * 24 * dt;
+                    }
+
+                    if (b.kind === 'anger') {
+                        if (b.x < b.r + 4 || b.x > cw - b.r - 4) {
+                            b.vx *= -1;
+                            b.x = Math.min(Math.max(b.x, b.r + 4), cw - b.r - 4);
+                            b.bounces--;
+                        }
+                        if (b.y < b.r + 22 || b.y > ch - b.r - 4) {
+                            b.vy *= -1;
+                            b.y = Math.min(Math.max(b.y, b.r + 22), ch - b.r - 4);
+                            b.bounces--;
+                        }
+                        if (b.bounces < 0) { BulletEngine.bullets.splice(i, 1); continue; }
+                    } else if (b.x < -65 || b.x > cw + 65 || b.y < -65 || b.y > ch + 65) {
+                        BulletEngine.bullets.splice(i, 1);
+                        continue;
+                    }
+                }
+
+                // Hitbox công bằng (nhỏ hơn chút khi dùng NÉ CHẬM chuẩn Bullet Hell)
+                const hitR = h.size * (isSlowFocusActive() ? 0.62 : 0.72);
+                let hit = false;
+
+                if (b.kind === 'bone') {
+                    const cx = Math.max(b.x - b.w / 2, Math.min(h.x, b.x + b.w / 2));
+                    const cy = Math.max(b.y - b.h / 2, Math.min(h.y, b.y + b.h / 2));
+                    hit = Math.hypot(h.x - cx, h.y - cy) < hitR;
+                } else if (b.kind === 'laserBeam') {
+                    hit = b.horizontal
+                        ? Math.abs(h.y - b.pos) < (b.thickness / 2 + hitR * 0.65)
+                        : Math.abs(h.x - b.pos) < (b.thickness / 2 + hitR * 0.65);
+                } else if (b.kind === 'pawSlam') {
+                    hit = Math.hypot(h.x - b.x, h.y - b.y) < (b.r * 0.84 + hitR);
+                } else {
+                    hit = Math.hypot(h.x - b.x, h.y - b.y) < (b.r * 0.8 + hitR);
+                }
+
+                if (hit) {
+                    if (b.kind === 'greenHeart') {
+                        GameState.playerHp = Math.min(GameState.playerMaxHp, GameState.playerHp + 3);
+                        updateHUD();
+                        SoundEngine.playHeal();
+                        spawnCanvasPopup(h.x, h.y - 12, '+3 HP 💚', '#22ee55');
+                        BulletEngine.bullets.splice(i, 1);
+                        continue;
+                    }
+
+                    if (b.kind === 'bone' && b.color === 'blue' && !h.moved) {
+                        if (!b.dodgedNotified) {
+                            b.dodgedNotified = true;
+                            spawnCanvasPopup(h.x, h.y - 12, 'ĐỨNG YÊN CHUẨN!', '#00d8ff');
+                        }
+                        continue;
+                    }
+
+                    if (h.invuln <= 0) {
+                        const dmg = GameState.phase === 2 ? 4 : 3;
+                        GameState.playerHp = Math.max(0, GameState.playerHp - dmg);
+                        h.invuln = 1.1; // Bất tử nhấp nháy tránh mất máu liên tục
+                        updateHUD();
+                        SoundEngine.playHurt();
+                        triggerScreenShake();
+                        spawnCanvasPopup(h.x, h.y - 12, `-${dmg} HP`, '#ff4444');
+                    }
+                }
+            }
+
+            for (let i = BulletEngine.popups.length - 1; i >= 0; i--) {
+                const p = BulletEngine.popups[i];
+                p.y -= 30 * dt;
+                p.life -= dt;
+                if (p.life <= 0) BulletEngine.popups.splice(i, 1);
+            }
+        }
+
+        function spawnCanvasPopup(x, y, text, color) {
+            BulletEngine.popups.push({ x, y, text, color, life: 0.72 });
+        }
+
+        /* --- VẼ CANVAS BULLET HELL --- */
+        function renderBattleCanvas() {
+            const ctx = BulletEngine.ctx;
+            const cw = BulletEngine.cw;
+            const ch = BulletEngine.ch;
+            if (!ctx) return;
+
+            ctx.clearRect(0, 0, cw, ch);
+            ctx.fillStyle = GameState.phase === 2 ? '#0b0406' : '#040407';
+            ctx.fillRect(0, 0, cw, ch);
+
+            // Lưới nền siêu mờ
+            ctx.strokeStyle = GameState.phase === 2 ? 'rgba(255, 60, 60, 0.06)' : 'rgba(255, 255, 255, 0.04)';
+            ctx.lineWidth = 1;
+            for (let gx = 0; gx < cw; gx += 30) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, ch); ctx.stroke(); }
+            for (let gy = 0; gy < ch; gy += 30) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(cw, gy); ctx.stroke(); }
+
+            // 1. Vẽ vùng cảnh báo đỏ nhấp nháy
+            BulletEngine.warnings.forEach(w => {
+                const blink = Math.floor(BulletEngine.elapsed * 16) % 2 === 0;
+                ctx.save();
+                if (w.kind === 'pawWarn') {
+                    ctx.beginPath();
+                    ctx.arc(w.x, w.y, w.r, 0, Math.PI * 2);
+                    ctx.fillStyle = blink ? 'rgba(255, 35, 35, 0.28)' : 'rgba(255, 190, 0, 0.16)';
+                    ctx.fill();
+                    ctx.strokeStyle = blink ? '#ff2222' : '#ffe600';
+                    ctx.lineWidth = 2.5;
+                    ctx.setLineDash([5, 4]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 16px Chakra Petch, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('!', w.x, w.y);
+                } else if (w.kind === 'laserWarn') {
+                    ctx.fillStyle = blink ? 'rgba(255, 40, 40, 0.25)' : 'rgba(255, 230, 0, 0.14)';
+                    ctx.strokeStyle = blink ? '#ff2222' : '#ffe600';
+                    ctx.lineWidth = 2;
+                    if (w.horizontal) {
+                        ctx.fillRect(0, w.pos - w.thickness / 2, cw, w.thickness);
+                        ctx.strokeRect(0, w.pos - w.thickness / 2, cw, w.thickness);
+                    } else {
+                        ctx.fillRect(w.pos - w.thickness / 2, 0, w.thickness, ch);
+                        ctx.strokeRect(w.pos - w.thickness / 2, 0, w.thickness, ch);
+                    }
+                }
+                ctx.restore();
+            });
+
+            // 2. Vẽ các loại đạn
+            BulletEngine.bullets.forEach(b => {
+                ctx.save();
+                if (b.kind === 'bone') {
+                    ctx.fillStyle = b.color === 'blue' ? '#00d8ff' : '#ffffff';
+                    ctx.shadowColor = b.color === 'blue' ? '#00d8ff' : 'rgba(255,255,255,0.4)';
+                    ctx.shadowBlur = b.color === 'blue' ? 9 : 3;
+                    ctx.fillRect(b.x - b.w / 2 + 2, b.y - b.h / 2 + 5, b.w - 4, Math.max(4, b.h - 10));
+                    [b.y - b.h / 2 + 5, b.y + b.h / 2 - 5].forEach(cy => {
+                        ctx.beginPath(); ctx.arc(b.x - 3.5, cy, 5.5, 0, Math.PI * 2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(b.x + 3.5, cy, 5.5, 0, Math.PI * 2); ctx.fill();
+                    });
+                } else if (b.kind === 'pawSlam') {
+                    ctx.globalAlpha = Math.min(1, b.life / (b.maxLife * 0.7));
+                    ctx.beginPath();
+                    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                    ctx.fillStyle = '#faecd2';
+                    ctx.fill();
+                    ctx.strokeStyle = '#ff3333';
+                    ctx.lineWidth = 3.5;
+                    ctx.stroke();
+                    ctx.fillStyle = '#ff6b8b';
+                    ctx.beginPath(); ctx.ellipse(b.x, b.y + 7, 12, 9.5, 0, 0, Math.PI * 2); ctx.fill();
+                    [[-13, -7], [-4, -14], [6, -14], [14, -7]].forEach(([ox, oy]) => {
+                        ctx.beginPath(); ctx.arc(b.x + ox, b.y + oy, 5, 0, Math.PI * 2); ctx.fill();
+                    });
+                } else if (b.kind === 'barkText') {
+                    ctx.fillStyle = '#ff4444';
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2.5;
+                    ctx.font = '900 15px Chakra Petch, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.strokeText('GÂU!', b.x, b.y);
+                    ctx.fillText('GÂU!', b.x, b.y);
+                } else if (b.kind === 'soundWave') {
+                    ctx.translate(b.x, b.y);
+                    ctx.rotate(b.rot || 0);
+                    ctx.strokeStyle = '#ffe600';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath(); ctx.arc(0, 0, 9, -0.9, 0.9); ctx.stroke();
+                    ctx.strokeStyle = '#ff5533';
+                    ctx.lineWidth = 2.2;
+                    ctx.beginPath(); ctx.arc(-4, 0, 6, -0.8, 0.8); ctx.stroke();
+                } else if (b.kind === 'anger') {
+                    ctx.translate(b.x, b.y);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath(); ctx.arc(0, 0, b.r + 1, 0, Math.PI * 2); ctx.fill();
+                    ctx.strokeStyle = '#e01111';
+                    ctx.lineWidth = 2.8;
+                    ctx.lineCap = 'round';
+                    ctx.beginPath(); ctx.arc(-4.5, -4.5, 4.5, 0, Math.PI * 0.5); ctx.stroke();
+                    ctx.beginPath(); ctx.arc(4.5, -4.5, 4.5, Math.PI * 0.5, Math.PI); ctx.stroke();
+                    ctx.beginPath(); ctx.arc(4.5, 4.5, 4.5, Math.PI, Math.PI * 1.5); ctx.stroke();
+                    ctx.beginPath(); ctx.arc(-4.5, 4.5, 4.5, Math.PI * 1.5, Math.PI * 2); ctx.stroke();
+                } else if (b.kind === 'laserBeam') {
+                    ctx.globalAlpha = Math.min(1, b.life / (b.maxLife * 0.6));
+                    ctx.fillStyle = '#ff2222';
+                    ctx.shadowColor = '#ff2222';
+                    ctx.shadowBlur = 12;
+                    if (b.horizontal) {
+                        ctx.fillRect(0, b.pos - b.thickness / 2, cw, b.thickness);
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, b.pos - b.thickness * 0.22, cw, b.thickness * 0.44);
+                    } else {
+                        ctx.fillRect(b.pos - b.thickness / 2, 0, b.thickness, ch);
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(b.pos - b.thickness * 0.22, 0, b.thickness * 0.44, ch);
+                    }
+                } else if (b.kind === 'giftHazard') {
+                    ctx.translate(b.x, b.y);
+                    ctx.fillStyle = '#e11d48';
+                    ctx.fillRect(-9.5, -9.5, 19, 19);
+                    ctx.fillStyle = '#fde047';
+                    ctx.fillRect(-2.5, -9.5, 5, 19);
+                    ctx.fillRect(-9.5, -2.5, 19, 5);
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 1.4;
+                    ctx.strokeRect(-9.5, -9.5, 19, 19);
+                } else if (b.kind === 'greenHeart') {
+                    drawHeartShape(ctx, b.x, b.y, 8.5, '#22ee55', '#ffffff');
+                }
+                ctx.restore();
+            });
+
+            // 3. Vẽ Trái Tim Đỏ (SOUL) + điểm tâm trắng khi giữ NÉ CHẬM
+            const h = BulletEngine.heart;
+            const blinkHide = h.invuln > 0 && Math.floor(h.invuln * 18) % 2 === 0;
+            if (!blinkHide) {
+                if (isSlowFocusActive()) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(h.x, h.y, h.size + 4, 0, Math.PI * 2);
+                    ctx.strokeStyle = 'rgba(0, 216, 255, 0.7)';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                    ctx.restore();
+                }
+                drawHeartShape(ctx, h.x, h.y, h.size, '#ff1e1e', '#ffffff');
+                if (isSlowFocusActive()) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(h.x, h.y, 2.5, 0, Math.PI * 2);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            // 4. Text nổi
+            BulletEngine.popups.forEach(p => {
+                ctx.save();
+                ctx.globalAlpha = Math.min(1, p.life * 2);
+                ctx.font = 'bold 12px Chakra Petch, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 3;
+                ctx.strokeText(p.text, p.x, p.y);
+                ctx.fillStyle = p.color;
+                ctx.fillText(p.text, p.x, p.y);
+                ctx.restore();
+            });
+        }
+
+        function drawHeartShape(ctx, x, y, size, fill, stroke) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.beginPath();
+            const s = size * 0.95;
+            ctx.moveTo(0, s * 0.85);
+            ctx.bezierCurveTo(-s * 1.25, s * 0.1, -s * 1.15, -s * 0.95, 0, -s * 0.25);
+            ctx.bezierCurveTo(s * 1.15, -s * 0.95, s * 1.25, s * 0.1, 0, s * 0.85);
+            ctx.closePath();
+            ctx.fillStyle = fill;
+            ctx.shadowColor = fill;
+            ctx.shadowBlur = 9;
+            ctx.fill();
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = stroke;
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        /* =====================================================================
+         * 8. MÀN HÌNH KẾT THÚC (FIGHT / MERCY: 160–260 PTS | DEFEAT: 40–70 PTS)
+         * ===================================================================== */
+        function finishGame(outcome) {
+            if (GameState.screen === 'end') return;
+
+            stopBulletHell();
+            cancelFightBar();
+            clearInterval(GameState.dialogueTimer);
+            GameState.dialogueTimer = null;
+            JoystickController.reset();
+            setSlowFocus(false);
+            document.body.classList.remove('phase2-active');
+
+            GameState.screen = 'end';
+            document.getElementById('battleScreen').classList.add('hidden');
+            document.getElementById('endScreen').classList.remove('hidden');
+
+            const visualEl = document.getElementById('endVisual');
+            const badgeEl = document.getElementById('endBadge');
+            const titleEl = document.getElementById('endTitle');
+            const storyEl = document.getElementById('endStory');
+            const rewardCard = document.getElementById('rewardCard');
+            const rewardCardTitle = document.getElementById('rewardCardTitle');
+            const pointsEl = document.getElementById('rewardTotalPoints');
+            const unitEl = document.getElementById('rewardPointsUnit');
+            const syncEl = document.getElementById('rewardSyncStatus');
+            const breakdownEl = document.getElementById('rewardBreakdown');
+            const restartBtn = document.getElementById('restartBtn');
+
+            const isDefeat = (outcome === 'defeat');
+            const isMercy = (outcome === 'mercy');
+            const routeText = getOutcomeLabel(outcome);
+
+            const resultPayload = isDefeat
+                ? {
+                    type: 'PART3_RESULT',
+                    outcome: 'defeat',
+                    turns: GameState.turn,
+                    hpLeft: 0,
+                    maxHp: GameState.playerMaxHp,
+                    mercyPct: Math.min(100, Math.max(0, GameState.mercy)),
+                    bossHpLeft: Math.max(0, GameState.bossHp)
+                }
+                : {
+                    type: 'PART3_RESULT',
+                    outcome: isMercy ? 'mercy' : 'fight',
+                    turns: GameState.turn,
+                    hpLeft: Math.max(0, GameState.playerHp),
+                    maxHp: GameState.playerMaxHp,
+                    mercyPct: Math.min(100, Math.max(0, GameState.mercy)),
+                    bossHpLeft: 0
+                };
+
+            if (isDefeat) {
+                SoundEngine.stopBgm();
+                SoundEngine.playHeartBreak();
+
+                visualEl.innerHTML = `
+                    <div class="relative w-28 h-28 flex items-center justify-center">
+                        <svg viewBox="0 0 100 100" class="w-24 h-24 overflow-visible" role="img" aria-label="Trái tim vỡ">
+                            <path class="heart-half-left" d="M50 86 C20 64 12 42 18 26 C24 12 42 14 50 28 L46 46 L52 60 Z" fill="#ff2222" stroke="#ffffff" stroke-width="3"/>
+                            <path class="heart-half-right" d="M50 86 C80 64 88 42 82 26 C76 12 58 14 50 28 L54 46 L48 60 Z" fill="#ff2222" stroke="#ffffff" stroke-width="3"/>
+                        </svg>
+                    </div>
+                `;
+                badgeEl.textContent = '💔 GAME OVER';
+                badgeEl.className = 'inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider mb-1.5 bg-red-900/90 border border-red-400 text-red-200';
+                titleEl.textContent = 'TRÁI TIM ĐÃ VỠ...';
+                storyEl.textContent = `Boss Cún Bông quá mạnh! Đừng bỏ cuộc — hãy giữ vững Quyết Tâm (DETERMINATION) của Phòng 204! Bạn vẫn nhận được ${Part3Bridge.defeatMin}–${Part3Bridge.defeatMax} PTS điểm an ủi khi đã chiến đấu ít nhất 1 lượt.`;
+                restartBtn.textContent = '🔥 THỬ LẠI NGAY';
+            } else if (isMercy) {
+                SoundEngine.playVictoryFanfare(true);
+                visualEl.innerHTML = getBossEndSvgMarkup('mercy');
+                badgeEl.textContent = '🌟 TRUE PACIFIST ENDING';
+                badgeEl.className = 'inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider mb-1.5 bg-yellow-500/25 border border-yellow-300 text-yellow-200';
+                titleEl.textContent = 'BẠN THÂN PHÒNG 204!';
+                storyEl.textContent = 'Bạn đã cảm hóa hoàn toàn Boss Cún Bông bằng sự ấm áp! Cún Bông vui vẻ mở cửa Phòng 204 và tặng bạn phần thưởng Secret Santa 204 hậu hĩnh.';
+                restartBtn.textContent = '🔄 CHƠI LẠI';
+            } else {
+                SoundEngine.playVictoryFanfare(false);
+                visualEl.innerHTML = getBossEndSvgMarkup('fight');
+                badgeEl.textContent = '⚔️ VICTORY ENDING';
+                badgeEl.className = 'inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider mb-1.5 bg-orange-900/80 border border-orange-400 text-orange-200';
+                titleEl.textContent = 'CHINH PHỤC BOSS 204!';
+                storyEl.textContent = 'Sau trận mưa đạn nảy lửa, Boss Cún Bông đã chịu thua và ngoan ngoãn nằm xuống thảm vàng Phòng 204. Thử tuyến Hòa Bình (ACT + MERCY) để có cơ hội nhận thưởng cao hơn nhé!';
+                restartBtn.textContent = '🔄 CHƠI LẠI';
+            }
+
+            rewardCard.classList.remove('hidden');
+            unitEl.textContent = 'PTS';
+
+            if (Part3Bridge.embedded) {
+                // Đang nhúng trong index.html: gửi kết quả về parent và chờ PART3_REWARD_APPLIED
+                rewardCardTitle.textContent = isDefeat
+                    ? '💝 ĐIỂM AN ỦI SECRET SANTA 204'
+                    : '🎁 PHẦN THƯỞNG SECRET SANTA 204';
+                pointsEl.textContent = '⏳';
+                pointsEl.className = 'text-4xl sm:text-5xl font-extrabold text-yellow-300 font-pixel-num animate-pulse';
+                syncEl.className = 'mt-1.5 px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold bg-white/10 border border-white/25 text-yellow-200';
+                syncEl.textContent = '⏳ Đang lưu điểm vào hệ thống Secret Santa 204...';
+                breakdownEl.innerHTML = `
+                    <div>• Kết quả: <strong class="text-yellow-300">${escapeHtml(routeText)}</strong></div>
+                    <div>• HP còn lại: <strong class="text-green-400">${resultPayload.hpLeft}/${resultPayload.maxHp} HP</strong> • Số lượt: <strong>${resultPayload.turns}</strong> • Thiện cảm: <strong class="text-pink-300">${resultPayload.mercyPct}%</strong></div>
+                    <div>• Khung thưởng Part 3: <strong class="text-cyan-300">${isDefeat ? `${Part3Bridge.defeatMin}–${Part3Bridge.defeatMax} PTS an ủi` : `${Part3Bridge.winMin}–${Part3Bridge.winMax} PTS`}</strong></div>
+                `;
+                GameState.lastRewardSummary = `[Secret Santa 204 - Part 3] UNDERTALE 204: Boss Cún Bông | ${routeText} | HP: ${resultPayload.hpLeft}/${resultPayload.maxHp} | Lượt: ${resultPayload.turns}`;
+
+                postPart3Result(resultPayload);
+            } else {
+                // Chế độ mở độc lập ngoài iframe: tính điểm xem trước trong khung 160–260 (thắng) / 40–70 (thua >=1 lượt)
+                const previewPts = calculateLocalPreviewReward(resultPayload);
+                Part3Bridge.lastResultPayload = resultPayload;
+                rewardCardTitle.textContent = isDefeat
+                    ? '💝 ĐIỂM AN ỦI DỰ KIẾN (STANDALONE)'
+                    : '🎁 PHẦN THƯỞNG DỰ KIẾN (STANDALONE)';
+                pointsEl.textContent = `+${previewPts}`;
+                pointsEl.className = 'text-4xl sm:text-5xl font-extrabold text-yellow-300 font-pixel-num';
+                syncEl.className = 'mt-1.5 px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold bg-indigo-950/90 border border-cyan-400/70 text-cyan-200';
+                syncEl.textContent = '🧪 Chế độ độc lập (điểm xem trước) — mở trong Secret Santa 204 để cộng điểm chính thức!';
+                breakdownEl.innerHTML = `
+                    <div>• Kết quả: <strong class="text-yellow-300">${escapeHtml(routeText)}</strong></div>
+                    <div>• HP còn lại: <strong class="text-green-400">${resultPayload.hpLeft}/${resultPayload.maxHp} HP</strong> • Số lượt: <strong>${resultPayload.turns}</strong> • Thiện cảm: <strong class="text-pink-300">${resultPayload.mercyPct}%</strong></div>
+                    <div>• Mức thưởng Part 3: <strong class="text-yellow-300">+${previewPts} PTS</strong> (${isDefeat ? `khung an ủi ${Part3Bridge.defeatMin}–${Part3Bridge.defeatMax} PTS` : `khung thắng Boss ${Part3Bridge.winMin}–${Part3Bridge.winMax} PTS`})</div>
+                `;
+                GameState.lastRewardSummary = `[Secret Santa 204 - Part 3] UNDERTALE 204: Boss Cún Bông | ${routeText} | HP: ${resultPayload.hpLeft}/${resultPayload.maxHp} | Lượt: ${resultPayload.turns} | Điểm dự kiến: +${previewPts} PTS`;
+            }
+        }
+
+        function copyRewardSummary() {
+            if (!GameState.lastRewardSummary) return;
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(GameState.lastRewardSummary).then(() => {
+                        showToast('✅ Đã sao chép chiến tích Part 3!');
+                    }).catch(() => fallbackCopyText(GameState.lastRewardSummary));
+                } else {
+                    fallbackCopyText(GameState.lastRewardSummary);
+                }
+            } catch (err) {
+                fallbackCopyText(GameState.lastRewardSummary);
+            }
+        }
+
+        function fallbackCopyText(text) {
+            try {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                const ok = document.execCommand('copy');
+                document.body.removeChild(ta);
+                showToast(ok ? '✅ Đã sao chép chiến tích Part 3!' : '⚠️ Không thể sao chép tự động');
+            } catch (err) {
+                showToast('⚠️ Lỗi khi sao chép kết quả');
+            }
+        }
+
+        /* =====================================================================
+         * 9. HỆ THỐNG CẦN ĐIỀU KHIỂN ẢO 360° SIÊU NHẠY ĐA CHẠM (VIRTUAL ANALOG)
+         * ===================================================================== */
+        const JoystickController = {
+            hitZone: null,
+            base: null,
+            knob: null,
+            glowArc: null,
+            touchId: null,
+            mouseDragging: false,
+            maxRadius: 38,    // Bán kính tối đa núm gạt trong đế hiển thị 120px
+            deadzone: 0.03,   // Vùng chết siêu nhỏ 3% để nhích nhẹ là phản hồi ngay
+            knee: 0.42,       // Đẩy 42% bán kính đã đạt tốc độ tối đa chuẩn (1.0x)
+            lastMenuNavTs: 0,
+
+            init() {
+                this.hitZone = document.getElementById('joystickHitZone');
+                this.base = document.getElementById('joystickBase');
+                this.knob = document.getElementById('joystickKnob');
+                this.glowArc = document.getElementById('joystickGlowArc');
+
+                this.hitZone.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    SoundEngine.init();
+                    if (this.touchId === null && e.changedTouches.length > 0) {
+                        const t = e.changedTouches[0];
+                        this.touchId = t.identifier;
+                        this.hitZone.classList.add('dragging');
+                        this.knob.classList.remove('spring-back');
+                        this.updateFromClientPos(t.clientX, t.clientY);
+                    }
+                }, { passive: false });
+
+                window.addEventListener('touchmove', (e) => {
+                    if (this.touchId === null) return;
+                    for (let i = 0; i < e.touches.length; i++) {
+                        const t = e.touches[i];
+                        if (t.identifier === this.touchId) {
+                            e.preventDefault();
+                            this.updateFromClientPos(t.clientX, t.clientY);
+                            break;
+                        }
+                    }
+                }, { passive: false });
+
+                const onTouchRelease = (e) => {
+                    if (this.touchId === null) return;
+                    for (let i = 0; i < e.changedTouches.length; i++) {
+                        if (e.changedTouches[i].identifier === this.touchId) {
+                            this.reset();
+                            break;
+                        }
+                    }
+                };
+                window.addEventListener('touchend', onTouchRelease, { passive: false });
+                window.addEventListener('touchcancel', onTouchRelease, { passive: false });
+
+                this.hitZone.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    SoundEngine.init();
+                    this.mouseDragging = true;
+                    this.hitZone.classList.add('dragging');
+                    this.knob.classList.remove('spring-back');
+                    this.updateFromClientPos(e.clientX, e.clientY);
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!this.mouseDragging) return;
+                    this.updateFromClientPos(e.clientX, e.clientY);
+                });
+
+                window.addEventListener('mouseup', () => {
+                    if (this.mouseDragging) this.reset();
+                });
+            },
+
+            updateFromClientPos(clientX, clientY) {
+                const rect = this.base.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+
+                const dx = clientX - cx;
+                const dy = clientY - cy;
+                const dist = Math.hypot(dx, dy);
+
+                const clampedDist = Math.min(dist, this.maxRadius);
+                const angle = Math.atan2(dy, dx);
+                const knobX = Math.cos(angle) * clampedDist;
+                const knobY = Math.sin(angle) * clampedDist;
+
+                this.knob.style.transform = `translate3d(${knobX}px, ${knobY}px, 0)`;
+
+                const normMag = clampedDist / this.maxRadius;
+                if (normMag < this.deadzone) {
+                    BulletEngine.joyX = 0;
+                    BulletEngine.joyY = 0;
+                    this.updateGlowAndArrows(0, 0, angle, 0);
+                } else {
+                    const t = (normMag - this.deadzone) / (1 - this.deadzone);
+                    const sensMult = getCurrentSensitivity().mult;
+                    let effMag = 0;
+
+                    if (t <= this.knee) {
+                        effMag = Math.pow(t / this.knee, 0.72);
+                    } else {
+                        const extra = (t - this.knee) / (1 - this.knee);
+                        effMag = 1.0 + (sensMult - 1.0) * Math.pow(extra, 0.85);
+                    }
+
+                    BulletEngine.joyX = Math.cos(angle) * effMag;
+                    BulletEngine.joyY = Math.sin(angle) * effMag;
+                    this.updateGlowAndArrows(BulletEngine.joyX, BulletEngine.joyY, angle, normMag);
+                    this.tryNavigateMenuWithStick(Math.cos(angle) * normMag, Math.sin(angle) * normMag);
+                }
+            },
+
+            tryNavigateMenuWithStick(vx, vy) {
+                if (GameState.screen !== 'battle' || (GameState.mode !== 'menu' && GameState.mode !== 'submenu')) return;
+                const now = performance.now();
+                if (now - this.lastMenuNavTs < 220) return;
+
+                if (Math.abs(vx) > 0.55 || Math.abs(vy) > 0.55) {
+                    this.lastMenuNavTs = now;
+                    if (GameState.mode === 'menu') {
+                        if (vx > 0.55) highlightMainAction(GameState.selectedMain + 1);
+                        else if (vx < -0.55) highlightMainAction(GameState.selectedMain - 1);
+                    } else if (GameState.mode === 'submenu') {
+                        stepSubmenu(vx > 0.55 || vy > 0.55 ? 1 : -1);
+                    }
+                }
+            },
+
+            updateGlowAndArrows(vx, vy, angle, normMag) {
+                document.getElementById('joyArrUp').classList.toggle('lit', vy < -0.3);
+                document.getElementById('joyArrDown').classList.toggle('lit', vy > 0.3);
+                document.getElementById('joyArrLeft').classList.toggle('lit', vx < -0.3);
+                document.getElementById('joyArrRight').classList.toggle('lit', vx > 0.3);
+
+                if (this.glowArc) {
+                    if (normMag > 0.22) {
+                        const deg = (angle * 180 / Math.PI) + 90;
+                        const glowOpacity = Math.min(1, (normMag - 0.18) * 1.25);
+                        this.glowArc.style.opacity = glowOpacity.toFixed(2);
+                        this.glowArc.style.transform = `rotate(${deg.toFixed(1)}deg)`;
+                    } else {
+                        this.glowArc.style.opacity = '0';
+                    }
+                }
+            },
+
+            reset() {
+                this.touchId = null;
+                this.mouseDragging = false;
+                BulletEngine.joyX = 0;
+                BulletEngine.joyY = 0;
+                if (this.hitZone) this.hitZone.classList.remove('dragging');
+                if (this.knob) {
+                    this.knob.classList.add('spring-back');
+                    this.knob.style.transform = 'translate3d(0px, 0px, 0)';
+                }
+                this.updateGlowAndArrows(0, 0, 0, 0);
+            }
+        };
+
+        /* =====================================================================
+         * 9B. HỖ TRỢ KÉO TRỰC TIẾP TRONG KHUNG ĐẤU (#battleCanvas) — ĐA CHẠM
+         * ===================================================================== */
+        function setupCanvasDirectDrag() {
+            const canvas = document.getElementById('battleCanvas');
+            if (!canvas) return;
+
+            let canvasTouchId = null;
+            let lastX = 0;
+            let lastY = 0;
+            let mouseDown = false;
+
+            canvas.addEventListener('touchstart', (e) => {
+                if (GameState.mode !== 'dodge') return;
+                e.preventDefault();
+                SoundEngine.init();
+                if (canvasTouchId === null && e.changedTouches.length > 0) {
+                    const t = e.changedTouches[0];
+                    canvasTouchId = t.identifier;
+                    lastX = t.clientX;
+                    lastY = t.clientY;
+                }
+            }, { passive: false });
+
+            canvas.addEventListener('touchmove', (e) => {
+                if (canvasTouchId === null || GameState.mode !== 'dodge') return;
+                for (let i = 0; i < e.touches.length; i++) {
+                    const t = e.touches[i];
+                    if (t.identifier === canvasTouchId) {
+                        e.preventDefault();
+                        BulletEngine.dragDeltaX += (t.clientX - lastX) * 1.15;
+                        BulletEngine.dragDeltaY += (t.clientY - lastY) * 1.15;
+                        lastX = t.clientX;
+                        lastY = t.clientY;
+                        break;
+                    }
+                }
+            }, { passive: false });
+
+            const releaseCanvasTouch = (e) => {
+                if (canvasTouchId === null) return;
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === canvasTouchId) {
+                        canvasTouchId = null;
+                        break;
+                    }
+                }
+            };
+            window.addEventListener('touchend', releaseCanvasTouch, { passive: false });
+            window.addEventListener('touchcancel', releaseCanvasTouch, { passive: false });
+
+            canvas.addEventListener('mousedown', (e) => {
+                if (GameState.mode !== 'dodge') return;
+                e.preventDefault();
+                SoundEngine.init();
+                mouseDown = true;
+                lastX = e.clientX;
+                lastY = e.clientY;
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!mouseDown || GameState.mode !== 'dodge') return;
+                BulletEngine.dragDeltaX += (e.clientX - lastX) * 1.1;
+                BulletEngine.dragDeltaY += (e.clientY - lastY) * 1.1;
+                lastX = e.clientX;
+                lastY = e.clientY;
+            });
+
+            window.addEventListener('mouseup', () => { mouseDown = false; });
+        }
+
+        /* =====================================================================
+         * 10. NÚT PHỤ TRỢ NGÓN CÁI PHẢI (NÉ CHẬM & CHỌN/ĐÁNH Z) + D-PAD + PC
+         * ===================================================================== */
+        function handleConfirmZ() {
+            SoundEngine.init();
+            if (GameState.screen === 'start') {
+                startGame();
+                return;
+            }
+            if (GameState.screen !== 'battle') return;
+
+            if (GameState.mode === 'fight') {
+                triggerFightStrike();
+            } else if (GameState.mode === 'dialogue') {
+                advanceDialogue();
+            } else if (GameState.mode === 'menu') {
+                selectMainAction(GameState.selectedMain);
+            } else if (GameState.mode === 'submenu') {
+                const btns = Array.from(document.querySelectorAll('#submenuGrid .sub-option'));
+                const active = btns[GameState.selectedSub];
+                if (active && !active.disabled) active.click();
+            }
+        }
+
+        function stepSubmenu(delta) {
+            const btns = Array.from(document.querySelectorAll('#submenuGrid .sub-option'));
+            if (!btns.length) return;
+            let idx = GameState.selectedSub;
+            for (let step = 0; step < btns.length; step++) {
+                idx = (idx + delta + btns.length) % btns.length;
+                if (!btns[idx].disabled) break;
+            }
+            SoundEngine.playMenuMove();
+            setSubSelection(idx);
+        }
+
+        function setupMobileButtonsAndDpad() {
+            // 1. Nút NÉ CHẬM (HOLD) hỗ trợ đa chạm độc lập với cần gạt bên trái
+            const slowBtn = document.getElementById('btnSlowHold');
+            let slowTouchId = null;
+
+            slowBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                SoundEngine.init();
+                if (slowTouchId === null && e.changedTouches.length > 0) {
+                    slowTouchId = e.changedTouches[0].identifier;
+                    setSlowFocus(true);
+                }
+            }, { passive: false });
+
+            const releaseSlowTouch = (e) => {
+                if (slowTouchId === null) return;
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === slowTouchId) {
+                        slowTouchId = null;
+                        setSlowFocus(false);
+                        break;
+                    }
+                }
+            };
+            window.addEventListener('touchend', releaseSlowTouch, { passive: false });
+            window.addEventListener('touchcancel', releaseSlowTouch, { passive: false });
+
+            slowBtn.addEventListener('mousedown', (e) => { e.preventDefault(); setSlowFocus(true); });
+            window.addEventListener('mouseup', () => { if (BulletEngine.slowBtn && slowTouchId === null) setSlowFocus(false); });
+
+            // 2. Nút CHỌN / ĐÁNH (Z) phản hồi tức thì cho FIGHT bar & thoại
+            const confirmBtn = document.getElementById('btnConfirmZ');
+            let lastTouchTrigger = 0;
+
+            confirmBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                lastTouchTrigger = performance.now();
+                confirmBtn.classList.add('active');
+                handleConfirmZ();
+            }, { passive: false });
+            confirmBtn.addEventListener('touchend', () => confirmBtn.classList.remove('active'));
+            confirmBtn.addEventListener('touchcancel', () => confirmBtn.classList.remove('active'));
+
+            confirmBtn.addEventListener('mousedown', (e) => {
+                if (performance.now() - lastTouchTrigger < 400) return;
+                e.preventDefault();
+                confirmBtn.classList.add('active');
+                handleConfirmZ();
+            });
+            confirmBtn.addEventListener('mouseup', () => confirmBtn.classList.remove('active'));
+            confirmBtn.addEventListener('mouseleave', () => confirmBtn.classList.remove('active'));
+
+            // 3. Phím D-Pad 4 hướng
+            document.querySelectorAll('.dpad-btn').forEach(btn => {
+                const dir = btn.dataset.dir;
+                const press = (e) => {
+                    e.preventDefault();
+                    SoundEngine.init();
+                    BulletEngine.dpadKeys[dir] = true;
+                    btn.classList.add('pressed');
+                    if (GameState.mode === 'menu') {
+                        if (dir === 'right') highlightMainAction(GameState.selectedMain + 1);
+                        else if (dir === 'left') highlightMainAction(GameState.selectedMain - 1);
+                    } else if (GameState.mode === 'submenu') {
+                        if (dir === 'right' || dir === 'down') stepSubmenu(1);
+                        else stepSubmenu(-1);
+                    }
+                };
+                const release = (e) => {
+                    e.preventDefault();
+                    BulletEngine.dpadKeys[dir] = false;
+                    btn.classList.remove('pressed');
+                };
+                btn.addEventListener('touchstart', press, { passive: false });
+                btn.addEventListener('touchend', release, { passive: false });
+                btn.addEventListener('touchcancel', release, { passive: false });
+                btn.addEventListener('mousedown', press);
+                btn.addEventListener('mouseup', release);
+                btn.addEventListener('mouseleave', release);
+            });
+        }
+
+        // Bàn phím PC (Mũi tên / WASD, Shift đi chậm, Z / Enter / Space chọn, X / Esc quay lại)
+        window.addEventListener('keydown', (e) => {
+            const k = e.key.toLowerCase();
+            SoundEngine.init();
+
+            if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(k) && GameState.screen === 'battle') {
+                e.preventDefault();
+            }
+
+            if (k === 'shift') {
+                BulletEngine.slowKey = true;
+                document.getElementById('btnSlowHold').classList.add('active');
+                document.getElementById('slowModeIndicator').classList.remove('hidden');
+                return;
+            }
+
+            if (GameState.screen === 'start') {
+                if (k === 'z' || ((k === 'enter' || k === ' ') && (!e.target || e.target.tagName !== 'BUTTON'))) {
+                    e.preventDefault();
+                    startGame();
+                }
+                return;
+            }
+
+            if (GameState.screen !== 'battle') return;
+
+            if (GameState.mode === 'dodge') {
+                if (k === 'arrowup' || k === 'w') BulletEngine.kbKeys.up = true;
+                if (k === 'arrowdown' || k === 's') BulletEngine.kbKeys.down = true;
+                if (k === 'arrowleft' || k === 'a') BulletEngine.kbKeys.left = true;
+                if (k === 'arrowright' || k === 'd') BulletEngine.kbKeys.right = true;
+                return;
+            }
+
+            if (k === 'enter' || k === ' ' || k === 'z') {
+                handleConfirmZ();
+                return;
+            }
+
+            if (GameState.mode === 'menu') {
+                if (k === 'arrowright' || k === 'd') highlightMainAction(GameState.selectedMain + 1);
+                else if (k === 'arrowleft' || k === 'a') highlightMainAction(GameState.selectedMain - 1);
+            } else if (GameState.mode === 'submenu') {
+                if (k === 'escape' || k === 'x') backToMainMenu();
+                else if (['arrowright', 'd', 'arrowdown', 's'].includes(k)) stepSubmenu(1);
+                else if (['arrowleft', 'a', 'arrowup', 'w'].includes(k)) stepSubmenu(-1);
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            const k = e.key.toLowerCase();
+            if (k === 'shift') {
+                BulletEngine.slowKey = false;
+                document.getElementById('btnSlowHold').classList.toggle('active', isSlowFocusActive());
+                document.getElementById('slowModeIndicator').classList.toggle('hidden', !isSlowFocusActive());
+            }
+            if (k === 'arrowup' || k === 'w') BulletEngine.kbKeys.up = false;
+            if (k === 'arrowdown' || k === 's') BulletEngine.kbKeys.down = false;
+            if (k === 'arrowleft' || k === 'a') BulletEngine.kbKeys.left = false;
+            if (k === 'arrowright' || k === 'd') BulletEngine.kbKeys.right = false;
+        });
+
+        window.addEventListener('resize', () => {
+            if (GameState.mode === 'dodge') resizeBattleCanvas();
+        });
+
+        window.addEventListener('pagehide', () => {
+            stopBulletHell();
+            cancelFightBar();
+            SoundEngine.stopBgm();
+        });
+
+        // Khởi tạo cụm tay cầm & gửi tín hiệu PART3_READY cho parent khi tải xong trang
+        window.onload = function () {
+            updateSensitivityUI();
+            JoystickController.init();
+            setupCanvasDirectDrag();
+            setupMobileButtonsAndDpad();
+            initPart3Bridge();
+        };
+    </script>
+</body>
+</html>
