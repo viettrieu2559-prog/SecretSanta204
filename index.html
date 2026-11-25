@@ -565,24 +565,28 @@
         </div>
     </div>
 
-    <!-- MODAL BỐC THĂM / GHÉP CẶP SECRET SANTA (ADMIN) -->
+    <!-- MODAL BỐC THĂM / GHÉP CẶP SECRET SANTA & GỬI EMAIL MẬT THƯ (ADMIN) -->
     <div id="matchingModal" class="hidden fixed inset-0 bg-black/80 z-[170] flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-            <div class="bg-gradient-to-r from-red-700 to-red-900 p-4 text-white flex justify-between items-center">
+        <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="bg-gradient-to-r from-red-700 via-rose-800 to-red-900 p-4 text-white flex justify-between items-center">
                 <div>
-                    <h3 class="text-base sm:text-xl font-bold flex items-center gap-2">🎲 Bốc Thăm & Ghép Cặp Secret Santa</h3>
-                    <p class="text-[11px] sm:text-xs text-amber-200 mt-0.5">Thuật toán ghép vòng tròn khép kín: Không ai tự bốc trúng chính mình</p>
+                    <h3 class="text-base sm:text-xl font-bold flex items-center gap-2">🎲 Bốc Thăm Ghép Cặp &amp; Gửi Mail Mật Thư Secret Santa</h3>
+                    <p class="text-[11px] sm:text-xs text-amber-200 mt-0.5">Ghép vòng tròn khép kín (không ai trúng chính mình) • Tự động chuẩn bị sẵn Email kèm Tên, Wishlist &amp; Blacklist người nhận quà</p>
                 </div>
                 <button onclick="closeMatchingModal()" class="bg-white/20 hover:bg-white/30 text-white w-8 h-8 rounded-full font-bold transition">✕</button>
             </div>
             <div class="p-3 sm:p-6 overflow-y-auto custom-scroll flex-1 space-y-4">
                 <div class="flex flex-wrap gap-2 justify-between items-center bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs sm:text-sm text-amber-900">
-                    <div>
-                        <strong>💡 Hướng dẫn:</strong> Bấm <em>"Quay Số Lại"</em> để tạo cặp mới, hoặc xuất ra file CSV để gửi mật thư.
+                    <div class="space-y-0.5">
+                        <div><strong>💡 Hướng dẫn:</strong> Sau khi quay xong, mỗi dòng đều có nút <strong>"📨 Gửi Mail"</strong> đã chuẩn bị sẵn <strong>Tên người được tặng + Wishlist + Blacklist</strong>.</div>
+                        <div class="text-[11px] text-amber-800">Bạn có thể bấm <strong>"📨 Mở Gmail"</strong> để gửi từng người, hoặc bấm <strong>"🚀 Gửi Tự Động Tất Cả"</strong> qua Google Apps Script!</div>
                     </div>
-                    <div class="flex gap-2 w-full sm:w-auto">
+                    <div class="flex flex-wrap gap-2 w-full sm:w-auto">
                         <button onclick="generateSantaPairs()" class="flex-1 sm:flex-initial bg-red-600 hover:bg-red-700 text-white font-bold px-3.5 py-2 rounded-lg shadow transition text-xs whitespace-nowrap">
-                            🎲 Quay Số Lại
+                            🎲 Quay Số Ghép Cặp Mới
+                        </button>
+                        <button onclick="sendAllSantaEmailsViaAppsScript()" class="flex-1 sm:flex-initial bg-blue-600 hover:bg-blue-700 text-white font-bold px-3.5 py-2 rounded-lg shadow transition text-xs whitespace-nowrap">
+                            🚀 Gửi Tự Động Tất Cả Mail
                         </button>
                         <button onclick="exportPairsCSV()" class="flex-1 sm:flex-initial bg-green-700 hover:bg-green-800 text-white font-bold px-3.5 py-2 rounded-lg shadow transition text-xs whitespace-nowrap">
                             📥 Xuất CSV
@@ -594,10 +598,11 @@
                         <thead>
                             <tr class="bg-gray-100 text-gray-700 border-b border-gray-200">
                                 <th class="p-2.5 sm:p-3 font-bold text-center w-10">#</th>
-                                <th class="p-2.5 sm:p-3 font-bold whitespace-nowrap">🎅 Người Tặng</th>
+                                <th class="p-2.5 sm:p-3 font-bold whitespace-nowrap">🎅 Người Tặng (Santa &amp; Email)</th>
                                 <th class="p-2.5 sm:p-3 font-bold text-center">➡️</th>
-                                <th class="p-2.5 sm:p-3 font-bold whitespace-nowrap">🎁 Người Nhận</th>
-                                <th class="p-2.5 sm:p-3 font-bold">Wishlist & Blacklist Người Nhận</th>
+                                <th class="p-2.5 sm:p-3 font-bold whitespace-nowrap">🎁 Người Nhận Quà</th>
+                                <th class="p-2.5 sm:p-3 font-bold">Wishlist &amp; Blacklist Người Nhận</th>
+                                <th class="p-2.5 sm:p-3 font-bold text-center whitespace-nowrap">📧 Gửi Mail Mật Thư</th>
                             </tr>
                         </thead>
                         <tbody id="matchingTableBody" class="divide-y divide-gray-100">
@@ -605,6 +610,118 @@
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL XEM TRƯỚC & GỬI EMAIL MẬT THƯ SECRET SANTA ĐÃ CHUẨN BỊ SẴN -->
+    <div id="santaEmailPreviewModal" class="hidden fixed inset-0 bg-black/85 z-[215] flex items-center justify-center p-3 sm:p-4" onclick="if(event.target===this) closeSantaEmailPreviewModal()">
+        <div class="bg-white rounded-3xl max-w-lg w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden border-2 border-amber-300" onclick="event.stopPropagation()">
+            <div class="bg-gradient-to-r from-red-800 via-rose-700 to-red-900 p-4 text-white flex items-center justify-between gap-2">
+                <div>
+                    <span class="text-[10px] bg-amber-400 text-red-950 font-black px-2.5 py-0.5 rounded-full uppercase">📧 Mật Thư Chuẩn Bị Sẵn</span>
+                    <h3 id="santaEmailModalHeader" class="text-base sm:text-lg font-black mt-1">Gửi Mật Thư Secret Santa</h3>
+                </div>
+                <button type="button" onclick="closeSantaEmailPreviewModal()" class="bg-white/20 hover:bg-white/30 text-white w-8 h-8 rounded-full font-bold transition">✕</button>
+            </div>
+            <div class="p-4 sm:p-5 overflow-y-auto custom-scroll space-y-3 text-xs sm:text-sm flex-1">
+                <div>
+                    <label class="block text-xs font-extrabold text-gray-700 mb-1">📬 Email Người Tặng (Santa nhận thư):</label>
+                    <input type="email" id="santaEmailToInput" class="w-full px-3 py-2 rounded-xl border border-gray-300 font-bold text-blue-700 bg-blue-50/40 focus:outline-none focus:border-red-600" placeholder="Nhập email người tặng (VD: sv@gmail.com)...">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-gray-700 mb-1">🏷️ Tiêu đề Email (Subject):</label>
+                    <input type="text" id="santaEmailSubjectInput" class="w-full px-3 py-2 rounded-xl border border-gray-300 font-bold text-gray-800 focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-gray-700 mb-1">📜 Nội dung Email đã điền sẵn (Tên người nhận + Wishlist + Blacklist):</label>
+                    <textarea id="santaEmailBodyInput" rows="10" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 font-medium text-gray-800 leading-relaxed focus:outline-none focus:border-red-600 custom-scroll"></textarea>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+                    <button type="button" onclick="triggerGmailComposeFromModal()" class="bg-red-600 hover:bg-red-700 text-white font-black py-2.5 px-3 rounded-xl shadow transition flex items-center justify-center gap-1.5 text-xs">
+                        <span>📨</span> <span>Mở Gmail &amp; Gửi</span>
+                    </button>
+                    <button type="button" onclick="triggerAppsScriptSendFromModal()" id="btnSendSantaMailAppsScript" class="bg-blue-600 hover:bg-blue-700 text-white font-black py-2.5 px-3 rounded-xl shadow transition flex items-center justify-center gap-1.5 text-xs">
+                        <span>⚡</span> <span>Gửi Tự Động</span>
+                    </button>
+                    <button type="button" onclick="copySantaEmailContentFromModal()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 font-black py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 text-xs">
+                        <span>📋</span> <span>Copy Nội Dung</span>
+                    </button>
+                </div>
+                <div class="text-center pt-1">
+                    <button type="button" onclick="triggerDefaultMailtoFromModal()" class="text-[11px] text-gray-500 hover:text-red-700 underline font-semibold">
+                        Hoặc mở ứng dụng Mail mặc định trên máy tính/điện thoại (mailto:)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP THÔNG BÁO TOÀN SỰ KIỆN TỪ BAN TỔ CHỨC (ADMIN BROADCAST) -->
+    <div id="broadcastPopupModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[214] flex items-center justify-center p-3 sm:p-4" onclick="if(event.target===this) closeBroadcastPopupModal()">
+        <div class="bg-gradient-to-b from-red-900 via-red-950 to-slate-950 text-white rounded-3xl max-w-lg w-full p-5 sm:p-6 border-2 border-amber-300 shadow-[0_0_55px_rgba(251,191,36,0.45)] relative overflow-hidden space-y-4" onclick="event.stopPropagation()">
+            <button type="button" onclick="closeBroadcastPopupModal()" class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white font-bold text-sm flex items-center justify-center transition">✕</button>
+            <div class="text-center space-y-1.5">
+                <span id="broadcastModalTypeBadge" class="inline-flex items-center gap-1.5 bg-amber-400 text-red-950 font-black text-[11px] px-3.5 py-1 rounded-full uppercase tracking-wider shadow">
+                    📢 Thông Báo Chính Thức Từ Ban Tổ Chức
+                </span>
+                <h3 id="broadcastModalTitle" class="text-lg sm:text-2xl font-black text-amber-300 leading-snug pt-1">
+                    🎄 Thông Báo Sự Kiện Secret Santa 2026
+                </h3>
+                <p id="broadcastModalTime" class="text-[11px] text-amber-100/80 font-semibold"></p>
+            </div>
+            <div class="bg-white/10 border border-amber-300/40 rounded-2xl p-4 text-left max-h-[45vh] overflow-y-auto custom-scroll">
+                <p id="broadcastModalContent" class="text-xs sm:text-sm text-white whitespace-pre-line leading-relaxed font-medium"></p>
+            </div>
+            <div id="broadcastModalHistoryWrap" class="hidden border-t border-white/15 pt-3 text-left space-y-2">
+                <p class="text-[11px] font-black text-amber-300 uppercase tracking-wider">🕓 Các thông báo trước đó từ BTC:</p>
+                <div id="broadcastModalHistoryList" class="space-y-2 max-h-[160px] overflow-y-auto custom-scroll pr-1"></div>
+            </div>
+            <button type="button" onclick="closeBroadcastPopupModal()" class="w-full bg-gradient-to-r from-amber-400 to-yellow-300 hover:brightness-105 text-red-950 font-black text-xs sm:text-sm py-3 rounded-xl shadow-lg transition">
+                ✅ Đã Hiểu Thông Báo Từ BTC
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL XEM CHI TIẾT SỐ LƯỢT CHƠI MINIGAME CỦA BẢN THÂN -->
+    <div id="myPlaysDetailModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[213] flex items-center justify-center p-3 sm:p-4" onclick="if(event.target===this) closeMyPlaysDetailModal()">
+        <div class="bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-950 text-white rounded-3xl max-w-md w-full p-5 sm:p-6 border-2 border-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.35)] relative space-y-4" onclick="event.stopPropagation()">
+            <button type="button" onclick="closeMyPlaysDetailModal()" class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white font-bold text-sm flex items-center justify-center transition">✕</button>
+            <div class="text-center space-y-1">
+                <span class="inline-flex items-center gap-1 bg-emerald-400 text-slate-950 font-black text-[11px] px-3 py-0.5 rounded-full uppercase">
+                    🎲 Thống Kê Lượt Chơi Của Bạn
+                </span>
+                <h3 class="text-lg sm:text-xl font-black text-amber-300 pt-1">Số Lượt Chơi Minigame Hôm Nay</h3>
+            </div>
+            <div class="grid grid-cols-3 gap-2.5 text-center">
+                <div class="bg-emerald-500/20 border border-emerald-400/50 rounded-2xl p-3">
+                    <p class="text-[10px] text-emerald-200 font-bold uppercase">Còn Lại</p>
+                    <p id="myPlaysRemainingBig" class="text-2xl sm:text-3xl font-black text-emerald-300 mt-0.5">3</p>
+                    <p class="text-[10px] text-emerald-100/80">lượt hôm nay</p>
+                </div>
+                <div class="bg-amber-500/20 border border-amber-400/50 rounded-2xl p-3">
+                    <p class="text-[10px] text-amber-200 font-bold uppercase">Đã Chơi</p>
+                    <p id="myPlaysUsedBig" class="text-2xl sm:text-3xl font-black text-amber-300 mt-0.5">0</p>
+                    <p class="text-[10px] text-amber-100/80">lượt hôm nay</p>
+                </div>
+                <div class="bg-sky-500/20 border border-sky-400/50 rounded-2xl p-3">
+                    <p class="text-[10px] text-sky-200 font-bold uppercase">Tổng Tối Đa</p>
+                    <p id="myPlaysMaxBig" class="text-2xl sm:text-3xl font-black text-sky-300 mt-0.5">3</p>
+                    <p class="text-[10px] text-sky-100/80">lượt hôm nay</p>
+                </div>
+            </div>
+            <div id="myPlaysBreakdownBox" class="bg-white/10 border border-white/15 rounded-2xl p-3.5 text-xs space-y-1.5 text-gray-200">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <button type="button" onclick="closeMyPlaysDetailModal(); switchEventPart(2);" class="bg-gradient-to-r from-emerald-400 to-teal-300 hover:brightness-105 text-slate-950 font-black py-2.5 px-3 rounded-xl text-xs shadow transition">
+                    🧹 Part 2 (100–180 PTS)
+                </button>
+                <button type="button" onclick="closeMyPlaysDetailModal(); switchEventPart(3);" class="bg-gradient-to-r from-rose-500 to-amber-400 hover:brightness-105 text-slate-950 font-black py-2.5 px-3 rounded-xl text-xs shadow transition">
+                    ⚔️ Part 3 Boss (160–260 PTS)
+                </button>
+            </div>
+            <button type="button" onclick="closeMyPlaysDetailModal(); switchEventPart(1); switchHubTab('shop');" class="w-full bg-gradient-to-r from-amber-400 to-yellow-300 hover:brightness-105 text-red-950 font-black py-2.5 px-3 rounded-xl text-xs shadow transition">
+                🎯 Làm Nhiệm Vụ Nhận Thêm Lượt (+Lượt)
+            </button>
         </div>
     </div>
 
@@ -630,7 +747,7 @@
                 <span class="text-xl sm:text-2xl">🧹</span>
                 <div class="min-w-0">
                     <p class="text-xs sm:text-sm font-black truncate text-amber-300">Part 2: Đại Chiến Dọn Phòng Họp 204</p>
-                    <p class="text-[10px] sm:text-xs text-teal-200 truncate">Thắng mỗi Ca nhận ngẫu nhiên +350 ~ 600 PTS (3 lượt/ngày + Nhiệm vụ tăng lượt)</p>
+                    <p class="text-[10px] sm:text-xs text-teal-200 truncate">Thắng mỗi Ca nhận ngẫu nhiên +100 ~ 180 PTS (3 lượt/ngày chung Part 2 &amp; Part 3 + Nhiệm vụ tăng lượt)</p>
                 </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
@@ -644,7 +761,28 @@
         <iframe id="part2GameFrame" src="about:blank" title="Mini-Game Dọn Phòng Họp 204" class="flex-1 w-full h-full border-0 bg-slate-950" allow="autoplay"></iframe>
     </div>
 
-    <!-- MODAL CHÚC MỪNG ĐIỂM DANH HẰNG NGÀY (DAILY CHECK-IN 100-300 PTS) -->
+    <!-- MODAL CHƠI MINI-GAME PART 3: UNDERTALE 204 - BOSS CÚN BÔNG -->
+    <div id="part3GameModal" class="hidden fixed inset-0 bg-black z-[195] flex flex-col">
+        <div class="bg-gradient-to-r from-slate-950 via-rose-950 to-purple-950 border-b border-rose-500/40 px-3 sm:px-5 py-2.5 flex items-center justify-between gap-2 text-white shrink-0">
+            <div class="flex items-center gap-2 min-w-0">
+                <span class="text-xl sm:text-2xl">🐩</span>
+                <div class="min-w-0">
+                    <p class="text-xs sm:text-sm font-black truncate text-amber-300">Part 3: UNDERTALE 204 — Boss Cún Bông</p>
+                    <p class="text-[10px] sm:text-xs text-rose-200 truncate">Thắng Boss nhận +160 ~ 260 PTS • Thua (≥1 lượt) nhận +40 ~ 70 PTS an ủi (Dùng chung lượt hôm nay)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <span id="part3ModalScorePill" class="hidden sm:inline-flex items-center gap-1 bg-amber-400/20 border border-amber-300/40 text-amber-200 text-xs font-extrabold px-2.5 py-1 rounded-full">⭐ Điểm tích lũy: 150 PTS</span>
+                <span id="part3ModalRewardPill" class="bg-rose-500/25 border border-rose-400/40 text-rose-200 text-[11px] sm:text-xs font-extrabold px-2.5 py-1 rounded-full">🎲 Lượt hôm nay: 0/3</span>
+                <button type="button" onclick="closePart3MinigameModal()" class="bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs sm:text-sm px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1">
+                    <span>✕</span> <span class="hidden sm:inline">Thoát Boss</span>
+                </button>
+            </div>
+        </div>
+        <iframe id="part3GameFrame" src="" title="Mini-Game Undertale 204: Boss Cún Bông" class="flex-1 w-full h-full border-0 bg-black" allow="autoplay"></iframe>
+    </div>
+
+    <!-- MODAL CHÚC MỪNG ĐIỂM DANH HẰNG NGÀY (DAILY CHECK-IN 50-120 PTS) -->
     <div id="dailyCheckinRewardModal" class="hidden fixed inset-0 bg-black/75 z-[192] flex items-center justify-center p-4" onclick="closeDailyCheckinModal()">
         <div class="bg-gradient-to-b from-amber-50 via-white to-red-50 border-4 border-amber-400 rounded-3xl max-w-md w-full p-6 text-center shadow-2xl space-y-4 greeting-card-anim" onclick="event.stopPropagation()">
             <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-amber-400 to-red-600 text-white flex items-center justify-center text-4xl shadow-lg animate-bounce">
@@ -654,10 +792,10 @@
                 Điểm Danh Hằng Ngày
             </span>
             <h3 id="dailyModalTitle" class="text-xl sm:text-2xl font-black text-red-800 leading-snug">
-                Bạn nhận được +200 PTS &amp; +1 lượt chơi hôm nay!
+                Bạn nhận được +85 PTS &amp; +1 lượt chơi hôm nay!
             </h3>
             <p id="dailyModalDesc" class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                Điểm thưởng ngẫu nhiên (100 – 300 PTS) kèm <strong>+1 lượt chơi Minigame</strong> đã được cộng trực tiếp vào tài khoản để đổi 6 Vật Phẩm Noel!
+                Điểm thưởng ngẫu nhiên (50 – 120 PTS) kèm <strong>+1 lượt chơi Minigame</strong> đã được cộng trực tiếp vào tài khoản để đổi 6 Vật Phẩm Noel!
             </p>
             <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-2xl p-3.5 shadow-inner">
                 <p class="text-[11px] uppercase font-bold text-emerald-100">Tổng điểm tích lũy hiện tại</p>
@@ -741,7 +879,7 @@
                 <p class="text-[11px] text-emerald-100 leading-relaxed">
                     • <strong>Bước 1:</strong> Quét mã QR ủng hộ tùy tâm <strong>5K – 10K</strong> và chụp màn hình Bill chuyển khoản.<br>
                     • <strong>Bước 2:</strong> Tải ảnh Bill lên form bên dưới để gửi riêng cho Ban Tổ Chức.<br>
-                    • <strong>Bước 3:</strong> Ngay khi <strong>Admin (BTC) bấm Duyệt Bill</strong>, hệ thống tự động cộng <strong>+5 Lượt chơi Minigame</strong> &amp; <strong>+300 PTS</strong> (đủ đổi ngay <strong>🏷️ Icon 204</strong>) vào tài khoản của bạn!
+                    • <strong>Bước 3:</strong> Ngay khi <strong>Admin (BTC) bấm Duyệt Bill</strong>, hệ thống tự động cộng <strong>+5 Lượt chơi Minigame</strong> &amp; <strong>+150 PTS</strong> (tích quỹ đổi <strong>🏷️ Icon 204</strong>) vào tài khoản của bạn!
                 </p>
             </div>
 
@@ -772,7 +910,7 @@
                 </div>
 
                 <button type="submit" id="btnConfirmDonateQuest" class="w-full bg-gradient-to-r from-amber-400 via-yellow-300 to-emerald-400 hover:brightness-105 text-slate-950 font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
-                    <span>📤</span> <span id="btnConfirmDonateQuestText">Gửi Ảnh Bill Cho BTC Duyệt (+5 Lượt &amp; +300 PTS)</span>
+                    <span>📤</span> <span id="btnConfirmDonateQuestText">Gửi Ảnh Bill Cho BTC Duyệt (+5 Lượt &amp; +150 PTS)</span>
                 </button>
             </form>
         </div>
@@ -859,7 +997,7 @@
                                     <span class="text-xs sm:text-sm font-black text-amber-200">Ủng hộ kinh phí mua quà cùng BTC — <span class="text-yellow-300 underline">Tùy tâm từ 5K – 10K</span>!</span>
                                 </div>
                                 <p class="text-[11px] text-rose-100/90 mt-0.5">
-                                    Quét mã QR Nguyễn Tiến Long • Tặng ngay <strong>+5 lượt chơi Minigame</strong> &amp; <strong>+300 PTS</strong> đổi Icon 204!
+                                    Quét mã QR Nguyễn Tiến Long • Tặng ngay <strong>+5 lượt chơi Minigame</strong> &amp; <strong>+150 PTS</strong> tích quỹ đổi Icon 204!
                                 </p>
                             </div>
                         </div>
@@ -867,6 +1005,25 @@
                             <span>💖</span> <span>Mở QR Donate Ngay</span>
                         </span>
                     </div>
+                </div>
+            </div>
+
+            <!-- BĂNG RÔN LOA THÔNG BÁO TOÀN SỰ KIỆN TỪ BAN TỔ CHỨC (ADMIN BROADCAST) -->
+            <div id="globalBroadcastBanner" class="hidden mt-3 max-w-2xl mx-auto">
+                <div onclick="openBroadcastPopupModal(true)" class="cursor-pointer bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-300 text-red-950 rounded-2xl px-4 py-2.5 shadow-[0_6px_25px_rgba(251,191,36,0.5)] border-2 border-white flex flex-col sm:flex-row items-center justify-between gap-2 text-left hover:brightness-105 transition">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-9 h-9 rounded-xl bg-red-700 text-white flex items-center justify-center text-lg shrink-0 shadow animate-bounce">📢</span>
+                        <div class="min-w-0 text-center sm:text-left">
+                            <div class="flex items-center justify-center sm:justify-start gap-1.5 flex-wrap">
+                                <span id="globalBroadcastBadge" class="bg-red-700 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Thông báo BTC</span>
+                                <span id="globalBroadcastTitle" class="text-xs sm:text-sm font-black text-red-950 truncate">Thông báo mới từ Ban Tổ Chức</span>
+                            </div>
+                            <p id="globalBroadcastSnippet" class="text-[11px] font-bold text-red-900/90 truncate mt-0.5"></p>
+                        </div>
+                    </div>
+                    <span class="bg-red-800 text-amber-200 font-black text-[11px] px-3 py-1.5 rounded-xl whitespace-nowrap shrink-0 shadow">
+                        🔔 Xem Chi Tiết →
+                    </span>
                 </div>
             </div>
         </div>
@@ -954,6 +1111,22 @@
                             </div>
                         </div>
 
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-blue-800">
+                                📧 Email Nhận Mật Thư Kết Quả Bốc Thăm Secret Santa <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="email"
+                                id="regEmailInput"
+                                required
+                                class="form-input font-semibold text-blue-900"
+                                placeholder="VD: longnt@fpt.edu.vn hoặc tenban@gmail.com..."
+                            >
+                            <p class="text-[11px] text-gray-500 mt-1">
+                                💡 Khi BTC quay bốc thăm ghép cặp xong, hệ thống sẽ gửi mật thư báo cho bạn biết <strong>bạn sẽ tặng quà cho ai (kèm Wishlist &amp; Blacklist của bạn đó)</strong> qua Email này!
+                            </p>
+                        </div>
+
                         <div class="bg-gray-50 p-3.5 rounded-xl border border-dashed border-gray-300">
                             <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-2">
                                 Ảnh Bản Thân Sắc Nét HD (Lưu Base64 Google Sheet) 📸 <span class="text-red-500">*</span>
@@ -1039,7 +1212,7 @@
                                 Ủng Hộ Quỹ Quà Phòng 204 — <span class="text-rose-600 underline">Tùy Tâm Từ 5K – 10K</span>
                             </h3>
                             <p class="text-[11px] text-gray-600 leading-relaxed">
-                                Quét QR <strong>NGUYỄN TIẾN LONG (*******698)</strong> để tiếp sức cho Ban Tổ Chức chuẩn bị quà &amp; nước uống! Đặc quyền khi Donate: <strong>+5 Lượt chơi Minigame</strong> &amp; <strong>+300 PTS</strong>!
+                                Quét QR <strong>NGUYỄN TIẾN LONG (*******698)</strong> để tiếp sức cho Ban Tổ Chức chuẩn bị quà &amp; nước uống! Đặc quyền khi Donate: <strong>+5 Lượt chơi Minigame</strong> &amp; <strong>+150 PTS</strong>!
                             </p>
                             <div class="pt-1">
                                 <button type="button" onclick="openBtcDonateModal()" class="bg-gradient-to-r from-rose-600 to-amber-500 hover:brightness-105 text-white font-black text-xs px-3.5 py-1.5 rounded-xl shadow transition inline-flex items-center gap-1.5">
@@ -1078,17 +1251,27 @@
                                 🎁 Chưa Check-in Quà
                             </span>
                         </div>
-                        <p class="text-[11px] sm:text-xs text-green-700 font-semibold mt-0.5">
-                            🎄 Điểm tích lũy BXH: <strong id="hubHeaderScore">150</strong> PTS
-                        </p>
+                        <div class="flex items-center gap-2 flex-wrap mt-0.5">
+                            <p class="text-[11px] sm:text-xs text-green-700 font-semibold">
+                                🎄 Điểm tích lũy BXH: <strong id="hubHeaderScore">150</strong> PTS
+                            </p>
+                            <span class="text-gray-300">•</span>
+                            <button type="button" id="btnHeaderMyPlays" onclick="openMyPlaysDetailModal()" class="inline-flex items-center gap-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full transition cursor-pointer shadow-xs" title="Bấm để xem chi tiết số lượt chơi của bạn hôm nay">
+                                <span>🎲</span> <span id="hubHeaderPlaysText">Lượt chơi: Còn 3/3 lượt</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
+                    <button type="button" id="btnHeaderBroadcastBell" onclick="openBroadcastPopupModal(true)" class="bg-amber-100 hover:bg-amber-200 text-red-900 border border-amber-300 font-extrabold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 whitespace-nowrap shadow-sm">
+                        <span>📢</span> <span>Thông báo BTC</span>
+                        <span id="headerBroadcastCountBadge" class="hidden bg-red-600 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full">1</span>
+                    </button>
                     <button type="button" onclick="openBtcDonateModal()" class="bg-gradient-to-r from-rose-600 to-amber-500 hover:brightness-105 text-white font-extrabold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 whitespace-nowrap shadow-sm">
                         <span>💖</span> <span>Donate BTC (5K–10K)</span>
                     </button>
                     <button type="button" id="btnHeaderDailyCheckin" onclick="checkAndTriggerDailyCheckin(true)" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:brightness-105 text-white font-extrabold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 whitespace-nowrap shadow-sm">
-                        <span>📅</span> <span id="headerDailyCheckinLabel">Điểm danh (+100~300 PTS)</span>
+                        <span>📅</span> <span id="headerDailyCheckinLabel">Điểm danh (+50~120 PTS)</span>
                     </button>
                     <button onclick="openMyChristmasWishModal()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 whitespace-nowrap shadow-sm">
                         <span>🔒</span> <span>Lời Chúc Bí Mật Của Bạn</span>
@@ -1130,7 +1313,7 @@
                     <span id="partTabBadge2" class="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp tới</span>
                 </button>
                 <button type="button" id="partTab3" onclick="switchEventPart(3)" class="part-tab upcoming font-bold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1 flex-wrap">
-                    <span>🧝</span> <span id="partTabTitle3">Part 3: The Sneaky Elf</span>
+                    <span>🐩</span> <span id="partTabTitle3">Part 3: Boss Cún Bông 204</span>
                     <span id="partTabBadge3" class="text-[9px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full font-bold">Sắp tới</span>
                 </button>
                 <button type="button" id="partTab4" onclick="switchEventPart(4)" class="part-tab upcoming font-bold py-2.5 px-3 rounded-xl sm:rounded-t-xl text-xs sm:text-sm flex items-center justify-center gap-1 flex-wrap">
@@ -1336,6 +1519,13 @@
                                         <label class="block text-xs font-bold text-gray-600">Họ và Tên <span class="text-red-500">*</span></label>
                                         <input type="text" id="p1NameInput" required class="form-input text-xs sm:text-sm font-semibold">
                                     </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-blue-800">
+                                        📧 Email Nhận Mật Thư Bốc Thăm Secret Santa <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="email" id="p1EmailInput" required class="form-input text-xs sm:text-sm font-semibold text-blue-900" placeholder="VD: longnt@fpt.edu.vn hoặc tenban@gmail.com...">
                                 </div>
 
                                 <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
@@ -1556,7 +1746,7 @@
                                         <span>🛒 Cửa Hàng 6 Vật Phẩm Noel &amp; Kho Báu Phòng 204</span>
                                     </h3>
                                     <p class="text-xs sm:text-sm text-amber-100/90">
-                                        Điểm danh mỗi ngày (<strong>100–300 PTS</strong>) &amp; chơi Minigame (<strong>350–600 PTS/lượt</strong> • 3 lượt/ngày + Nhiệm vụ tăng lượt) để đổi trọn bộ <strong>6 Vật Phẩm Noel</strong> (từ <strong>Icon 204: 204 PTS</strong>), mở khóa <strong>Hộp Quà Bí Ẩn Từ BTC</strong>!
+                                        Điểm danh mỗi ngày (<strong>50–120 PTS</strong>) &amp; chơi Minigame dùng chung lượt: <strong>Part 2 (100–180 PTS)</strong> &amp; <strong>Part 3 Boss (160–260 PTS)</strong> (3 lượt/ngày + Nhiệm vụ tăng lượt) để đổi trọn bộ <strong>6 Vật Phẩm Noel</strong> (từ <strong>Icon 204: 204 PTS</strong>), mở khóa <strong>Hộp Quà Bí Ẩn Từ BTC</strong>!
                                     </p>
                                 </div>
                                 <div class="bg-black/35 border-2 border-amber-300/70 rounded-2xl px-5 py-3 text-center shrink-0">
@@ -1572,7 +1762,7 @@
                                         <p class="text-xs sm:text-sm font-black text-amber-300 flex items-center gap-1.5">
                                             <span>📅</span> <span>Luồng A: Điểm Danh Hằng Ngày</span>
                                         </p>
-                                        <p id="shopDailyStatusText" class="text-[11px] text-emerald-100">Nhận ngẫu nhiên từ 100 đến 300 điểm mỗi ngày đăng nhập!</p>
+                                        <p id="shopDailyStatusText" class="text-[11px] text-emerald-100">Nhận ngẫu nhiên từ 50 đến 120 PTS &amp; +1 lượt chơi mỗi ngày đăng nhập!</p>
                                     </div>
                                     <button type="button" id="btnShopDailyCheckin" onclick="checkAndTriggerDailyCheckin(true)" class="bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 font-black text-xs px-3.5 py-2.5 rounded-xl shadow hover:brightness-105 transition whitespace-nowrap shrink-0">
                                         🎲 Điểm Danh Ngay
@@ -1581,13 +1771,18 @@
                                 <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-3.5 flex items-center justify-between gap-3">
                                     <div class="space-y-0.5">
                                         <p class="text-xs sm:text-sm font-black text-sky-300 flex items-center gap-1.5">
-                                            <span>🧹</span> <span>Luồng B: Chơi Minigame Nhận Điểm</span>
+                                            <span>🎮</span> <span>Luồng B: Minigame Part 2 &amp; Part 3 Boss</span>
                                         </p>
-                                        <p id="shopMinigamePlaysText" class="text-[11px] text-sky-100">Thưởng 350 – 600 PTS / lượt thắng (3 lượt/ngày + Nhiệm vụ tăng lượt)</p>
+                                        <p id="shopMinigamePlaysText" class="text-[11px] text-sky-100">Part 2: 100–180 PTS • Part 3 Boss: 160–260 PTS (3 lượt/ngày + Nhiệm vụ tăng lượt)</p>
                                     </div>
-                                    <button type="button" onclick="switchEventPart(2)" class="bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-xs px-3.5 py-2.5 rounded-xl shadow hover:brightness-105 transition whitespace-nowrap shrink-0">
-                                        🎮 Tới Minigame →
-                                    </button>
+                                    <div class="flex flex-col sm:flex-row gap-1.5 shrink-0">
+                                        <button type="button" onclick="switchEventPart(2)" class="bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 font-black text-xs px-3 py-2 rounded-xl shadow hover:brightness-105 transition whitespace-nowrap">
+                                            🧹 Part 2 →
+                                        </button>
+                                        <button type="button" onclick="switchEventPart(3)" class="bg-gradient-to-r from-rose-500 to-amber-400 text-slate-950 font-black text-xs px-3 py-2 rounded-xl shadow hover:brightness-105 transition whitespace-nowrap">
+                                            ⚔️ Part 3 →
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1691,7 +1886,7 @@
                         </span>
                         <h3 id="part2TitleEl" class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 2: Dọn Phòng Họp 204 — Đại Chiến Tổng Vệ Sinh</h3>
                         <p id="part2DescEl" class="text-gray-600 text-xs sm:text-base leading-relaxed">
-                            Tại Chặng 2, hãy phối hợp cùng bé Poodle trắng <strong>Bông 🐩</strong> tổng vệ sinh Phòng 204! Mỗi lượt hoàn thành Ca trực nhận ngẫu nhiên <strong>+350 đến +600 PTS</strong> (mặc định <strong>3 lượt/ngày</strong> + làm nhiệm vụ nhận thêm lượt) để đổi trọn bộ <strong>6 Vật Phẩm Noel</strong>!
+                            Tại Chặng 2, hãy phối hợp cùng bé Poodle trắng <strong>Bông 🐩</strong> tổng vệ sinh Phòng 204! Mỗi lượt hoàn thành Ca trực nhận ngẫu nhiên <strong>+100 đến +180 PTS</strong> (mặc định <strong>3 lượt/ngày</strong> dùng chung Part 2 &amp; Part 3 + làm nhiệm vụ nhận thêm lượt) để đổi trọn bộ <strong>6 Vật Phẩm Noel</strong>!
                         </p>
                         <div id="part2CountdownBanner" class="hidden max-w-lg mx-auto bg-slate-900 text-white rounded-2xl p-4 border-2 border-amber-400 shadow-lg space-y-1"></div>
                         <div id="part2UnlockedBar" class="hidden max-w-xl mx-auto bg-gradient-to-r from-emerald-600 to-green-700 text-white rounded-2xl p-4 border-2 border-lime-300 shadow-lg space-y-1.5">
@@ -1718,7 +1913,7 @@
                                     Kéo thả rác vào đúng thùng, chà sạch vết bẩn trên sàn/bảng trắng, chỉnh 3 bảng khẩu hiệu, tắt TV, dựng bình hoa &amp; cùng bé Poodle Bông tiêu diệt lũ gián tinh quái!
                                 </p>
                                 <div class="flex flex-wrap gap-1.5 text-[10px] font-bold">
-                                    <span class="bg-emerald-500/25 border border-emerald-300/40 px-2 py-1 rounded-lg text-emerald-200">🎲 Thưởng thắng: 350 – 600 PTS / lượt</span>
+                                    <span class="bg-emerald-500/25 border border-emerald-300/40 px-2 py-1 rounded-lg text-emerald-200">🎲 Thưởng thắng: 100 – 180 PTS / lượt</span>
                                     <span class="bg-white/10 border border-white/15 px-2 py-1 rounded-lg text-amber-200">⚡ Mặc định: 3 lượt/ngày (+Nhiệm vụ tăng lượt)</span>
                                     <span id="part2GameBestBadge" class="bg-sky-500/25 border border-sky-300/40 px-2 py-1 rounded-lg text-sky-200">🏆 Kỷ lục game: 0đ</span>
                                 </div>
@@ -1738,7 +1933,7 @@
                                     <span>🎯</span> <span>Hết 3 lượt mặc định? Làm Nhiệm Vụ Nhận Thêm Lượt Chơi Ngay:</span>
                                 </p>
                                 <button type="button" onclick="openBtcDonateModal()" class="text-[11px] bg-gradient-to-r from-rose-500 to-amber-400 text-slate-950 font-black px-2.5 py-1 rounded-lg shadow hover:brightness-105 transition">
-                                    💖 Donate BTC (+5 Lượt &amp; +300 PTS)
+                                    💖 Donate BTC (+5 Lượt &amp; +150 PTS)
                                 </button>
                             </div>
                             <div id="part2QuestsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"></div>
@@ -1792,25 +1987,78 @@
                     </div>
                 </div>
 
-                <div id="eventPart3Content" class="hidden py-6 px-2 sm:px-4 max-w-3xl mx-auto space-y-6 text-center">
-                    <div class="w-20 h-20 bg-green-100 text-green-700 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
-                        🧝
+                <div id="eventPart3Content" class="hidden py-6 px-2 sm:px-4 max-w-3xl mx-auto space-y-6">
+                    <div class="text-center space-y-3">
+                        <div class="w-20 h-20 bg-rose-100 text-rose-700 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
+                            🐩
+                        </div>
+                        <span id="part3StatusBadge" class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase">
+                            ⏳ Dành Cho Sự Kiện Sắp Tới
+                        </span>
+                        <h3 id="part3TitleEl" class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 3: Boss Cún Bông 204</h3>
+                        <p id="part3DescEl" class="text-gray-600 text-xs sm:text-base leading-relaxed max-w-2xl mx-auto">
+                            Đại chiến <strong>Undertale 204: Boss Cún Bông</strong> ngay tại Phòng 204! Thắng Boss (<strong>FIGHT</strong> hoặc <strong>MERCY</strong>) nhận <strong>+160 đến +260 PTS</strong> (Thua sau ≥1 lượt nhận <strong>+40 đến +70 PTS</strong> an ủi), dùng chung lượt chơi mỗi ngày để đổi trọn bộ <strong>6 Vật Phẩm Noel</strong>!
+                        </p>
+                        <div id="part3CountdownBanner" class="hidden max-w-lg mx-auto bg-slate-900 text-white rounded-2xl p-4 border-2 border-amber-400 shadow-lg space-y-1"></div>
+                        <div id="part3UnlockedBar" class="hidden max-w-xl mx-auto bg-gradient-to-r from-rose-700 via-purple-800 to-indigo-800 text-white rounded-2xl p-4 border-2 border-amber-300 shadow-lg space-y-1.5">
+                            <p class="text-xs sm:text-sm font-black uppercase tracking-wide">🟢 Chặng 3 Đã Chính Thức Mở Khóa — Đấu Trường Boss 204!</p>
+                            <p id="part3UnlockedNote" class="text-xs text-rose-100"></p>
+                            <p class="text-xs font-extrabold text-amber-200">🏆 Điểm tích lũy hiện tại của bạn: <span id="part3MyScoreText">150</span> PTS</p>
+                        </div>
                     </div>
-                    <span id="part3StatusBadge" class="inline-block bg-amber-100 text-amber-800 border border-amber-300 text-xs font-extrabold px-3.5 py-1 rounded-full uppercase">
-                        ⏳ Dành Cho Sự Kiện Sắp Tới
-                    </span>
-                    <h3 id="part3TitleEl" class="text-2xl sm:text-3xl font-extrabold text-gray-800">Part 3: The Sneaky Elf — Săn Yêu Tinh Tích Điểm Đổi Ấn Phẩm</h3>
-                    <p id="part3DescEl" class="text-gray-600 text-xs sm:text-base leading-relaxed max-w-2xl mx-auto">
-                        <strong>Mini-Game Chặng 3</strong> dành cho sự kiện sắp tới! Săn tìm các chú Yêu Tinh Giáng Sinh tinh quái để tích lũy <strong>+500 PTS</strong>, dùng điểm đổi trọn bộ <strong>Ấn Phẩm Sự Kiện</strong> và mở khóa <strong>🎁 Món Quà Bí Mật từ Ban Tổ Chức</strong>!
-                    </p>
-                    <div id="part3CountdownBanner" class="hidden max-w-lg mx-auto bg-slate-900 text-white rounded-2xl p-4 border-2 border-amber-400 shadow-lg space-y-1"></div>
-                    <div id="part3UnlockedBar" class="hidden max-w-xl mx-auto bg-gradient-to-r from-emerald-600 to-green-700 text-white rounded-2xl p-4 border-2 border-lime-300 shadow-lg space-y-1.5">
-                        <p class="text-xs sm:text-sm font-black uppercase tracking-wide">🟢 Chặng 3 Đã Chính Thức Mở Khóa!</p>
-                        <p id="part3UnlockedNote" class="text-xs text-emerald-50"></p>
+
+                    <!-- THẺ KHỞI CHẠY MINI-GAME PART 3: UNDERTALE 204 - BOSS CÚN BÔNG -->
+                    <div id="part3GameLauncherCard" class="bg-gradient-to-br from-slate-950 via-rose-950 to-purple-950 text-white border-2 border-rose-400/60 rounded-2xl p-4 sm:p-5 shadow-xl overflow-hidden space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-5 gap-4 items-center">
+                            <div class="sm:col-span-2 relative rounded-xl overflow-hidden border-2 border-rose-300/50 shadow-lg bg-black/50">
+                                <img src="room204.jpg" alt="Đấu Trường Boss Cún Bông Phòng 204" class="w-full h-40 sm:h-44 object-cover brightness-90" />
+                                <span class="absolute top-2 left-2 bg-rose-600/95 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full shadow">UNDERTALE 204</span>
+                                <span class="absolute bottom-2 right-2 bg-slate-950/90 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded-lg border border-amber-400/50">🐩⚔️ BOSS CÚN BÔNG</span>
+                            </div>
+                            <div class="sm:col-span-3 space-y-2.5 text-left">
+                                <div class="flex items-center justify-between gap-2 flex-wrap">
+                                    <h4 class="text-base sm:text-lg font-black text-amber-300">⚔️ UNDERTALE 204: Boss Cún Bông</h4>
+                                    <span id="part3RewardProgressBadge" class="text-[11px] bg-emerald-500/25 text-emerald-200 border border-emerald-400/50 font-extrabold px-2.5 py-0.5 rounded-full">🎲 Lượt thưởng hôm nay: 0/3</span>
+                                </div>
+                                <p class="text-xs text-rose-100 leading-relaxed">
+                                    Điều khiển trái tim đỏ ❤️ né loạt chiêu thức siêu ngầu của Boss Cún Bông! Bạn có thể chọn <strong>FIGHT</strong> để hạ Boss hoặc dùng <strong>ACT &amp; MERCY</strong> để cảm hóa Boss (thưởng thiên về mức cao khi chọn MERCY hoặc giữ nhiều HP!).
+                                </p>
+                                <div class="flex flex-wrap gap-1.5 text-[10px] font-bold">
+                                    <span class="bg-amber-500/25 border border-amber-300/40 px-2 py-1 rounded-lg text-amber-200">⚔️ Thắng Boss: 160 – 260 PTS / trận</span>
+                                    <span class="bg-rose-500/25 border border-rose-300/40 px-2 py-1 rounded-lg text-rose-200">💝 Thua (≥1 lượt): 40 – 70 PTS an ủi</span>
+                                    <span id="part3GameBestBadge" class="bg-sky-500/25 border border-sky-300/40 px-2 py-1 rounded-lg text-sky-200">🏆 Hạ/Cảm hóa Boss: 0 lần</span>
+                                </div>
+                                <div class="pt-1 flex flex-col sm:flex-row sm:items-center gap-2">
+                                    <button type="button" id="btnLaunchPart3Game" onclick="openPart3MinigameModal()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm bg-gradient-to-r from-amber-400 via-orange-400 to-rose-500 text-slate-950 shadow-lg hover:brightness-105 transition inline-flex items-center justify-center gap-2">
+                                        <span>⚔️</span> <span>Khiêu Chiến Boss Cún Bông (+160~260 PTS)</span>
+                                    </button>
+                                    <span id="part3GameLockNote" class="text-[11px] text-amber-200/90 font-semibold"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KHUNG NHIỆM VỤ NHẬN THÊM LƯỢT CHƠI NGAY TRONG PART 3 -->
+                        <div class="bg-black/35 border border-rose-400/35 rounded-2xl p-3.5 space-y-2.5 text-left">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <p class="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                                    <span>🎯</span> <span>Hết lượt chơi hôm nay? Làm Nhiệm Vụ Nhận Thêm Lượt Ngay (Dùng chung Part 2 &amp; Part 3):</span>
+                                </p>
+                                <button type="button" onclick="openBtcDonateModal()" class="text-[11px] bg-gradient-to-r from-rose-500 to-amber-400 text-slate-950 font-black px-2.5 py-1 rounded-lg shadow hover:brightness-105 transition">
+                                    💖 Donate BTC (+5 Lượt &amp; +150 PTS)
+                                </button>
+                            </div>
+                            <div id="part3QuestsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"></div>
+                        </div>
                     </div>
-                    <button onclick="switchEventPart(1)" class="btn-green px-5 py-2.5 text-xs sm:text-sm inline-flex items-center gap-2">
-                        <span>← Quay lại Part 1 &amp; Bảng Tin Giáng Sinh</span>
-                    </button>
+
+                    <div class="flex flex-wrap items-center justify-center gap-3">
+                        <button type="button" onclick="switchEventPart(1); switchHubTab('shop');" class="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:brightness-105 text-white font-black text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-md transition inline-flex items-center gap-2">
+                            <span>🛒</span> <span>Mở Cửa Hàng Đổi 6 Vật Phẩm Noel →</span>
+                        </button>
+                        <button type="button" onclick="switchEventPart(1)" class="btn-green px-5 py-2.5 text-xs sm:text-sm inline-flex items-center gap-2">
+                            <span>← Quay lại Part 1 &amp; Bảng Tin Giáng Sinh</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div id="eventPart4Content" class="hidden py-6 px-2 sm:px-4 max-w-3xl mx-auto space-y-6 text-center">
@@ -1896,6 +2144,57 @@
                 </div>
             </div>
 
+            <!-- PHÁT THÔNG BÁO TOÀN SỰ KIỆN ĐẾN TẤT CẢ MỌI NGƯỜI (ADMIN BROADCAST MEGAPHONE) -->
+            <div class="bg-gradient-to-r from-red-900 via-rose-900 to-slate-900 text-white rounded-2xl border-2 border-amber-300 p-4 sm:p-5 shadow-xl space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/15 pb-3">
+                    <div>
+                        <span class="inline-block bg-amber-400 text-red-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase mb-1">
+                            📢 Loa Phát Thanh Ban Tổ Chức • Realtime Toàn Sự Kiện
+                        </span>
+                        <h3 class="text-base sm:text-lg font-black text-amber-300 flex items-center gap-1.5">
+                            <span>🔔 Gửi Thông Báo Đến Tất Cả Mọi Người</span>
+                        </h3>
+                        <p class="text-xs text-rose-100 mt-0.5">
+                            Thông báo khi phát sẽ ghim nổi bật trên đầu trang web và <strong>tự động bật Popup thông báo</strong> tới tất cả thành viên đang truy cập!
+                        </p>
+                    </div>
+                    <span id="adminBroadcastCountBadge" class="text-xs bg-amber-400 text-red-950 font-black px-3 py-1 rounded-full shadow">
+                        0 thông báo
+                    </span>
+                </div>
+
+                <form onsubmit="handleSendAdminBroadcast(event)" class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start bg-black/25 p-3.5 rounded-xl border border-white/15">
+                    <div class="lg:col-span-3">
+                        <label class="block text-[11px] font-bold text-amber-200 mb-1">Nhãn thông báo:</label>
+                        <select id="adminBroadcastType" class="w-full px-3 py-2 rounded-xl bg-white text-gray-900 text-xs font-extrabold focus:outline-none">
+                            <option value="🎄 Thông báo BTC">🎄 Thông báo BTC</option>
+                            <option value="🔥 Khẩn cấp • Quan trọng">🔥 Khẩn cấp • Quan trọng</option>
+                            <option value="🎁 Sự kiện Mở Quà 204">🎁 Sự kiện Mở Quà 204</option>
+                            <option value="🎮 Giải Đấu Minigame">🎮 Giải Đấu Minigame</option>
+                        </select>
+                    </div>
+                    <div class="lg:col-span-6 space-y-2">
+                        <div>
+                            <label class="block text-[11px] font-bold text-amber-200 mb-1">Tiêu đề thông báo *:</label>
+                            <input type="text" id="adminBroadcastTitle" required class="w-full px-3 py-2 rounded-xl bg-white text-gray-900 text-xs font-bold focus:outline-none" placeholder="VD: 🎉 Tối nay 19h30 mở khóa Part 2 & bốc thăm Secret Santa tại Phòng 204!">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-amber-200 mb-1">Nội dung chi tiết gửi đến tất cả thành viên *:</label>
+                            <textarea id="adminBroadcastMessage" required rows="2" class="w-full px-3 py-2 rounded-xl bg-white text-gray-900 text-xs font-medium focus:outline-none" placeholder="Nhập nội dung thông báo chi tiết từ Ban Tổ Chức..."></textarea>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-3 lg:pt-5 flex flex-col gap-2">
+                        <button type="submit" id="btnSendAdminBroadcast" class="w-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 hover:brightness-105 text-red-950 font-black py-3 px-4 rounded-xl text-xs sm:text-sm shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
+                            <span>📢</span> <span>Phát Thông Báo Ngay</span>
+                        </button>
+                    </div>
+                </form>
+
+                <div id="adminBroadcastHistoryList" class="space-y-2 max-h-[220px] overflow-y-auto custom-scroll pr-1">
+                    <p class="text-xs text-rose-200/70 text-center py-2">Chưa có thông báo nào đang phát.</p>
+                </div>
+            </div>
+
             <!-- CÀI ĐẶT NGÀY/GIỜ MỞ CÁC CHẶNG SỰ KIỆN (PART 1 - 4) -->
             <div class="bg-gradient-to-br from-amber-50 via-white to-red-50 rounded-2xl border-2 border-amber-300 p-4 sm:p-5 shadow-md space-y-4">
                 <div class="flex flex-wrap items-center justify-between gap-3 border-b border-amber-200 pb-3">
@@ -1966,7 +2265,7 @@
                         <h3 class="text-base sm:text-lg font-black text-rose-800 flex items-center gap-1.5">
                             <span>💖</span> Kiểm Duyệt Bill Donate Quỹ Quà BTC (5K–10K)
                         </h3>
-                        <p class="text-xs text-gray-600">Kiểm tra ảnh Bill chuyển khoản của thành viên và bấm <strong>"✅ Duyệt Donate"</strong> để cộng tự động <strong>+5 Lượt chơi Minigame &amp; +300 PTS</strong> vào tài khoản bạn đó</p>
+                        <p class="text-xs text-gray-600">Kiểm tra ảnh Bill chuyển khoản của thành viên và bấm <strong>"✅ Duyệt Donate"</strong> để cộng tự động <strong>+5 Lượt chơi Minigame &amp; +150 PTS</strong> vào tài khoản bạn đó</p>
                     </div>
                     <span id="adminDonateCountBadge" class="text-xs bg-rose-600 text-white font-extrabold px-3.5 py-1 rounded-full shadow-sm">0 bill</span>
                 </div>
@@ -2145,8 +2444,15 @@
 
         function describeDbError(err, targetUrl = SHEETDB_API) {
             const msg = String((err && err.message) || err || '');
+            const errName = String((err && err.name) || '');
             if (msg.includes('QUOTA_429') || msg.includes('429')) {
                 return 'Máy chủ SheetDB hiện đã hết lượt miễn phí (Lỗi 429). Vui lòng mở Admin (mật khẩu 1234) để dán link Google Apps Script / SheetDB mới, hoặc bật run_sqlserver_backend.bat rồi nhấn "SQL Server (8080)"!';
+            }
+            if (msg.includes('GAS_NON_JSON_RESPONSE') || msg.includes('GAS_WRITE_FAILED')) {
+                return 'Google Apps Script không trả về JSON hợp lệ hoặc từ chối ghi dữ liệu! Vui lòng mở Apps Script -> copy lại file GoogleAppsScript_Code.js mới nhất -> Deploy (New deployment) với quyền "Anyone / Bất kỳ ai"!';
+            }
+            if (errName === 'AbortError' || msg.toLowerCase().includes('aborted')) {
+                return 'Máy chủ Google Apps Script phản hồi quá chậm (hết thời gian chờ). Vui lòng bấm Lưu / Tải lại thêm một lần nữa hoặc cập nhật GoogleAppsScript_Code.js mới nhất để bật chế độ fast!';
             }
             if (isSqlServerApi(targetUrl) && window.location.protocol === 'https:' && String(targetUrl).startsWith('http://')) {
                 return 'Trang HTTPS (GitHub Pages) không thể gọi trực tiếp http://localhost:8080. Hãy mở web tại http://localhost:8080/index.html hoặc dùng link Google Apps Script HTTPS!';
@@ -2195,6 +2501,53 @@
         let _inflightDbFetchFast = null;
         let _inflightDbFetchFull = null;
 
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 45000) {
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+            try {
+                return await fetch(url, { ...options, signal: ctrl.signal });
+            } finally {
+                clearTimeout(timer);
+            }
+        }
+
+        async function parseGasWriteResponse(res, expectUpdatedField = false) {
+            if (res.status === 404) {
+                return { ok: false, updated: 0, deleted: 0 };
+            }
+            if (res.status === 429) {
+                _lastDbError = 'QUOTA_429';
+                refreshDbEngineBadge();
+                throw new Error('QUOTA_429');
+            }
+            if (!res.ok) {
+                throw new Error(`HTTP_${res.status}`);
+            }
+
+            const rawText = await res.text();
+            let respJson = null;
+            if (rawText) {
+                try {
+                    respJson = JSON.parse(rawText);
+                } catch (e) {
+                    if (isGoogleAppsScript()) {
+                        throw new Error('GAS_NON_JSON_RESPONSE');
+                    }
+                }
+            }
+            if (respJson && respJson.error) {
+                throw new Error(String(respJson.error));
+            }
+            if (isGoogleAppsScript() && (!respJson || respJson.success === false)) {
+                throw new Error((respJson && respJson.message) ? String(respJson.message) : 'GAS_WRITE_FAILED');
+            }
+            if (expectUpdatedField) {
+                const updated = (respJson && typeof respJson.updated === 'number') ? respJson.updated : 1;
+                return { ok: updated > 0, updated, raw: respJson };
+            }
+            return respJson || { ok: true };
+        }
+
         async function dbFetchRows(options = {}) {
             const canUseFast = Boolean(options && options.fast)
                 && (_rowImageCache.size > 0 || _hasFullFetchedOnce)
@@ -2204,78 +2557,84 @@
             if (!canUseFast && _inflightDbFetchFull) return _inflightDbFetchFull;
 
             const runner = (async () => {
-                const ctrl = new AbortController();
-                const timer = setTimeout(() => ctrl.abort(), 10000);
-                try {
-                    let fetchUrl = SHEETDB_API;
-                    if (isGoogleAppsScript() || isSqlServerApi()) {
-                        const sep = SHEETDB_API.includes('?') ? '&' : '?';
-                        fetchUrl = `${SHEETDB_API}${sep}_t=${Date.now()}${canUseFast ? '&mode=fast' : ''}`;
-                    }
-
-                    const res = await fetch(fetchUrl, {
-                        method: 'GET',
-                        cache: 'no-store',
-                        signal: ctrl.signal
-                    });
-                    clearTimeout(timer);
-
-                    if (res.status === 429) {
-                        _lastDbError = 'QUOTA_429';
-                        refreshDbEngineBadge();
-                        throw new Error('QUOTA_429');
-                    }
-                    if (!res.ok) {
-                        _lastDbError = `HTTP_${res.status}`;
-                        refreshDbEngineBadge();
-                        throw new Error(`HTTP_${res.status}`);
-                    }
-
-                    const data = await res.json();
-                    if (data && !Array.isArray(data) && data.error) {
-                        _lastDbError = String(data.error);
-                        refreshDbEngineBadge();
-                        throw new Error(String(data.error));
-                    }
-
-                    const rows = Array.isArray(data) ? data : [];
-                    let needFullHydration = false;
-                    rows.forEach(r => {
-                        if (!r) return;
-                        const k = String(r.hoten || '').trim();
-                        const pb = String(r.phongban || '');
-                        if (pb.startsWith('__IMG_REF__:')) {
-                            const expectedLen = parseInt(pb.split(':')[1], 10) || 0;
-                            const cachedImg = _rowImageCache.get(k);
-                            if (cachedImg && (!expectedLen || cachedImg.length === expectedLen)) {
-                                r.phongban = cachedImg;
-                            } else {
-                                needFullHydration = true;
-                            }
-                        } else if (k && pb.startsWith('data:image')) {
-                            _rowImageCache.set(k, pb);
-                        }
-                    });
-
-                    if (canUseFast && needFullHydration) {
-                        _inflightDbFetchFast = null;
-                        return await dbFetchRows({ fast: false });
-                    }
-
-                    _hasFullFetchedOnce = true;
-                    _lastDbFetchAt = Date.now();
-                    _lastDbError = '';
-                    saveLocalCachedRows(rows);
-                    refreshDbEngineBadge();
-                    return rows;
-                } catch (err) {
-                    clearTimeout(timer);
-                    if (err.message !== 'QUOTA_429' && !String(err.message || '').startsWith('HTTP_')) {
-                        _lastDbError = 'NETWORK';
-                        refreshDbEngineBadge();
-                    }
-                    throw err;
+                const timeoutMs = canUseFast ? 30000 : 55000;
+                let fetchUrl = SHEETDB_API;
+                if (isGoogleAppsScript() || isSqlServerApi()) {
+                    const sep = SHEETDB_API.includes('?') ? '&' : '?';
+                    fetchUrl = `${SHEETDB_API}${sep}_t=${Date.now()}${canUseFast ? '&mode=fast' : ''}`;
                 }
+
+                let lastErr = null;
+                for (let attempt = 0; attempt < 2; attempt++) {
+                    try {
+                        const res = await fetchWithTimeout(fetchUrl, {
+                            method: 'GET',
+                            cache: 'no-store'
+                        }, timeoutMs);
+
+                        if (res.status === 429) {
+                            _lastDbError = 'QUOTA_429';
+                            refreshDbEngineBadge();
+                            throw new Error('QUOTA_429');
+                        }
+                        if (!res.ok) {
+                            _lastDbError = `HTTP_${res.status}`;
+                            refreshDbEngineBadge();
+                            throw new Error(`HTTP_${res.status}`);
+                        }
+
+                        const data = await res.json();
+                        if (data && !Array.isArray(data) && data.error) {
+                            _lastDbError = String(data.error);
+                            refreshDbEngineBadge();
+                            throw new Error(String(data.error));
+                        }
+
+                        const rows = Array.isArray(data) ? data : [];
+                        let needFullHydration = false;
+                        rows.forEach(r => {
+                            if (!r) return;
+                            const k = String(r.hoten || '').trim();
+                            const pb = String(r.phongban || '');
+                            if (pb.startsWith('__IMG_REF__:')) {
+                                const expectedLen = parseInt(pb.split(':')[1], 10) || 0;
+                                const cachedImg = _rowImageCache.get(k);
+                                if (cachedImg && (!expectedLen || cachedImg.length === expectedLen)) {
+                                    r.phongban = cachedImg;
+                                } else {
+                                    needFullHydration = true;
+                                }
+                            } else if (k && pb.startsWith('data:image')) {
+                                _rowImageCache.set(k, pb);
+                            }
+                        });
+
+                        if (canUseFast && needFullHydration) {
+                            _inflightDbFetchFast = null;
+                            return await dbFetchRows({ fast: false });
+                        }
+
+                        _hasFullFetchedOnce = true;
+                        _lastDbFetchAt = Date.now();
+                        _lastDbError = '';
+                        saveLocalCachedRows(rows);
+                        refreshDbEngineBadge();
+                        return rows;
+                    } catch (err) {
+                        lastErr = err;
+                        const msg = String((err && err.message) || '');
+                        if (attempt === 0 && (err.name === 'AbortError' || msg === 'Failed to fetch')) {
+                            await new Promise(r => setTimeout(r, 450));
+                            continue;
+                        }
+                        if (msg !== 'QUOTA_429' && !msg.startsWith('HTTP_')) {
+                            _lastDbError = 'NETWORK';
+                            refreshDbEngineBadge();
+                        }
+                        throw err;
+                    }
+                }
+                throw lastErr || new Error('NETWORK');
             })();
 
             if (canUseFast) {
@@ -2290,103 +2649,51 @@
         async function dbInsertRow(payload) {
             let res;
             if (isGoogleAppsScript()) {
-                res = await fetch(SHEETDB_API, {
+                res = await fetchWithTimeout(SHEETDB_API, {
                     method: 'POST',
                     body: JSON.stringify({ action: 'INSERT', data: [payload] })
-                });
+                }, 45000);
             } else {
-                res = await fetch(SHEETDB_API, {
+                res = await fetchWithTimeout(SHEETDB_API, {
                     method: 'POST',
                     headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
                     body: JSON.stringify({ data: [payload] })
-                });
+                }, 45000);
             }
-
-            if (res.status === 429) {
-                _lastDbError = 'QUOTA_429';
-                refreshDbEngineBadge();
-                throw new Error('QUOTA_429');
-            }
-            if (!res.ok) {
-                throw new Error(`HTTP_${res.status}`);
-            }
-
-            let respJson = null;
-            try { respJson = await res.json(); } catch (e) {}
-            if (respJson && respJson.error) {
-                throw new Error(String(respJson.error));
-            }
-            return respJson || { ok: true };
+            return await parseGasWriteResponse(res, false);
         }
 
         async function dbPatchRow(colName, colVal, patchData) {
             let res;
             if (isGoogleAppsScript()) {
-                res = await fetch(SHEETDB_API, {
+                res = await fetchWithTimeout(SHEETDB_API, {
                     method: 'POST',
                     body: JSON.stringify({ action: 'PATCH', column: colName, value: colVal, data: patchData })
-                });
+                }, 45000);
             } else {
-                res = await fetch(`${SHEETDB_API}/${colName}/${encodeURIComponent(colVal)}`, {
+                res = await fetchWithTimeout(`${SHEETDB_API}/${colName}/${encodeURIComponent(colVal)}`, {
                     method: 'PATCH',
                     headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
                     body: JSON.stringify({ data: patchData })
-                });
+                }, 45000);
             }
-
-            if (res.status === 404) {
-                return { ok: false, updated: 0 };
-            }
-            if (res.status === 429) {
-                _lastDbError = 'QUOTA_429';
-                refreshDbEngineBadge();
-                throw new Error('QUOTA_429');
-            }
-            if (!res.ok) {
-                throw new Error(`HTTP_${res.status}`);
-            }
-
-            let respJson = {};
-            try { respJson = await res.json(); } catch (e) {}
-            if (respJson && respJson.error) {
-                throw new Error(String(respJson.error));
-            }
-            const updated = typeof respJson.updated === 'number' ? respJson.updated : 1;
-            return { ok: updated > 0, updated };
+            return await parseGasWriteResponse(res, true);
         }
 
         async function dbDeleteRow(colName, colVal) {
             let res;
             if (isGoogleAppsScript()) {
-                res = await fetch(SHEETDB_API, {
+                res = await fetchWithTimeout(SHEETDB_API, {
                     method: 'POST',
                     body: JSON.stringify({ action: 'DELETE', column: colName, value: colVal })
-                });
+                }, 45000);
             } else {
-                res = await fetch(`${SHEETDB_API}/${colName}/${encodeURIComponent(colVal)}`, {
+                res = await fetchWithTimeout(`${SHEETDB_API}/${colName}/${encodeURIComponent(colVal)}`, {
                     method: 'DELETE',
                     headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
-                });
+                }, 45000);
             }
-
-            if (res.status === 404) {
-                return { ok: true, deleted: 0 };
-            }
-            if (res.status === 429) {
-                _lastDbError = 'QUOTA_429';
-                refreshDbEngineBadge();
-                throw new Error('QUOTA_429');
-            }
-            if (!res.ok) {
-                throw new Error(`HTTP_${res.status}`);
-            }
-
-            let respJson = {};
-            try { respJson = await res.json(); } catch (e) {}
-            if (respJson && respJson.error) {
-                throw new Error(String(respJson.error));
-            }
-            return respJson || { ok: true };
+            return await parseGasWriteResponse(res, false);
         }
 
         async function useLocalSqlServerApi() {
@@ -2555,6 +2862,7 @@
         let allSheetRecordsCache = [];
         let giftCheckinMap = new Map(); // Lưu riêng bản ghi Check-in Quà theo MSSV (Chỉ chủ tài khoản & BTC xem được)
         let btcDonateMap = new Map();   // Lưu riêng bản ghi Bill Donate Quỹ Quà BTC theo MSSV (Chờ BTC duyệt / Đã duyệt)
+        let broadcastMessagesList = []; // Lưu danh sách Thông Báo Toàn Sự Kiện từ Ban Tổ Chức (Admin Broadcast)
         let publicFeedPosts = [];       // Lưu danh sách bài đăng trên Bảng Tin Giáng Sinh
         let publicChatMessages = [];    // Lưu danh sách tin nhắn Kênh Chat Chung
         let adminAllRecords = [];
@@ -2563,18 +2871,21 @@
         let _pendingOptimisticChats = [];
         let _pendingOptimisticPosts = [];
         let _eventConfigRawHotens = [];
+        let _eventConfigRowCount = 0;
+        let _lastSavedScheduleConfig = null;
         let _lastUsersSig = '';
         let _lastFeedSig = '';
         let _lastChatSig = '';
         let _lastCheckinSig = '';
         let _lastDonateSig = '';
+        let _lastBroadcastSig = '';
         let _lastCfgSig = '';
 
         const DEFAULT_EVENT_SCHEDULE = {
             parts: {
                 1: { title: 'Part 1: Gathering', mode: 'open', openAt: '', note: 'Check-in quà, Cây Thông, Bảng Tin & Kênh Chat Chung' },
-                2: { title: 'Part 2: Dọn Phòng 204', mode: 'locked', openAt: '', note: 'Mini-Game Đại Chiến Dọn Phòng Họp 204 (+300 PTS) & Đổi Ấn Phẩm' },
-                3: { title: 'Part 3: The Sneaky Elf', mode: 'locked', openAt: '', note: 'Săn Yêu Tinh Giáng Sinh tích điểm (+500 PTS) & Sưu tầm Ấn Phẩm' },
+                2: { title: 'Part 2: Dọn Phòng 204', mode: 'locked', openAt: '', note: 'Mini-Game Đại Chiến Dọn Phòng Họp 204 (+100~180 PTS/lượt) & Đổi Ấn Phẩm' },
+                3: { title: 'Part 3: Boss Cún Bông 204', mode: 'locked', openAt: '', note: 'Đại chiến Undertale 204: Boss Cún Bông (+160~260 PTS/trận thắng) & Sưu tầm Ấn Phẩm' },
                 4: { title: 'Part 4: The Reveal', mode: 'locked', openAt: '', note: 'Đổi Quà Bí Mật BTC, Công Bố Cặp Secret Santa & Đêm Hội Mở Quà' }
             }
         };
@@ -2656,7 +2967,10 @@
 
         function isHeavyModalActive() {
             const p2m = document.getElementById('part2GameModal');
-            return document.hidden || Boolean(p2m && !p2m.classList.contains('hidden'));
+            const p3m = document.getElementById('part3GameModal');
+            return document.hidden
+                || Boolean(p2m && !p2m.classList.contains('hidden'))
+                || Boolean(p3m && !p3m.classList.contains('hidden'));
         }
 
         function animateSantaFlight() {
@@ -3187,15 +3501,26 @@
             if (!rawJson) return base;
             try {
                 const obj = typeof rawJson === 'string' ? JSON.parse(rawJson) : rawJson;
+                if (obj && obj.updatedAt) {
+                    base.updatedAt = Number(obj.updatedAt) || 0;
+                }
                 const srcParts = (obj && obj.parts) ? obj.parts : {};
+                const legacyTitleRe = /Sneaky\s*Elf|Yêu\s*Tinh|The\s*Workshop/i;
+                const legacyNoteRe = /Sneaky\s*Elf|Yêu\s*Tinh|The\s*Workshop|350\s*[~–-]\s*600|\b350\b|100\s*[~–-]\s*300|\+500|\+300|50\s*[~–-]\s*100/i;
                 [1, 2, 3, 4].forEach(n => {
                     const p = srcParts[n] || srcParts[String(n)];
                     if (p && typeof p === 'object') {
+                        const rawTitle = String(p.title || '').trim();
+                        const rawNote = p.note !== undefined ? String(p.note).trim() : '';
+                        const isLegacyTitle = !rawTitle || legacyTitleRe.test(rawTitle);
+                        const isLegacyNote = (p.note === undefined) || legacyNoteRe.test(rawNote);
+                        const resolvedMode = ['open', 'auto', 'locked'].includes(p.mode) ? p.mode : base.parts[n].mode;
+                        const rawOpenAt = String(p.openAt || '');
                         base.parts[n] = {
-                            title: String(p.title || base.parts[n].title).trim() || base.parts[n].title,
-                            mode: ['open', 'auto', 'locked'].includes(p.mode) ? p.mode : base.parts[n].mode,
-                            openAt: String(p.openAt || ''),
-                            note: String(p.note !== undefined ? p.note : base.parts[n].note)
+                            title: isLegacyTitle ? base.parts[n].title : rawTitle,
+                            mode: resolvedMode,
+                            openAt: rawOpenAt,
+                            note: isLegacyNote ? base.parts[n].note : rawNote
                         };
                     }
                 });
@@ -3335,6 +3660,13 @@
             const p2ModalScore = document.getElementById('part2ModalScorePill');
             const p2ModalReward = document.getElementById('part2ModalRewardPill');
 
+            const p2LauncherCard = document.getElementById('part2GameLauncherCard');
+            if (p2LauncherCard) p2LauncherCard.classList.toggle('hidden', !p2.unlocked);
+            if (!p2.unlocked) {
+                const p2Modal = document.getElementById('part2GameModal');
+                if (p2Modal && !p2Modal.classList.contains('hidden')) closePart2GameModal();
+            }
+
             if (p2ProgEl) p2ProgEl.textContent = `🎲 Lượt thưởng hôm nay: ${playsToday}/${maxPlaysToday}`;
             if (p2BestEl) p2BestEl.textContent = `🏆 Kỷ lục game: ${p2Best.toLocaleString('vi-VN')}đ`;
             if (p2ModalScore) p2ModalScore.textContent = `⭐ Điểm tích lũy: ${myScore.toLocaleString('vi-VN')} PTS`;
@@ -3346,7 +3678,7 @@
                     p2LaunchBtn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 shadow-lg hover:brightness-105 transition inline-flex items-center justify-center gap-2 cursor-pointer';
                     p2LaunchBtn.innerHTML = playsToday >= maxPlaysToday
                         ? '<span>🎯</span> <span>Làm Nhiệm Vụ Bên Dưới Để Nhận Thêm Lượt (Hoặc Chơi Phá Kỷ Lục)</span>'
-                        : '<span>🚀</span> <span>Chơi Mini-Game (+350~600 PTS/lượt)</span>';
+                        : `<span>🚀</span> <span>Chơi Mini-Game (+${MINIGAME_REWARD_MIN}~${MINIGAME_REWARD_MAX} PTS/lượt)</span>`;
                 } else {
                     p2LaunchBtn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm bg-slate-700/80 text-slate-300 border border-slate-500/50 cursor-not-allowed inline-flex items-center justify-center gap-2 opacity-80';
                     p2LaunchBtn.innerHTML = '<span>🔒</span> <span>Chờ Mở Khóa Part 2</span>';
@@ -3360,48 +3692,96 @@
                     : (p2.mode === 'auto' && p2.openTs > 0 ? `Mở lúc ${formatVietnamDateTime(p2.openAt)}` : 'Admin chưa mở khóa chặng này.');
             }
 
+            // Cập nhật trạng thái Launcher & Modal của Part 3: Boss Cún Bông 204
+            const p3 = getPartUnlockState(3);
+            const p3ScoreEl = document.getElementById('part3MyScoreText');
+            const p3Wins = Math.max(0, Number(currentStudentRecord && currentStudentRecord.part3Wins) || 0);
+            const p3ProgEl = document.getElementById('part3RewardProgressBadge');
+            const p3BestEl = document.getElementById('part3GameBestBadge');
+            const p3LaunchBtn = document.getElementById('btnLaunchPart3Game');
+            const p3LockNote = document.getElementById('part3GameLockNote');
+            const p3ModalScore = document.getElementById('part3ModalScorePill');
+            const p3ModalReward = document.getElementById('part3ModalRewardPill');
+
+            const p3LauncherCard = document.getElementById('part3GameLauncherCard');
+            if (p3LauncherCard) p3LauncherCard.classList.toggle('hidden', !p3.unlocked);
+            if (!p3.unlocked) {
+                const p3Modal = document.getElementById('part3GameModal');
+                if (p3Modal && !p3Modal.classList.contains('hidden')) closePart3MinigameModal();
+            }
+
+            if (p3ScoreEl) p3ScoreEl.textContent = myScore.toLocaleString('vi-VN');
+            if (p3ProgEl) p3ProgEl.textContent = `🎲 Lượt thưởng hôm nay: ${playsToday}/${maxPlaysToday}`;
+            if (p3BestEl) p3BestEl.textContent = `🏆 Hạ/Cảm hóa Boss: ${p3Wins} lần`;
+            if (p3ModalScore) p3ModalScore.textContent = `⭐ Điểm tích lũy: ${myScore.toLocaleString('vi-VN')} PTS`;
+            if (p3ModalReward) p3ModalReward.textContent = `🎲 Lượt hôm nay: ${playsToday}/${maxPlaysToday}`;
+
+            if (p3LaunchBtn) {
+                p3LaunchBtn.disabled = !p3.unlocked;
+                if (p3.unlocked) {
+                    p3LaunchBtn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm bg-gradient-to-r from-amber-400 via-orange-400 to-rose-500 text-slate-950 shadow-lg hover:brightness-105 transition inline-flex items-center justify-center gap-2 cursor-pointer';
+                    p3LaunchBtn.innerHTML = playsToday >= maxPlaysToday
+                        ? '<span>🎯</span> <span>Làm Nhiệm Vụ Nhận Thêm Lượt (Hoặc Đánh Boss Giải Trí)</span>'
+                        : `<span>⚔️</span> <span>Khiêu Chiến Boss Cún Bông (+${PART3_WIN_MIN}~${PART3_WIN_MAX} PTS)</span>`;
+                } else {
+                    p3LaunchBtn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl font-black text-xs sm:text-sm bg-slate-700/80 text-slate-300 border border-slate-500/50 cursor-not-allowed inline-flex items-center justify-center gap-2 opacity-80';
+                    p3LaunchBtn.innerHTML = '<span>🔒</span> <span>Chờ Mở Khóa Part 3</span>';
+                }
+            }
+            if (p3LockNote) {
+                p3LockNote.textContent = p3.unlocked
+                    ? (playsToday >= maxPlaysToday
+                        ? `⚠️ Đã hết ${playsToday}/${maxPlaysToday} lượt thưởng hôm nay! Làm nhiệm vụ bên dưới để nhận thêm lượt (vẫn có thể đấu Boss ghi nhận chiến thắng).`
+                        : `Còn ${maxPlaysToday - playsToday} lượt nhận thưởng (Thắng: ${PART3_WIN_MIN}–${PART3_WIN_MAX} PTS • Thua ≥1 lượt: ${PART3_DEFEAT_MIN}–${PART3_DEFEAT_MAX} PTS)`)
+                    : (p3.mode === 'auto' && p3.openTs > 0 ? `Mở lúc ${formatVietnamDateTime(p3.openAt)}` : 'Admin chưa mở khóa chặng này.');
+            }
+
             renderRewardShopAndInventory();
             updatePartCountdowns();
         }
 
         // =========================================================================
-        // HỆ THỐNG ĐỔI THƯỞNG & TÍCH LŨY (DAILY CHECK-IN, MINIGAME 350-600 PTS, 3 LƯỢT/NGÀY + NHIỆM VỤ, SHOP 6 MÓN & QUÀ BÍ ẨN BTC)
+        // HỆ THỐNG ĐỔI THƯỞNG & TÍCH LŨY (DAILY CHECK-IN 50-120 PTS, PART 2: 100-180 PTS, PART 3 BOSS: 160-260 PTS, 3 LƯỢT/NGÀY + NHIỆM VỤ, SHOP 6 MÓN & QUÀ BÍ ẨN BTC)
         // =========================================================================
         const BASE_DAILY_MINIGAME_PLAYS = 3;
-        const MINIGAME_REWARD_MIN = 350;
-        const MINIGAME_REWARD_MAX = 600;
-        const DAILY_CHECKIN_MIN = 100;
-        const DAILY_CHECKIN_MAX = 300;
-        const DONATE_BONUS_PTS = 300;
+        const MINIGAME_REWARD_MIN = 100;
+        const MINIGAME_REWARD_MAX = 180;
+        const PART3_WIN_MIN = 160;
+        const PART3_WIN_MAX = 260;
+        const PART3_DEFEAT_MIN = 40;
+        const PART3_DEFEAT_MAX = 70;
+        const DAILY_CHECKIN_MIN = 50;
+        const DAILY_CHECKIN_MAX = 120;
+        const DONATE_BONUS_PTS = 150;
 
-        // 6 Nhiệm vụ hằng ngày giúp mở khóa thêm lượt chơi Minigame (ngoài 3 lượt miễn phí/ngày)
+        // 6 Nhiệm vụ hằng ngày giúp mở khóa thêm lượt chơi Minigame (ngoài 3 lượt miễn phí/ngày, tổng 8 lượt miễn phí hoặc 13 lượt khi Donate BTC)
         const DAILY_PLAY_QUESTS = [
             {
                 id: 'donate_btc',
                 name: 'Donate Quỹ Quà BTC (5K–10K)',
                 icon: '💖',
                 bonusPlays: 5,
-                bonusPts: 300,
-                desc: 'Quét QR ủng hộ 5K–10K & gửi ảnh Bill để Admin (BTC) duyệt cộng +5 lượt & +300 PTS.',
+                bonusPts: DONATE_BONUS_PTS,
+                desc: 'Quét QR ủng hộ 5K–10K & gửi ảnh Bill để Admin (BTC) duyệt cộng +5 lượt & +150 PTS.',
                 btnText: '💖 Donate & Gửi Bill (+5 lượt)'
             },
             {
                 id: 'post_feed',
                 name: 'Đăng Bài Lên Bảng Tin Noel',
                 icon: '📸',
-                bonusPlays: 2,
+                bonusPlays: 1,
                 bonusPts: 0,
                 desc: 'Đăng 1 khoảnh khắc hoặc lời chúc mới lên Bảng Tin (Tự động xác nhận khi đăng).',
-                btnText: '📸 Đăng Bảng Tin (+2 lượt)'
+                btnText: '📸 Đăng Bảng Tin (+1 lượt)'
             },
             {
                 id: 'gift_or_wish',
                 name: 'Check-in Quà / Cập Nhật Wishlist',
                 icon: '🎁',
-                bonusPlays: 2,
+                bonusPlays: 1,
                 bonusPts: 0,
                 desc: 'Gửi ảnh Check-in Quà hoặc bấm Lưu cập nhật Wishlist/Hồ sơ (Tự động xác nhận khi lưu).',
-                btnText: '🎁 Làm Nhiệm Vụ (+2 lượt)'
+                btnText: '🎁 Làm Nhiệm Vụ (+1 lượt)'
             },
             {
                 id: 'send_chat',
@@ -3427,12 +3807,12 @@
                 icon: '📅',
                 bonusPlays: 1,
                 bonusPts: 0,
-                desc: 'Hoàn thành Điểm Danh Hằng Ngày để nhận 100–300 PTS và thêm 1 lượt chơi.',
+                desc: 'Hoàn thành Điểm Danh Hằng Ngày để nhận 50–120 PTS và thêm 1 lượt chơi.',
                 btnText: '📅 Điểm Danh (+1 lượt)'
             }
         ];
 
-        // Danh sách 6 Vật Phẩm Noel trong Cửa Hàng (Tổng 12,704 PTS -> cân đối với 350-600 PTS/lượt chơi)
+        // Danh sách 6 Vật Phẩm Noel trong Cửa Hàng (Tổng 12,704 PTS -> cân đối với Part 2: 100-180 PTS & Part 3 Boss: 160-260 PTS)
         const NOEL_REWARD_SHOP_ITEMS = [
             { id: 'icon_204', name: 'Icon 204 Độc Quyền', icon: '🏷️', price: 204, desc: 'Huy hiệu [🏷️ ICON 204] danh giá gắn cạnh tên bạn trên Bảng Xếp Hạng, Kênh Chat & Bảng Tin!' },
             { id: 'mu_noel', name: 'Mũ Santa Thần Kỳ', icon: '🎅', price: 1000, desc: 'Chiếc mũ đỏ phép thuật của Ông Già Noel mang lại may mắn suốt mùa lễ hội.' },
@@ -3499,7 +3879,8 @@
             DAILY_PLAY_QUESTS.forEach(q => {
                 if (completed.includes(q.id)) bonus += q.bonusPlays;
             });
-            return BASE_DAILY_MINIGAME_PLAYS + bonus;
+            const adminBonus = record ? Math.max(0, parseInt(record.adminBonusPlays, 10) || 0) : 0;
+            return BASE_DAILY_MINIGAME_PLAYS + bonus + adminBonus;
         }
 
         function getTodayMinigamePlays(record) {
@@ -3508,6 +3889,197 @@
             if (String(record.ngay_choi_game_cuoi || '') !== todayStr) return 0;
             const maxPlays = getMaxDailyMinigamePlays(record);
             return Math.min(maxPlays, Math.max(0, parseInt(record.luot_choi_hom_nay, 10) || 0));
+        }
+
+        function getRemainingMinigamePlays(record) {
+            const maxPlays = getMaxDailyMinigamePlays(record);
+            const usedPlays = getTodayMinigamePlays(record);
+            return Math.max(0, maxPlays - usedPlays);
+        }
+
+        function openMyPlaysDetailModal() {
+            const rec = currentStudentRecord;
+            const usedPlays = getTodayMinigamePlays(rec);
+            const maxPlays = getMaxDailyMinigamePlays(rec);
+            const remPlays = Math.max(0, maxPlays - usedPlays);
+            const completed = getCompletedQuestsToday(rec);
+            let questBonus = 0;
+            DAILY_PLAY_QUESTS.forEach(q => {
+                if (completed.includes(q.id)) questBonus += q.bonusPlays;
+            });
+            const adminBonus = rec ? Math.max(0, parseInt(rec.adminBonusPlays, 10) || 0) : 0;
+
+            const remEl = document.getElementById('myPlaysRemainingBig');
+            const usedEl = document.getElementById('myPlaysUsedBig');
+            const maxEl = document.getElementById('myPlaysMaxBig');
+            const breakdownEl = document.getElementById('myPlaysBreakdownBox');
+
+            if (remEl) remEl.textContent = String(remPlays);
+            if (usedEl) usedEl.textContent = String(usedPlays);
+            if (maxEl) maxEl.textContent = String(maxPlays);
+            if (breakdownEl) {
+                breakdownEl.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+                        <span>🎯 Lượt miễn phí mặc định mỗi ngày:</span>
+                        <strong class="text-white">${BASE_DAILY_MINIGAME_PLAYS} lượt</strong>
+                    </div>
+                    <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+                        <span>✨ Lượt cộng thêm từ Nhiệm vụ hôm nay (${completed.length}/${DAILY_PLAY_QUESTS.length}):</span>
+                        <strong class="text-amber-300">+${questBonus} lượt</strong>
+                    </div>
+                    <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+                        <span>🛡️ Lượt do Ban Tổ Chức (Admin) tặng thêm:</span>
+                        <strong class="text-sky-300">+${adminBonus} lượt</strong>
+                    </div>
+                    <div class="flex items-center justify-between pt-0.5 text-emerald-300 font-black">
+                        <span>🎲 Số lượt bạn còn chơi nhận thưởng hôm nay:</span>
+                        <span>Còn ${remPlays}/${maxPlays} lượt</span>
+                    </div>
+                    <div class="pt-1.5 mt-1 border-t border-white/10 text-[11px] text-amber-200/90 leading-relaxed">
+                        💡 Dùng chung cho cả <strong>Part 2: Dọn Phòng 204 (${MINIGAME_REWARD_MIN}–${MINIGAME_REWARD_MAX} PTS)</strong> &amp; <strong>Part 3: Boss Cún Bông (${PART3_WIN_MIN}–${PART3_WIN_MAX} PTS/thắng • ${PART3_DEFEAT_MIN}–${PART3_DEFEAT_MAX} PTS an ủi)</strong>.
+                    </div>
+                `;
+            }
+
+            const modal = document.getElementById('myPlaysDetailModal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeMyPlaysDetailModal() {
+            const modal = document.getElementById('myPlaysDetailModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        // HỆ THỐNG THÔNG BÁO TOÀN SỰ KIỆN TỪ BAN TỔ CHỨC (ADMIN BROADCAST MEGAPHONE)
+        function renderGlobalBroadcastUI() {
+            const banner = document.getElementById('globalBroadcastBanner');
+            const badgeEl = document.getElementById('globalBroadcastBadge');
+            const titleEl = document.getElementById('globalBroadcastTitle');
+            const snippetEl = document.getElementById('globalBroadcastSnippet');
+            const bellCountEl = document.getElementById('headerBroadcastCountBadge');
+
+            if (!Array.isArray(broadcastMessagesList) || broadcastMessagesList.length === 0) {
+                if (banner) banner.classList.add('hidden');
+                if (bellCountEl) bellCountEl.classList.add('hidden');
+                return;
+            }
+
+            const latest = broadcastMessagesList[0];
+            if (banner) banner.classList.remove('hidden');
+            if (badgeEl) badgeEl.textContent = latest.badgeType || '🎄 Thông báo BTC';
+            if (titleEl) titleEl.textContent = latest.title || 'Thông báo từ Ban Tổ Chức';
+            if (snippetEl) snippetEl.textContent = `${latest.message || ''} (${latest.thoigian || ''})`;
+            if (bellCountEl) {
+                bellCountEl.textContent = String(broadcastMessagesList.length);
+                bellCountEl.classList.remove('hidden');
+            }
+
+            // Tự động bật Popup thông báo nếu thành viên chưa đọc thông báo mới nhất này
+            try {
+                const seenKey = `ss26_seen_broadcast_${latest.broadcastId}`;
+                const pageAdmin = document.getElementById('pageAdmin');
+                const isAdminOpen = pageAdmin && !pageAdmin.classList.contains('hidden');
+                if (!isAdminOpen && !localStorage.getItem(seenKey)) {
+                    localStorage.setItem(seenKey, '1');
+                    openBroadcastPopupModal(false);
+                }
+            } catch (e) {}
+        }
+
+        function openBroadcastPopupModal(manual = true) {
+            if (!Array.isArray(broadcastMessagesList) || broadcastMessagesList.length === 0) {
+                if (manual) showToast('📢 Hiện tại Ban Tổ Chức chưa đăng thông báo mới nào!', '🔔');
+                return;
+            }
+            const latest = broadcastMessagesList[0];
+            const typeEl = document.getElementById('broadcastModalTypeBadge');
+            const titleEl = document.getElementById('broadcastModalTitle');
+            const timeEl = document.getElementById('broadcastModalTime');
+            const contentEl = document.getElementById('broadcastModalContent');
+            const histWrap = document.getElementById('broadcastModalHistoryWrap');
+            const histList = document.getElementById('broadcastModalHistoryList');
+
+            if (typeEl) typeEl.textContent = latest.badgeType || '📢 Thông Báo Từ Ban Tổ Chức';
+            if (titleEl) titleEl.textContent = latest.title || 'Thông Báo Sự Kiện Secret Santa 2026';
+            if (timeEl) timeEl.textContent = `🕒 Đăng lúc: ${latest.thoigian || 'Vừa xong'} • Gửi tới toàn bộ thành viên`;
+            if (contentEl) contentEl.textContent = latest.message || '';
+
+            if (histWrap && histList) {
+                if (broadcastMessagesList.length > 1) {
+                    histWrap.classList.remove('hidden');
+                    histList.innerHTML = broadcastMessagesList.slice(1).map(b => `
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-2.5 text-xs space-y-0.5">
+                            <div class="flex items-center justify-between gap-1">
+                                <span class="font-bold text-amber-200">${escapeHtml(b.title)}</span>
+                                <span class="text-[10px] text-gray-400 shrink-0">${escapeHtml(b.thoigian)}</span>
+                            </div>
+                            <p class="text-[11px] text-gray-200 whitespace-pre-line">${escapeHtml(b.message)}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    histWrap.classList.add('hidden');
+                }
+            }
+
+            const modal = document.getElementById('broadcastPopupModal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeBroadcastPopupModal() {
+            const modal = document.getElementById('broadcastPopupModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function handleSendAdminBroadcast(e) {
+            if (e && typeof e.preventDefault === 'function') e.preventDefault();
+            const badgeType = (document.getElementById('adminBroadcastType')?.value || '🎄 Thông báo BTC').trim();
+            const titleVal = (document.getElementById('adminBroadcastTitle')?.value || '').trim();
+            const msgVal = (document.getElementById('adminBroadcastMessage')?.value || '').trim();
+
+            if (!titleVal || !msgVal) {
+                alert('Vui lòng nhập đầy đủ Tiêu đề và Nội dung thông báo để gửi tới tất cả mọi người!');
+                return;
+            }
+
+            const btn = document.getElementById('btnSendAdminBroadcast');
+            if (btn) btn.disabled = true;
+
+            const broadcastId = 'BC_' + Date.now();
+            const nowStr = getFormattedNowStr();
+            const payload = {
+                "hoten": `BROADCAST_MSG | ${broadcastId} | BTC`,
+                "thoigian": `${nowStr} | ${badgeType}`,
+                "phongban": titleVal,
+                "wishlist": msgVal,
+                "blacklist": "ACTIVE"
+            };
+
+            try {
+                await dbInsertRow(payload);
+                document.getElementById('adminBroadcastTitle').value = '';
+                document.getElementById('adminBroadcastMessage').value = '';
+                showToast('📢 Đã phát thông báo toàn sự kiện tới tất cả thành viên!', '🎉');
+                await fetchAdminData();
+                renderGlobalBroadcastUI();
+            } catch (err) {
+                console.error(err);
+                alert(describeDbError(err));
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        async function deleteBroadcastByRawHoten(rawHoten) {
+            if (!rawHoten) return;
+            if (!confirm('Bạn có muốn gỡ thông báo này khỏi trang sự kiện không?')) return;
+            try {
+                await dbDeleteRow('hoten', rawHoten);
+                showToast('🗑️ Đã gỡ thông báo thành công!', '✅');
+                await fetchAdminData();
+                renderGlobalBroadcastUI();
+            } catch (err) {
+                alert('Không thể gỡ thông báo lúc này!');
+            }
         }
 
         function hasUserIcon204(recordOrMssv) {
@@ -3526,8 +4098,10 @@
         let _isRedeemingShopItem = false;
         let _isSavingPart2Progress = false;
         let _queuedPart2Progress = null;
+        let _isSavingPart3Result = false;
+        let _lastPart3ResultTs = 0;
 
-        // MODAL DONATE CHO BAN TỔ CHỨC (TÙY TÂM 5K - 10K) & GỬI ẢNH BILL ĐỂ ADMIN XÁC NHẬN (+5 LƯỢT CHƠI & +300 PTS)
+        // MODAL DONATE CHO BAN TỔ CHỨC (TÙY TÂM 5K - 10K) & GỬI ẢNH BILL ĐỂ ADMIN XÁC NHẬN (+5 LƯỢT CHƠI & +150 PTS)
         function openBtcDonateModal() {
             const modal = document.getElementById('btcDonateModal');
             renderUserDonateState();
@@ -3579,7 +4153,7 @@
                     statusPill.className = 'text-[10px] font-black px-2.5 py-1 rounded-full bg-white/15 text-amber-200 border border-amber-300/40';
                     statusPill.textContent = '⏳ Chưa gửi ảnh Bill xác nhận';
                 }
-                if (btnText) btnText.textContent = 'Gửi Ảnh Bill Cho BTC Duyệt (+5 Lượt & +300 PTS)';
+                if (btnText) btnText.textContent = `Gửi Ảnh Bill Cho BTC Duyệt (+5 Lượt & +${DONATE_BONUS_PTS} PTS)`;
             } else if (myDonate && myDonate.status === 'PENDING' && !isApprovedToday) {
                 if (myDonate.billImage && myDonate.billImage.startsWith('data:image') && preview && base64Input && !base64Input.value) {
                     preview.src = myDonate.billImage;
@@ -3601,7 +4175,7 @@
                 if (myDonate && noteInput && !noteInput.value) noteInput.value = myDonate.note || '';
                 if (statusPill) {
                     statusPill.className = 'text-[10px] font-black px-2.5 py-1 rounded-full bg-emerald-500 text-slate-950 shadow';
-                    statusPill.textContent = '🟢 BTC Đã Duyệt! Đã cộng +5 Lượt & +300 PTS';
+                    statusPill.textContent = `🟢 BTC Đã Duyệt! Đã cộng +5 Lượt & +${DONATE_BONUS_PTS} PTS`;
                 }
                 if (btnText) btnText.textContent = '💖 Gửi Thêm Bill Donate Mới Cho BTC';
             }
@@ -3653,7 +4227,7 @@
                 await loadLeaderboardData(false, { fast: false });
                 renderUserDonateState();
                 renderRewardShopAndInventory();
-                showToast('💖 Đã gửi ảnh Bill chuyển khoản cho BTC! Ngay khi Admin bấm Duyệt, bạn sẽ nhận tự động +5 Lượt chơi & +300 PTS!', '🧾');
+                showToast(`💖 Đã gửi ảnh Bill chuyển khoản cho BTC! Ngay khi Admin bấm Duyệt, bạn sẽ nhận tự động +5 Lượt chơi & +${DONATE_BONUS_PTS} PTS!`, '🧾');
                 closeBtcDonateModal();
             } catch (err) {
                 console.error(err);
@@ -3744,7 +4318,8 @@
                 return;
             }
             if (questId === 'post_feed') {
-                closePart2MinigameModal();
+                closePart2GameModal();
+                closePart3MinigameModal();
                 switchEventPart(1);
                 switchHubTab('feed');
                 const input = document.getElementById('feedCaptionInput');
@@ -3752,24 +4327,27 @@
                     input.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     setTimeout(() => input.focus(), 250);
                 }
-                showToast('📸 Hãy đăng 1 bài viết mới lên Bảng Tin — hệ thống sẽ tự động xác nhận và cộng +2 lượt chơi ngay khi đăng xong!', '📸');
+                showToast('📸 Hãy đăng 1 bài viết mới lên Bảng Tin — hệ thống sẽ tự động xác nhận và cộng +1 lượt chơi ngay khi đăng xong!', '📸');
                 return;
             }
             if (questId === 'send_chat') {
-                closePart2MinigameModal();
+                closePart2GameModal();
+                closePart3MinigameModal();
                 openChatFromAnywhere();
                 showToast('💬 Hãy gửi 1 lời chúc Giáng Sinh trên Kênh Chat — hệ thống sẽ tự động xác nhận và cộng +1 lượt chơi ngay khi gửi!', '💬');
                 return;
             }
             if (questId === 'like_feed') {
-                closePart2MinigameModal();
+                closePart2GameModal();
+                closePart3MinigameModal();
                 switchEventPart(1);
                 switchHubTab('feed');
                 showToast('❤️ Hãy bấm Thả Tim 1 bài viết trên Bảng Tin — hệ thống sẽ tự động xác nhận và cộng +1 lượt chơi ngay khi bạn thả tim!', '❤️');
                 return;
             }
             if (questId === 'gift_or_wish') {
-                closePart2MinigameModal();
+                closePart2GameModal();
+                closePart3MinigameModal();
                 switchEventPart(1);
                 switchHubTab('profile');
                 const noteEl = document.getElementById('checkinGiftNote') || document.getElementById('p1WishlistInput');
@@ -3777,11 +4355,11 @@
                     noteEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     setTimeout(() => noteEl.focus(), 250);
                 }
-                showToast('🎁 Hãy gửi ảnh Check-in Quà hoặc bấm Lưu cập nhật Wishlist/Hồ sơ — hệ thống sẽ tự động xác nhận và cộng +2 lượt chơi!', '🎁');
+                showToast('🎁 Hãy gửi ảnh Check-in Quà hoặc bấm Lưu cập nhật Wishlist/Hồ sơ — hệ thống sẽ tự động xác nhận và cộng +1 lượt chơi!', '🎁');
             }
         }
 
-        // LUỒNG A: NHẬN ĐIỂM THƯỞNG HẰNG NGÀY (DAILY CHECK-IN 100 - 300 ĐIỂM + MỞ KHÓA +1 LƯỢT CHƠI)
+        // LUỒNG A: NHẬN ĐIỂM THƯỞNG HẰNG NGÀY (DAILY CHECK-IN 50 - 120 PTS + MỞ KHÓA +1 LƯỢT CHƠI)
         async function checkAndTriggerDailyCheckin(manualClick = false) {
             if (!currentStudentRecord || !currentStudentRecord.mssv) return;
             const mssvVal = normalizeMssv(currentStudentRecord.mssv);
@@ -3912,6 +4490,8 @@
 
             const p2Grid = document.getElementById('part2QuestsGrid');
             if (p2Grid) p2Grid.innerHTML = buildCards(true);
+            const p3Grid = document.getElementById('part3QuestsGrid');
+            if (p3Grid) p3Grid.innerHTML = buildCards(true);
             const shopGrid = document.getElementById('shopQuestsGrid');
             if (shopGrid) shopGrid.innerHTML = buildCards(true);
         }
@@ -3985,8 +4565,13 @@
             }
 
             const shopGameText = document.getElementById('shopMinigamePlaysText');
+            const remPlaysToday = Math.max(0, maxPlaysToday - playsToday);
             if (shopGameText) {
-                shopGameText.textContent = `Hôm nay đã chơi: ${playsToday}/${maxPlaysToday} lượt (Thưởng ${MINIGAME_REWARD_MIN} – ${MINIGAME_REWARD_MAX} PTS/lượt thắng • Làm nhiệm vụ để cộng thêm lượt!)`;
+                shopGameText.textContent = `Còn lại: ${remPlaysToday}/${maxPlaysToday} lượt (Đã chơi: ${playsToday} • Part 2: ${MINIGAME_REWARD_MIN}–${MINIGAME_REWARD_MAX} PTS • Part 3 Boss: ${PART3_WIN_MIN}–${PART3_WIN_MAX} PTS)`;
+            }
+            const hdrPlaysText = document.getElementById('hubHeaderPlaysText');
+            if (hdrPlaysText) {
+                hdrPlaysText.textContent = `Lượt chơi: Còn ${remPlaysToday}/${maxPlaysToday} lượt (Đã chơi ${playsToday})`;
             }
 
             renderDailyPlayQuestsUI(playsToday, maxPlaysToday);
@@ -4288,10 +4873,14 @@
                 frame.src = 'about:blank';
             }
             if (modal) modal.classList.add('hidden');
-            document.body.style.overflow = '';
+            const p3Modal = document.getElementById('part3GameModal');
+            if (!p3Modal || p3Modal.classList.contains('hidden')) {
+                document.body.style.overflow = '';
+            }
         }
+        const closePart2MinigameModal = closePart2GameModal;
 
-        // LUỒNG B: CHƠI MINIGAME NHẬN ĐIỂM NGẪU NHIÊN 350 - 600 PTS (MẶC ĐỊNH 3 LƯỢT/NGÀY + NHIỆM VỤ TĂNG LƯỢT)
+        // LUỒNG B: CHƠI MINIGAME PART 2 NHẬN ĐIỂM NGẪU NHIÊN 100 - 180 PTS (MẶC ĐỊNH 3 LƯỢT/NGÀY + NHIỆM VỤ TĂNG LƯỢT)
         async function handlePart2GameProgress(data) {
             if (!data || !currentStudentRecord || !getPartUnlockState(2).unlocked) return;
             const levelCleared = Math.min(4, Math.max(0, parseInt(data.levelCleared, 10) || 0));
@@ -4334,7 +4923,7 @@
 
             if (randomRewardPts === 0 && nextBest <= prevBest) {
                 if (levelCleared > 0 && !canAwardPts) {
-                    showToast(`⚠️ Bạn đã dùng hết ${playsToday}/${maxPlaysToday} lượt hôm nay! Hãy làm Nhiệm Vụ (Donate BTC +5 lượt, Đăng Bảng Tin +2 lượt...) để chơi tiếp nhé!`, '🎯');
+                    showToast(`⚠️ Bạn đã dùng hết ${playsToday}/${maxPlaysToday} lượt hôm nay! Hãy làm Nhiệm Vụ (Donate BTC +5 lượt, Đăng Bảng Tin +1 lượt...) để chơi tiếp nhé!`, '🎯');
                 }
                 return;
             }
@@ -4401,12 +4990,239 @@
             }
         }
 
+        function openPart3MinigameModal() {
+            const p3 = getPartUnlockState(3);
+            if (!p3.unlocked) {
+                showToast('🔒 Mini-Game Part 3 (Boss Cún Bông) sẽ mở theo lịch của Ban Tổ Chức!', '⏳');
+                return;
+            }
+            const modal = document.getElementById('part3GameModal');
+            const frame = document.getElementById('part3GameFrame');
+            if (!modal || !frame) return;
+            applyEventScheduleUI();
+            frame.src = 'Part3.html';
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePart3MinigameModal() {
+            const modal = document.getElementById('part3GameModal');
+            const frame = document.getElementById('part3GameFrame');
+            if (frame) {
+                frame.src = '';
+            }
+            if (modal) modal.classList.add('hidden');
+            const p2Modal = document.getElementById('part2GameModal');
+            if (!p2Modal || p2Modal.classList.contains('hidden')) {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function postPart3InitToFrame(targetWin = null) {
+            const frame = document.getElementById('part3GameFrame');
+            const win = (frame && frame.contentWindow) || targetWin;
+            if (!win) return;
+            const rec = currentStudentRecord;
+            const playsToday = getTodayMinigamePlays(rec);
+            const maxPlays = getMaxDailyMinigamePlays(rec);
+            try {
+                win.postMessage({
+                    type: 'PART3_INIT',
+                    playerName: (rec && rec.hoten) || 'Thành viên 204',
+                    mssv: (rec && rec.mssv) || '',
+                    score: rec ? getScoreFromRow(rec) : 150,
+                    playsToday: playsToday,
+                    maxPlays: maxPlays,
+                    winMin: PART3_WIN_MIN,
+                    winMax: PART3_WIN_MAX,
+                    defeatMin: PART3_DEFEAT_MIN,
+                    defeatMax: PART3_DEFEAT_MAX
+                }, '*');
+            } catch (e) {}
+        }
+
+        // LUỒNG B (PART 3): UNDERTALE 204 - BOSS CÚN BÔNG (THẮNG 160-260 PTS, THUA >=1 LƯỢT 40-70 PTS)
+        async function handlePart3GameResult(data, sourceWin = null) {
+            if (!data || typeof data !== 'object') return;
+            if (_isSavingPart3Result) return;
+
+            const frame = document.getElementById('part3GameFrame');
+            const replyWin = (frame && frame.contentWindow) || sourceWin;
+            const postReply = (payload) => {
+                if (!replyWin) return;
+                try {
+                    replyWin.postMessage({ type: 'PART3_REWARD_APPLIED', ...payload }, '*');
+                } catch (e) {}
+            };
+
+            if (!currentStudentRecord || !currentStudentRecord.mssv || !getPartUnlockState(3).unlocked) {
+                postReply({
+                    earnedPts: 0,
+                    totalScore: currentStudentRecord ? getScoreFromRow(currentStudentRecord) : 0,
+                    playsToday: getTodayMinigamePlays(currentStudentRecord),
+                    maxPlays: getMaxDailyMinigamePlays(currentStudentRecord),
+                    capped: true,
+                    reason: 'Chặng 3 chưa mở khóa hoặc bạn chưa đăng nhập tài khoản.'
+                });
+                return;
+            }
+
+            const outcome = String(data.outcome || '').toLowerCase();
+            const isWin = (outcome === 'fight' || outcome === 'mercy');
+            const isDefeat = (outcome === 'defeat');
+            if (!isWin && !isDefeat) return;
+
+            const nowTs = Date.now();
+            if (nowTs - _lastPart3ResultTs < 1200) return;
+            _lastPart3ResultTs = nowTs;
+
+            const turns = Math.max(0, parseInt(data.turns, 10) || 0);
+            const maxHp = Math.max(1, Number(data.maxHp) || 20);
+            const hpLeft = Math.max(0, Math.min(maxHp, Number(data.hpLeft) || 0));
+            const mercyPct = Math.max(0, Math.min(100, Number(data.mercyPct) || 0));
+            const bossHpLeft = Math.max(0, Number(data.bossHpLeft) || 0);
+
+            const todayStr = getVietnamTodayDateStr();
+            const playsToday = getTodayMinigamePlays(currentStudentRecord);
+            const maxPlaysToday = getMaxDailyMinigamePlays(currentStudentRecord);
+            const currentScore = getScoreFromRow(currentStudentRecord);
+
+            if (isDefeat && turns < 1) {
+                postReply({
+                    earnedPts: 0,
+                    totalScore: currentScore,
+                    playsToday: playsToday,
+                    maxPlays: maxPlaysToday,
+                    capped: false,
+                    reason: 'Chưa chiến đấu đủ 1 lượt nên chưa nhận điểm an ủi (không bị trừ lượt chơi).'
+                });
+                return;
+            }
+
+            const isCapped = (playsToday >= maxPlaysToday);
+            let earnedPts = 0;
+            let reason = '';
+
+            if (isCapped) {
+                earnedPts = 0;
+                reason = 'Đã hết lượt nhận thưởng hôm nay — hãy làm nhiệm vụ để nhận thêm lượt!';
+            } else if (isWin) {
+                const hpRatio = Math.max(0, Math.min(1, hpLeft / maxHp));
+                const winSpan = PART3_WIN_MAX - PART3_WIN_MIN;
+                const mercyBias = outcome === 'mercy' ? 0.25 : 0;
+                const hpBias = hpRatio * 0.35;
+                const randBias = Math.random() * 0.40;
+                earnedPts = Math.min(
+                    PART3_WIN_MAX,
+                    Math.max(PART3_WIN_MIN, Math.round(PART3_WIN_MIN + winSpan * (mercyBias + hpBias + randBias)))
+                );
+                reason = outcome === 'mercy'
+                    ? `Cảm hóa Boss Cún Bông (MERCY • còn ${Math.round(hpRatio * 100)}% HP)!`
+                    : `Hạ gục Boss Cún Bông (FIGHT • còn ${Math.round(hpRatio * 100)}% HP)!`;
+            } else {
+                const defSpan = PART3_DEFEAT_MAX - PART3_DEFEAT_MIN;
+                const effortBias = Math.min(0.7, (Math.min(turns, 6) / 6) * 0.5 + (mercyPct / 100) * 0.2);
+                const randBias = Math.random() * 0.3;
+                earnedPts = Math.min(
+                    PART3_DEFEAT_MAX,
+                    Math.max(PART3_DEFEAT_MIN, Math.round(PART3_DEFEAT_MIN + defSpan * Math.min(1, effortBias + randBias)))
+                );
+                reason = `Điểm an ủi sau ${turns} lượt chiến đấu với Boss Cún Bông (Boss còn ${Math.round(bossHpLeft)} HP)!`;
+            }
+
+            if (isCapped && !isWin) {
+                postReply({
+                    earnedPts: 0,
+                    totalScore: currentScore,
+                    playsToday: playsToday,
+                    maxPlays: maxPlaysToday,
+                    capped: true,
+                    reason: reason
+                });
+                showToast(`⚠️ Bạn đã dùng hết ${playsToday}/${maxPlaysToday} lượt thưởng hôm nay! Hãy làm Nhiệm Vụ (Donate BTC +5 lượt, Đăng Bảng Tin +1 lượt...) để nhận thêm lượt chơi!`, '🎯');
+                return;
+            }
+
+            _isSavingPart3Result = true;
+            try {
+                const mssvVal = normalizeMssv(currentStudentRecord.mssv);
+                const wishData = buildUniqueWishData(currentStudentRecord, allSheetRecordsCache);
+                const nextPlaysToday = (!isCapped && earnedPts > 0) ? (playsToday + 1) : playsToday;
+                const prevPart3Wins = Math.max(0, Number(currentStudentRecord.part3Wins) || 0);
+                const nextPart3Wins = isWin ? (prevPart3Wins + 1) : prevPart3Wins;
+                const newTotalScore = currentScore + earnedPts;
+
+                const nextMeta = {
+                    ...currentStudentRecord,
+                    diem: newTotalScore,
+                    diem_tich_luoi: newTotalScore,
+                    part3Wins: nextPart3Wins,
+                    ngay_choi_game_cuoi: (!isCapped && earnedPts > 0) ? todayStr : (currentStudentRecord.ngay_choi_game_cuoi || todayStr),
+                    luot_choi_hom_nay: nextPlaysToday
+                };
+
+                const payload = {
+                    "mssv": mssvVal,
+                    "hoten": formatHotenForSheet(mssvVal, currentStudentRecord.hoten),
+                    "thoigian": formatTimeForSheet(mssvVal, wishData.wishId, newTotalScore, nextMeta),
+                    "phongban": currentStudentRecord.phongban || '',
+                    "wishlist": currentStudentRecord.wishlist || '',
+                    "blacklist": currentStudentRecord.blacklist || ''
+                };
+
+                const updated = await saveOrUpdateStudentToSheet(payload, currentStudentRecord);
+                currentStudentRecord = updated;
+                renderPart1UserInfo(updated, allSheetRecordsCache);
+                applyEventScheduleUI();
+
+                postReply({
+                    earnedPts: earnedPts,
+                    totalScore: newTotalScore,
+                    playsToday: nextPlaysToday,
+                    maxPlays: maxPlaysToday,
+                    capped: isCapped,
+                    reason: reason
+                });
+
+                if (earnedPts > 0 && isWin) {
+                    showToast(`⚔️ ${outcome === 'mercy' ? 'Cảm hóa' : 'Hạ gục'} Boss Cún Bông! Nhận +${earnedPts} PTS (Lượt hôm nay: ${nextPlaysToday}/${maxPlaysToday} • Tổng: ${newTotalScore} PTS)`, '🐩');
+                    if (window._spawnCanvasBurst) {
+                        window._spawnCanvasBurst(window.innerWidth / 2, window.innerHeight / 3, 45);
+                    }
+                } else if (earnedPts > 0 && isDefeat) {
+                    showToast(`💝 Thua Boss sau ${turns} lượt! Nhận +${earnedPts} PTS điểm an ủi (Lượt hôm nay: ${nextPlaysToday}/${maxPlaysToday} • Tổng: ${newTotalScore} PTS)`, '❤️');
+                } else if (isCapped && isWin) {
+                    showToast(`🏆 Ghi nhận chiến thắng Boss lần #${nextPart3Wins}! (Đã hết ${playsToday}/${maxPlaysToday} lượt thưởng hôm nay — làm nhiệm vụ để nhận thêm lượt!)`, '🐩');
+                }
+                loadLeaderboardData(false, { fast: _hasFullFetchedOnce });
+            } catch (err) {
+                console.warn('Lỗi lưu điểm Part 3:', err.message);
+                showToast('⚠️ Không thể kết nối máy chủ để lưu điểm Part 3. Vui lòng thử lại!', '⚠️');
+                postReply({
+                    earnedPts: 0,
+                    totalScore: currentScore,
+                    playsToday: playsToday,
+                    maxPlays: maxPlaysToday,
+                    capped: false,
+                    reason: 'Không thể kết nối máy chủ để lưu điểm. Vui lòng thử lại!'
+                });
+            } finally {
+                _isSavingPart3Result = false;
+            }
+        }
+
         window.addEventListener('message', (ev) => {
             if (!ev || !ev.data || typeof ev.data !== 'object') return;
             if (ev.data.type === 'SECRET_SANTA_PART2_PROGRESS') {
                 handlePart2GameProgress(ev.data);
             } else if (ev.data.type === 'SECRET_SANTA_PART2_CLOSE') {
                 closePart2GameModal();
+            } else if (ev.data.type === 'PART3_READY') {
+                postPart3InitToFrame(ev.source);
+            } else if (ev.data.type === 'PART3_RESULT') {
+                handlePart3GameResult(ev.data, ev.source);
+            } else if (ev.data.type === 'PART3_CLOSE') {
+                closePart3MinigameModal();
             }
         });
 
@@ -4469,21 +5285,39 @@
             updateAdminSchedulePreview(n);
         }
 
+        async function quickTogglePartSchedule(partNum, targetMode) {
+            const modeEl = document.getElementById('schedMode_' + partNum);
+            if (!modeEl) return;
+            modeEl.value = targetMode;
+            updateAdminSchedulePreview(partNum);
+            await saveAdminEventSchedule();
+        }
+
         function renderAdminScheduleControls() {
             const grid = document.getElementById('adminScheduleGrid');
             if (!grid) return;
-            const icons = { 1: '🎄', 2: '🤫', 3: '🧝', 4: '🎁' };
+            const icons = { 1: '🎄', 2: '🧹', 3: '🐩', 4: '🎁' };
 
             grid.innerHTML = [1, 2, 3, 4].map(n => {
                 const cfg = (eventScheduleConfig && eventScheduleConfig.parts && eventScheduleConfig.parts[n])
                     || DEFAULT_EVENT_SCHEDULE.parts[n];
                 return `
                     <div class="bg-white rounded-xl border border-amber-200 p-3.5 shadow-sm space-y-2.5">
-                        <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
                             <span class="text-xs sm:text-sm font-black text-red-800 flex items-center gap-1.5">
                                 <span>${icons[n]}</span> Chặng ${n} (Part ${n})
                             </span>
-                            <span id="schedPreviewBadge_${n}">${getSchedulePreviewHtml(cfg.mode, cfg.openAt)}</span>
+                            <div class="flex items-center gap-1.5">
+                                <span id="schedPreviewBadge_${n}">${getSchedulePreviewHtml(cfg.mode, cfg.openAt)}</span>
+                                <button type="button" onclick="quickTogglePartSchedule(${n}, 'open')"
+                                    class="text-[10px] font-black px-2 py-0.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white transition cursor-pointer" title="Mở ngay và lưu lên Sheet">
+                                    🔓 Mở ngay
+                                </button>
+                                <button type="button" onclick="quickTogglePartSchedule(${n}, 'locked')"
+                                    class="text-[10px] font-black px-2 py-0.5 rounded-md bg-slate-600 hover:bg-slate-700 text-white transition cursor-pointer" title="Khóa ngay và lưu lên Sheet">
+                                    🔒 Khóa
+                                </button>
+                            </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <div>
@@ -4515,7 +5349,7 @@
         }
 
         async function saveAdminEventSchedule() {
-            const nextConfig = { parts: {} };
+            const nextConfig = { parts: {}, updatedAt: Date.now() };
             for (const n of [1, 2, 3, 4]) {
                 const title = (document.getElementById('schedTitle_' + n)?.value || '').trim() || DEFAULT_EVENT_SCHEDULE.parts[n].title;
                 const mode = document.getElementById('schedMode_' + n)?.value || 'locked';
@@ -4532,7 +5366,7 @@
             const btn = document.getElementById('btnSaveScheduleConfig');
             const origHtml = btn ? btn.innerHTML : '';
             if (btn) {
-                btn.innerHTML = '<span>⏳ Đang lưu đồng bộ...</span>';
+                btn.innerHTML = '<span>⏳ Đang lưu lên Google Sheets...</span>';
                 btn.disabled = true;
             }
 
@@ -4545,22 +5379,56 @@
             };
 
             try {
+                for (const rh of _eventConfigRawHotens) {
+                    if (rh && rh !== 'EVENT_CONFIG | SCHEDULE') {
+                        try { await dbDeleteRow('hoten', rh); } catch (e) {}
+                    }
+                }
                 let updated = false;
-                if (_eventConfigRawHotens.length > 0) {
-                    const patchRes = await dbPatchRow('hoten', 'EVENT_CONFIG | SCHEDULE', payload);
+                if (_eventConfigRowCount > 1) {
+                    try { await dbDeleteRow('hoten', 'EVENT_CONFIG | SCHEDULE'); } catch (e) {}
+                } else {
+                    const patchKey = (_eventConfigRawHotens.length > 0 && !_eventConfigRawHotens.includes('EVENT_CONFIG | SCHEDULE'))
+                        ? _eventConfigRawHotens[0]
+                        : 'EVENT_CONFIG | SCHEDULE';
+                    const patchRes = await dbPatchRow('hoten', patchKey, payload);
                     if (patchRes && patchRes.ok) updated = true;
                 }
                 if (!updated) {
                     await dbInsertRow(payload);
                 }
-                eventScheduleConfig = nextConfig;
-                _lastCfgSig = JSON.stringify(nextConfig);
+
+                _eventConfigRowCount = 1;
+                _eventConfigRawHotens = ['EVENT_CONFIG | SCHEDULE'];
+                _lastSavedScheduleConfig = JSON.parse(JSON.stringify(nextConfig));
+                eventScheduleConfig = JSON.parse(JSON.stringify(nextConfig));
+                _lastCfgSig = JSON.stringify(eventScheduleConfig);
+                try {
+                    const cachedRows = getLocalCachedRows();
+                    if (cachedRows.length > 0) {
+                        const filteredCache = cachedRows.filter(r => !String((r && r.hoten) || '').trim().startsWith('EVENT_CONFIG |'));
+                        filteredCache.push(payload);
+                        saveLocalCachedRows(filteredCache);
+                    }
+                } catch (e) {}
                 applyEventScheduleUI();
-                showToast('✅ Đã lưu lịch mở khóa Part 1–4 lên toàn bộ hệ thống!', '🗓️');
-                await fetchAdminData();
+                renderAdminScheduleControls();
+                showToast('✅ Đã lưu lịch mở khóa Part 1–4 lên Google Sheets!', '🗓️');
+
+                // Xác minh lại trên server bằng fast fetch (không gây báo lỗi giả nếu tải nặng)
+                try {
+                    const verifyRows = await dbFetchRows({ fast: true });
+                    adminAllRecords = deduplicateRecords(Array.isArray(verifyRows) ? verifyRows : []);
+                    updateAdminStats();
+                    renderAdminTable();
+                    renderAdminModerationPanels();
+                    renderAdminScheduleControls();
+                } catch (syncErr) {
+                    console.warn('Đồng bộ lại bảng Admin sau khi lưu cấu hình:', syncErr);
+                }
             } catch (err) {
                 console.error(err);
-                alert(describeDbError(err));
+                alert('❌ Không lưu được lịch mở khóa lên Database!\n\n' + describeDbError(err));
             } finally {
                 if (btn) {
                     btn.innerHTML = origHtml;
@@ -4789,9 +5657,12 @@
                 qd: String(existing.ngay_nhiem_vu_cuoi || ''),
                 qt: Array.isArray(existing.nhiem_vu_hom_nay) ? existing.nhiem_vu_hom_nay : [],
                 inv: Array.isArray(existing.vat_pham_so_huu) ? existing.vat_pham_so_huu : [],
-                hist: Array.isArray(existing.lich_su_doi_qua) ? existing.lich_su_doi_qua : []
+                hist: Array.isArray(existing.lich_su_doi_qua) ? existing.lich_su_doi_qua : [],
+                em: String(existing.email || '').trim(),
+                eb: parseInt(existing.adminBonusPlays, 10) || 0,
+                p3w: parseInt(existing.part3Wins, 10) || 0
             };
-            if (!stateObj.d && !stateObj.gd && !stateObj.qd && stateObj.inv.length === 0 && stateObj.hist.length === 0) return '';
+            if (!stateObj.d && !stateObj.gd && !stateObj.qd && !stateObj.em && !stateObj.eb && !stateObj.p3w && stateObj.inv.length === 0 && stateObj.hist.length === 0) return '';
             try {
                 return 'RW:' + encodeURIComponent(JSON.stringify(stateObj));
             } catch (e) {
@@ -4836,6 +5707,7 @@
             let extractedScore = parseInt(rawRow.diem_tich_luoi !== undefined && rawRow.diem_tich_luoi !== '' ? rawRow.diem_tich_luoi : rawRow.diem, 10) || 0;
             let extractedPart2Pts = parseInt(rawRow.part2Pts, 10) || 0;
             let extractedPart2Best = parseInt(rawRow.part2Best, 10) || 0;
+            let extractedPart3Wins = parseInt(rawRow.part3Wins, 10) || 0;
             let extractedLastCheckinDate = String(rawRow.ngay_diem_danh_cuoi || '').trim();
             let extractedLastDailyPts = parseInt(rawRow.lastDailyPts, 10) || 0;
             let extractedLastGameDate = String(rawRow.ngay_choi_game_cuoi || '').trim();
@@ -4844,6 +5716,8 @@
             let extractedQuestsToday = parseJsonArraySafe(rawRow.nhiem_vu_hom_nay);
             let extractedOwnedItems = parseJsonArraySafe(rawRow.vat_pham_so_huu);
             let extractedGiftHistory = parseJsonArraySafe(rawRow.lich_su_doi_qua);
+            let extractedEmail = String(rawRow.email || '').trim();
+            let extractedAdminBonusPlays = parseInt(rawRow.adminBonusPlays, 10) || 0;
 
             const bracketMatch = rawHoten.match(/^\[([^\]]+)\]\s*(.*)$/);
             if (bracketMatch) {
@@ -4883,6 +5757,9 @@
                                 if (Array.isArray(rwObj.qt) && extractedQuestsToday.length === 0) extractedQuestsToday = rwObj.qt;
                                 if (Array.isArray(rwObj.inv) && extractedOwnedItems.length === 0) extractedOwnedItems = rwObj.inv;
                                 if (Array.isArray(rwObj.hist) && extractedGiftHistory.length === 0) extractedGiftHistory = rwObj.hist;
+                                if (rwObj.em && !extractedEmail) extractedEmail = String(rwObj.em).trim();
+                                if (rwObj.eb !== undefined) extractedAdminBonusPlays = parseInt(rwObj.eb, 10) || 0;
+                                if (rwObj.p3w !== undefined) extractedPart3Wins = parseInt(rwObj.p3w, 10) || 0;
                             }
                         } catch (e) {}
                     } else if (/^[A-Z0-9]{3,15}$/.test(seg) && !extractedMssv) {
@@ -4900,6 +5777,8 @@
                 ...rawRow,
                 mssv: extractedMssv,
                 hoten: cleanName,
+                email: extractedEmail,
+                adminBonusPlays: extractedAdminBonusPlays,
                 thoigian: cleanTime,
                 wishId: extractedWishId,
                 diem: extractedScore,
@@ -4914,6 +5793,7 @@
                 lich_su_doi_qua: extractedGiftHistory,
                 part2Pts: extractedPart2Pts,
                 part2Best: extractedPart2Best,
+                part3Wins: extractedPart3Wins,
                 _rawHoten: rawRow.hoten || '',
                 _rawThoigian: rawThoigian,
                 phongban: rawRow.phongban || rawRow.selfie || '',
@@ -4941,9 +5821,11 @@
             const normalRows = [];
             const checkinTempMap = new Map();
             const donateTempMap = new Map();
+            const broadcastTempList = [];
             const feedTempList = [];
             const chatTempList = [];
             let latestConfigJson = '';
+            let latestConfigTs = -1;
             const configHotens = [];
 
             rawRows.forEach(raw => {
@@ -4953,7 +5835,33 @@
 
                 if (h.startsWith('EVENT_CONFIG |')) {
                     configHotens.push(h);
-                    if (raw.wishlist) latestConfigJson = String(raw.wishlist);
+                    if (raw.wishlist) {
+                        const candidateJson = String(raw.wishlist);
+                        let candidateTs = 0;
+                        try {
+                            const parsedCfg = JSON.parse(candidateJson);
+                            candidateTs = Number(parsedCfg && parsedCfg.updatedAt) || 0;
+                        } catch (e) {}
+                        if (!latestConfigJson || candidateTs >= latestConfigTs) {
+                            latestConfigJson = candidateJson;
+                            latestConfigTs = candidateTs;
+                        }
+                    }
+                } else if (h.startsWith('BROADCAST_MSG |')) {
+                    const parts = h.split('|').map(s => s.trim());
+                    const broadcastId = parts[1] || t;
+                    const timeParts = t.split('|').map(s => s.trim());
+                    const cleanTime = timeParts[0] || t;
+                    const badgeType = timeParts[1] || '🎄 Thông báo BTC';
+                    broadcastTempList.push({
+                        broadcastId,
+                        thoigian: cleanTime,
+                        badgeType,
+                        title: raw.phongban || 'Thông báo từ Ban Tổ Chức',
+                        message: raw.wishlist || '',
+                        _rawHoten: h,
+                        _rawThoigian: t
+                    });
                 } else if (h.startsWith('DONATE_BTC |')) {
                     const parts = h.split('|').map(s => s.trim());
                     const mssv = normalizeMssv(parts[1] || '');
@@ -5061,9 +5969,17 @@
                 }
             });
 
+            _eventConfigRowCount = configHotens.length;
             _eventConfigRawHotens = Array.from(new Set(configHotens));
             if (latestConfigJson) {
-                eventScheduleConfig = mergeEventScheduleConfig(latestConfigJson);
+                const mergedCfg = mergeEventScheduleConfig(latestConfigJson);
+                if (!_lastSavedScheduleConfig || (Number(mergedCfg.updatedAt) || 0) >= (Number(_lastSavedScheduleConfig.updatedAt) || 0)) {
+                    eventScheduleConfig = mergedCfg;
+                } else {
+                    eventScheduleConfig = JSON.parse(JSON.stringify(_lastSavedScheduleConfig));
+                }
+            } else if (_lastSavedScheduleConfig) {
+                eventScheduleConfig = JSON.parse(JSON.stringify(_lastSavedScheduleConfig));
             }
 
             // Giữ các bài đăng/tin nhắn vừa bấm gửi (optimistic) chưa kịp đồng bộ xong từ server
@@ -5076,6 +5992,7 @@
 
             giftCheckinMap = checkinTempMap;
             btcDonateMap = donateTempMap;
+            broadcastMessagesList = broadcastTempList.reverse(); // Thông báo mới nhất lên đầu
             publicFeedPosts = [..._pendingOptimisticPosts, ...feedTempList.reverse()]; // Bài mới nhất lên đầu
             publicChatMessages = [...chatTempList, ..._pendingOptimisticChats];        // Tin nhắn theo thứ tự thời gian
 
@@ -5106,8 +6023,10 @@
                         ...prev,
                         ...parsed,
                         mssv: parsed.mssv || prev.mssv,
+                        email: parsed.email || prev.email || '',
                         wishId: parsed.wishId || prev.wishId,
                         diem: Math.max(prev.diem || 0, parsed.diem || 0),
+                        part3Wins: Math.max(prev.part3Wins || 0, parsed.part3Wins || 0),
                         phongban: (parsed.phongban && parsed.phongban.startsWith('data:image')) ? parsed.phongban : prev.phongban,
                         _allRawHotens: allRawHotens,
                         _allRawTimes: allRawTimes
@@ -5130,6 +6049,7 @@
             const mergedPreview = parseSheetRow({ ...(existingRecord || {}), ...payload });
             if (mergedPreview) {
                 payload.mssv = mergedPreview.mssv || payload.mssv || '';
+                payload.email = String(mergedPreview.email || '');
                 payload.diem_tich_luoi = String(getScoreFromRow(mergedPreview));
                 payload.ngay_diem_danh_cuoi = String(mergedPreview.ngay_diem_danh_cuoi || '');
                 payload.vat_pham_so_huu = JSON.stringify(Array.isArray(mergedPreview.vat_pham_so_huu) ? mergedPreview.vat_pham_so_huu : []);
@@ -6287,12 +7207,13 @@
             e.preventDefault();
             const mssvVal = normalizeMssv(document.getElementById('regMssvInput').value);
             const nameVal = document.getElementById('regNameInput').value.trim();
+            const emailVal = (document.getElementById('regEmailInput')?.value || '').trim();
             const selfieVal = document.getElementById('regSelfieBase64').value;
             const wishVal = document.getElementById('regWishlistInput').value.trim();
             const blackVal = document.getElementById('regBlacklistInput').value.trim();
 
-            if (!mssvVal || !nameVal) {
-                alert('Vui lòng nhập đầy đủ Mã sinh viên (VD: TH12345) và Họ tên!');
+            if (!mssvVal || !nameVal || !emailVal) {
+                alert('Vui lòng nhập đầy đủ Mã sinh viên, Họ tên và Email nhận mật thư Secret Santa!');
                 return;
             }
             if (!selfieVal) {
@@ -6318,11 +7239,13 @@
                     ? existing.wishId
                     : pickUnusedWishId(mssvVal, nameVal, uniqueList);
                 const scoreVal = existing ? getScoreFromRow(existing) : 150;
+                const nextMeta = { ...(existing || {}), email: emailVal };
 
                 const payload = {
                     "mssv": mssvVal,
+                    "email": emailVal,
                     "hoten": formatHotenForSheet(mssvVal, nameVal),
-                    "thoigian": formatTimeForSheet(mssvVal, uniqueWishId, scoreVal, existing),
+                    "thoigian": formatTimeForSheet(mssvVal, uniqueWishId, scoreVal, nextMeta),
                     "phongban": selfieVal,
                     "wishlist": wishVal,
                     "blacklist": blackVal
@@ -6389,10 +7312,20 @@
 
             document.getElementById('p1MssvInput').value = record.mssv || '';
             document.getElementById('p1NameInput').value = record.hoten || '';
+            const p1EmailEl = document.getElementById('p1EmailInput');
+            if (p1EmailEl) p1EmailEl.value = record.email || '';
             document.getElementById('p1SelfiePreview').src = validImg;
             document.getElementById('p1SelfieBase64').value = record.phongban || '';
             document.getElementById('p1WishlistInput').value = (record.wishlist && record.wishlist !== '(Chưa cập nhật)') ? record.wishlist : '';
             document.getElementById('p1BlacklistInput').value = (record.blacklist && record.blacklist !== '(Chưa cập nhật)') ? record.blacklist : '';
+
+            const usedPlays = getTodayMinigamePlays(record);
+            const maxPlays = getMaxDailyMinigamePlays(record);
+            const remPlays = Math.max(0, maxPlays - usedPlays);
+            const hdrPlaysText = document.getElementById('hubHeaderPlaysText');
+            if (hdrPlaysText) {
+                hdrPlaysText.textContent = `Lượt chơi: Còn ${remPlays}/${maxPlays} lượt (Đã chơi ${usedPlays})`;
+            }
         }
 
         async function handleUpdatePart1Profile(e) {
@@ -6401,6 +7334,7 @@
 
             const mssvVal = normalizeMssv(document.getElementById('p1MssvInput').value);
             const nameVal = document.getElementById('p1NameInput').value.trim();
+            const emailVal = (document.getElementById('p1EmailInput')?.value || '').trim();
             const selfieVal = document.getElementById('p1SelfieBase64').value || currentStudentRecord.phongban;
             const wishVal = document.getElementById('p1WishlistInput').value.trim();
             const blackVal = document.getElementById('p1BlacklistInput').value.trim();
@@ -6412,11 +7346,13 @@
 
             const wishData = buildUniqueWishData(currentStudentRecord, allSheetRecordsCache);
             const scoreVal = getScoreFromRow(currentStudentRecord);
+            const nextMeta = { ...currentStudentRecord, email: emailVal };
 
             const payload = {
                 "mssv": mssvVal,
+                "email": emailVal,
                 "hoten": formatHotenForSheet(mssvVal, nameVal),
-                "thoigian": formatTimeForSheet(mssvVal, wishData.wishId, scoreVal, currentStudentRecord),
+                "thoigian": formatTimeForSheet(mssvVal, wishData.wishId, scoreVal, nextMeta),
                 "phongban": selfieVal,
                 "wishlist": wishVal,
                 "blacklist": blackVal
@@ -6532,8 +7468,11 @@
             const chatSig = (publicChatMessages || []).map(c => {
                 return [c.hoten || '', c.mssv, c.thoigian, c.message, c.isOptimistic ? 1 : 0].join('|');
             }).join(';');
+            const broadcastSig = (broadcastMessagesList || []).map(b => {
+                return [b.broadcastId, b.thoigian, b.badgeType, b.title, b.message].join('|');
+            }).join(';');
             const cfgSig = JSON.stringify(eventScheduleConfig);
-            return { usersSig, checkinSig, donateSig, feedSig, chatSig, cfgSig };
+            return { usersSig, checkinSig, donateSig, broadcastSig, feedSig, chatSig, cfgSig };
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -6543,6 +7482,7 @@
                 if (cachedRows && cachedRows.length > 0) {
                     deduplicateRecords(cachedRows);
                     _lastCfgSig = JSON.stringify(eventScheduleConfig);
+                    renderGlobalBroadcastUI();
                 }
             } catch (e) {}
             try {
@@ -6563,7 +7503,7 @@
             document.addEventListener('visibilitychange', () => {
                 if (!document.hidden && currentStudentRecord && !document.getElementById('pageEvent').classList.contains('hidden')) {
                     if (Date.now() - _lastDbFetchAt > 8000) {
-                        loadLeaderboardData(false, { fast: _hasFullFetchedOnce });
+                        loadLeaderboardData(false, { fast: _hasFullFetchedOnce || _rowImageCache.size > 0 });
                     } else {
                         scheduleNextAutoSync();
                     }
@@ -6582,13 +7522,14 @@
             _isLoadingBoardData = true;
             try {
                 const prevChatCount = publicChatMessages.length;
-                const useFast = (options && typeof options.fast === 'boolean') ? options.fast : _hasFullFetchedOnce;
+                const useFast = (options && typeof options.fast === 'boolean') ? options.fast : (_hasFullFetchedOnce || _rowImageCache.size > 0);
                 const rawData = await dbFetchRows({ fast: useFast });
                 const uniqueList = deduplicateRecords(rawData);
                 const sigs = buildSyncSignatures(uniqueList);
                 const usersChanged = sigs.usersSig !== _lastUsersSig;
                 const checkinChanged = sigs.checkinSig !== _lastCheckinSig;
                 const donateChanged = sigs.donateSig !== _lastDonateSig;
+                const broadcastChanged = sigs.broadcastSig !== _lastBroadcastSig;
                 const feedChanged = sigs.feedSig !== _lastFeedSig;
                 const chatChanged = sigs.chatSig !== _lastChatSig;
                 const cfgChanged = sigs.cfgSig !== _lastCfgSig;
@@ -6606,6 +7547,9 @@
                 if (cfgChanged || usersChanged || donateChanged) {
                     applyEventScheduleUI();
                     _lastScheduleUnlockKey = getCurrentScheduleUnlockKey();
+                }
+                if (broadcastChanged) {
+                    renderGlobalBroadcastUI();
                 }
                 if (usersChanged) {
                     renderLeaderboard(uniqueList);
@@ -6627,6 +7571,7 @@
                 _lastUsersSig = sigs.usersSig;
                 _lastCheckinSig = sigs.checkinSig;
                 _lastDonateSig = sigs.donateSig;
+                _lastBroadcastSig = sigs.broadcastSig;
                 _lastFeedSig = sigs.feedSig;
                 _lastChatSig = sigs.chatSig;
                 _lastCfgSig = sigs.cfgSig;
@@ -6906,14 +7851,39 @@
             document.getElementById('statApprovedGift').textContent = approvedCount;
         }
 
-        // Hiển thị danh sách Bill Donate BTC, Bài Đăng Bảng Tin & Tin Nhắn Chat để BTC kiểm duyệt
+        // Hiển thị danh sách Thông báo BTC, Bill Donate BTC, Bài Đăng Bảng Tin & Tin Nhắn Chat để BTC kiểm duyệt
         function renderAdminModerationPanels() {
+            const broadcastListEl = document.getElementById('adminBroadcastHistoryList');
+            const broadcastCountEl = document.getElementById('adminBroadcastCountBadge');
             const donateListEl = document.getElementById('adminDonateModerationList');
             const donateCountEl = document.getElementById('adminDonateCountBadge');
             const feedListEl = document.getElementById('adminFeedModerationList');
             const feedCountEl = document.getElementById('adminFeedCountBadge');
             const chatListEl = document.getElementById('adminChatModerationList');
             const chatCountEl = document.getElementById('adminChatCountBadge');
+
+            if (broadcastCountEl) broadcastCountEl.textContent = `${broadcastMessagesList.length} thông báo`;
+            if (broadcastListEl) {
+                if (broadcastMessagesList.length === 0) {
+                    broadcastListEl.innerHTML = `<p class="text-xs text-rose-200/70 text-center py-2">Chưa có thông báo nào đang phát.</p>`;
+                } else {
+                    broadcastListEl.innerHTML = broadcastMessagesList.map((b) => `
+                        <div class="flex items-start justify-between gap-3 p-3 rounded-xl bg-white/10 border border-amber-300/30 text-white">
+                            <div class="min-w-0 space-y-0.5">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <span class="bg-amber-400 text-red-950 font-black text-[10px] px-2 py-0.5 rounded-full">${escapeHtml(b.badgeType)}</span>
+                                    <span class="font-extrabold text-xs sm:text-sm text-amber-200">${escapeHtml(b.title)}</span>
+                                    <span class="text-[10px] text-rose-200/80">${escapeHtml(b.thoigian)}</span>
+                                </div>
+                                <p class="text-xs text-white/90 whitespace-pre-line break-words">${escapeHtml(b.message)}</p>
+                            </div>
+                            <button type="button" onclick="deleteBroadcastByRawHoten('${escapeHtml(b._rawHoten)}')" class="bg-red-600 hover:bg-red-500 text-white font-bold text-xs px-2.5 py-1.5 rounded-lg transition shrink-0">
+                                🗑️ Gỡ
+                            </button>
+                        </div>
+                    `).join('');
+                }
+            }
 
             const donateEntries = Array.from(btcDonateMap.values()).sort((a, b) => {
                 if (a.status !== b.status) return a.status === 'PENDING' ? -1 : 1;
@@ -6952,8 +7922,8 @@
                                         <p class="text-xs text-gray-700 font-medium break-words">"${escapeHtml(dn.note || 'Ủng hộ quỹ quà BTC')}"</p>
                                         <div class="flex flex-wrap items-center gap-1.5 pt-0.5">
                                             ${isApproved
-                                                ? `<span class="inline-flex items-center bg-emerald-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">✅ Đã Duyệt (+5 Lượt & +300 PTS)</span>`
-                                                : `<button type="button" onclick="approveBtcDonateByMssv('${escapeHtml(dn.mssv)}')" class="inline-flex items-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:brightness-105 text-white text-[11px] font-black px-3 py-1 rounded-xl shadow transition cursor-pointer">✅ Duyệt Donate (+5 Lượt & +300 PTS)</button>`
+                                                ? `<span class="inline-flex items-center bg-emerald-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">✅ Đã Duyệt (+5 Lượt & +${DONATE_BONUS_PTS} PTS)</span>`
+                                                : `<button type="button" onclick="approveBtcDonateByMssv('${escapeHtml(dn.mssv)}')" class="inline-flex items-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:brightness-105 text-white text-[11px] font-black px-3 py-1 rounded-xl shadow transition cursor-pointer">✅ Duyệt Donate (+5 Lượt & +${DONATE_BONUS_PTS} PTS)</button>`
                                             }
                                             <button type="button" onclick="rejectBtcDonateByMssv('${escapeHtml(dn.mssv)}')" class="inline-flex items-center bg-red-100 hover:bg-red-600 text-red-700 hover:text-white text-[10px] font-bold px-2.5 py-1 rounded-xl transition cursor-pointer">🗑️ Xóa Bill</button>
                                         </div>
@@ -7029,9 +7999,10 @@
                 if (!query) return true;
                 const mssv = String(row.mssv || '').toLowerCase();
                 const hoten = String(row.hoten || '').toLowerCase();
+                const email = String(row.email || '').toLowerCase();
                 const wish = String(row.wishlist || '').toLowerCase();
                 const black = String(row.blacklist || '').toLowerCase();
-                return mssv.includes(query) || hoten.includes(query) || wish.includes(query) || black.includes(query);
+                return mssv.includes(query) || hoten.includes(query) || email.includes(query) || wish.includes(query) || black.includes(query);
             });
 
             document.getElementById('adminFilterCount').textContent = `Hiển thị ${filtered.length} / ${adminAllRecords.length} cá nhân`;
@@ -7050,7 +8021,13 @@
                     : `<button onclick="assignMssvByIndex(${index})" class="inline-flex items-center justify-center whitespace-nowrap text-xs bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-3 py-1.5 rounded-full border border-amber-300 transition shadow-sm" title="Bấm để gán MSSV cho bạn này">➕ Gán MSSV</button>`;
 
                 const nameDisplay = escapeHtml(row.hoten || '---');
+                const emailDisplay = row.email
+                    ? `<button onclick="editEmailByIndex(${index})" class="inline-flex items-center gap-1 text-[11px] text-blue-700 hover:underline font-semibold mt-0.5" title="Bấm để sửa Email">📧 ${escapeHtml(row.email)}</button>`
+                    : `<button onclick="editEmailByIndex(${index})" class="inline-flex items-center gap-1 text-[10px] bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 px-2 py-0.5 rounded-full font-bold mt-1" title="Bấm để thêm Email nhận thư Secret Santa">➕ Thêm Email</button>`;
                 const scoreVal = getScoreFromRow(row);
+                const usedPlays = getTodayMinigamePlays(row);
+                const maxPlays = getMaxDailyMinigamePlays(row);
+                const remPlays = Math.max(0, maxPlays - usedPlays);
                 const wishDisplay = escapeHtml(row.wishlist || '---');
                 const blackDisplay = escapeHtml(row.blacklist || '---');
                 const timeDisplay = escapeHtml(row.thoigian || '---');
@@ -7091,7 +8068,7 @@
                                 <p class="text-[10px] text-rose-800 font-bold truncate" title="${escapeHtml(dn.note)}">💖 Bill: "${escapeHtml(dn.note || 'Donate BTC')}"</p>
                                 ${isDnApproved
                                     ? `<span class="inline-flex items-center whitespace-nowrap bg-emerald-600 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full">✅ Đã Duyệt Donate</span>`
-                                    : `<button onclick="approveBtcDonateByMssv('${escapeHtml(dn.mssv)}')" class="inline-flex items-center whitespace-nowrap bg-rose-600 hover:bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-lg shadow transition">✅ Duyệt Bill (+5 Lượt & +300 PTS)</button>`
+                                    : `<button onclick="approveBtcDonateByMssv('${escapeHtml(dn.mssv)}')" class="inline-flex items-center whitespace-nowrap bg-rose-600 hover:bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-lg shadow transition">✅ Duyệt Bill (+5 Lượt & +${DONATE_BONUS_PTS} PTS)</button>`
                                 }
                             </div>
                         </div>
@@ -7105,12 +8082,18 @@
                         <td class="p-3 whitespace-nowrap">${mssvDisplay}</td>
                         <td class="p-3">
                             <div class="font-bold text-gray-800">${nameDisplay}</div>
+                            <div>${emailDisplay}</div>
                             <div class="text-[10px] text-gray-400 mt-0.5">${timeDisplay}</div>
                         </td>
                         <td class="p-3 text-center whitespace-nowrap">
                             <button onclick="editScoreByIndex(${index})" class="inline-flex items-center justify-center gap-1 whitespace-nowrap bg-amber-100 hover:bg-amber-200 text-amber-900 font-extrabold text-xs px-3 py-1.5 rounded-full border border-amber-300 shadow-sm transition" title="Bấm để cộng/sửa điểm BXH">
                                 <span>🏆</span> <span>${scoreVal} PTS</span>
                             </button>
+                            <div class="mt-1">
+                                <button onclick="editUserPlaysByIndex(${index})" class="inline-flex items-center justify-center gap-1 whitespace-nowrap bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-extrabold text-[11px] px-2.5 py-1 rounded-full border border-indigo-200 transition" title="Bấm để cộng thêm hoặc chỉnh lượt chơi cho thành viên này">
+                                    <span>🎲</span> <span>Còn ${remPlays}/${maxPlays} lượt (Đã chơi: ${usedPlays})</span>
+                                </button>
+                            </div>
                             ${(() => {
                                 const inv = Array.isArray(row.vat_pham_so_huu) ? row.vat_pham_so_huu : [];
                                 const hist = Array.isArray(row.lich_su_doi_qua) ? row.lich_su_doi_qua : [];
@@ -7175,8 +8158,16 @@
                                         <button onclick="editScoreByIndex(${index})" class="inline-flex items-center whitespace-nowrap bg-amber-100 text-amber-900 font-extrabold text-[10px] px-2 py-0.5 rounded-full border border-amber-300">
                                             🏆 ${getScoreFromRow(row)} PTS
                                         </button>
+                                        <button onclick="editUserPlaysByIndex(${index})" class="inline-flex items-center whitespace-nowrap bg-indigo-50 text-indigo-800 font-extrabold text-[10px] px-2 py-0.5 rounded-full border border-indigo-200">
+                                            🎲 Còn ${Math.max(0, getMaxDailyMinigamePlays(row) - getTodayMinigamePlays(row))}/${getMaxDailyMinigamePlays(row)} lượt
+                                        </button>
                                     </div>
                                     <h4 class="font-extrabold text-gray-800 text-sm truncate mt-0.5">${escapeHtml(row.hoten || '---')}</h4>
+                                    <div class="mt-0.5">
+                                        <button onclick="editEmailByIndex(${index})" class="text-[11px] text-blue-700 font-semibold hover:underline">
+                                            📧 ${escapeHtml(row.email || 'Chưa có Email (Bấm thêm)')}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <button onclick="deleteMemberByIndex(${index})" class="inline-flex items-center whitespace-nowrap bg-red-100 active:bg-red-600 text-red-700 active:text-white font-bold px-3 py-2 rounded-xl text-xs shrink-0">
@@ -7219,7 +8210,7 @@
             openLightbox(
                 dn.billImage,
                 `💖 Ảnh Bill Donate của ${dn.hoten || mssv} (${mssv})`,
-                `Ghi chú: "${dn.note}" • Trạng thái: ${dn.status === 'APPROVED' ? 'Đã duyệt (+5 lượt & +300 PTS)' : 'Chờ Admin xác nhận'}`
+                `Ghi chú: "${dn.note}" • Trạng thái: ${dn.status === 'APPROVED' ? `Đã duyệt (+5 lượt & +${DONATE_BONUS_PTS} PTS)` : 'Chờ Admin xác nhận'}`
             );
         }
 
@@ -7409,6 +8400,86 @@
             }
         }
 
+        async function editEmailByIndex(idx) {
+            const list = window._currentFilteredAdminList || adminAllRecords;
+            const row = list[idx];
+            if (!row) return;
+
+            const newEmail = prompt(`Nhập địa chỉ Email nhận mật thư Secret Santa cho "${row.hoten}" (${row.mssv || ''}):`, row.email || '');
+            if (newEmail === null) return;
+
+            const cleanEmail = newEmail.trim();
+            const scoreVal = getScoreFromRow(row);
+            const wishData = buildUniqueWishData(row, adminAllRecords);
+            const nextMeta = { ...row, email: cleanEmail };
+
+            const payload = {
+                "mssv": row.mssv || '',
+                "email": cleanEmail,
+                "hoten": formatHotenForSheet(row.mssv, row.hoten),
+                "thoigian": formatTimeForSheet(row.mssv, wishData.wishId, scoreVal, nextMeta),
+                "phongban": row.phongban || '',
+                "wishlist": row.wishlist || '',
+                "blacklist": row.blacklist || ''
+            };
+
+            showToast(`⏳ Đang cập nhật Email cho ${row.hoten}...`, '📧');
+            try {
+                await saveOrUpdateStudentToSheet(payload, row);
+                showToast(`✅ Đã lưu Email "${cleanEmail}" cho ${row.hoten}!`, '📧');
+                await fetchAdminData();
+            } catch (err) {
+                alert('Không thể cập nhật Email. Vui lòng thử lại!');
+            }
+        }
+
+        async function editUserPlaysByIndex(idx) {
+            const list = window._currentFilteredAdminList || adminAllRecords;
+            const row = list[idx];
+            if (!row) return;
+
+            const usedPlays = getTodayMinigamePlays(row);
+            const maxPlays = getMaxDailyMinigamePlays(row);
+            const remPlays = Math.max(0, maxPlays - usedPlays);
+            const curBonus = parseInt(row.adminBonusPlays, 10) || 0;
+
+            const inputBonus = prompt(
+                `🎲 Quản lý lượt chơi của "${row.hoten}" (${row.mssv || ''}):\n` +
+                `• Hiện tại hôm nay: Còn ${remPlays}/${maxPlays} lượt (Đã chơi: ${usedPlays} lượt)\n` +
+                `• Số lượt BTC đang tặng thêm: +${curBonus} lượt\n\n` +
+                `👉 Nhập tổng số lượt BTC muốn tặng thêm cho bạn này (Nhập 0 để về mặc định):`,
+                String(curBonus + 3)
+            );
+            if (inputBonus === null) return;
+
+            const nextBonus = Math.max(0, parseInt(inputBonus, 10) || 0);
+            const scoreVal = getScoreFromRow(row);
+            const wishData = buildUniqueWishData(row, adminAllRecords);
+            const nextMeta = { ...row, adminBonusPlays: nextBonus };
+
+            const payload = {
+                "mssv": row.mssv || '',
+                "email": row.email || '',
+                "hoten": formatHotenForSheet(row.mssv, row.hoten),
+                "thoigian": formatTimeForSheet(row.mssv, wishData.wishId, scoreVal, nextMeta),
+                "phongban": row.phongban || '',
+                "wishlist": row.wishlist || '',
+                "blacklist": row.blacklist || ''
+            };
+
+            showToast(`⏳ Đang cập nhật lượt chơi cho ${row.hoten}...`, '🎲');
+            try {
+                const updated = await saveOrUpdateStudentToSheet(payload, row);
+                if (currentStudentRecord && normalizeMssv(currentStudentRecord.mssv) === normalizeMssv(row.mssv)) {
+                    currentStudentRecord = updated;
+                }
+                showToast(`✅ Đã cập nhật +${nextBonus} lượt tặng thêm từ BTC cho ${row.hoten}!`, '🎲');
+                await fetchAdminData();
+            } catch (err) {
+                alert('Không thể cập nhật lượt chơi. Vui lòng thử lại!');
+            }
+        }
+
         async function deleteMemberByIndex(idx) {
             const list = window._currentFilteredAdminList || adminAllRecords;
             const row = list[idx];
@@ -7484,19 +8555,118 @@
         }
 
         // =========================================================================
-        // 14. CÔNG CỤ BỐC THĂM / GHÉP CẶP SECRET SANTA & XUẤT FILE CSV
+        // 14. CÔNG CỤ BỐC THĂM / GHÉP CẶP SECRET SANTA & CHUẨN BỊ / GỬI MAIL MẬT THƯ
         // =========================================================================
+        let _activeEmailPreviewIndex = -1;
+
+        function buildPreparedSantaEmail(pair) {
+            const g = (pair && pair.giver) || {};
+            const r = (pair && pair.receiver) || {};
+            const giverName = g.hoten || g.mssv || 'Bạn';
+            const giverMssv = g.mssv || 'N/A';
+            const receiverName = r.hoten || r.mssv || 'Người nhận bí mật';
+            const receiverMssv = r.mssv || 'N/A';
+            const receiverWish = (r.wishlist && r.wishlist.trim()) ? r.wishlist.trim() : '(Bạn ấy chưa ghi gợi ý cụ thể - bạn có thể chọn món quà Giáng Sinh bất ngờ nhé!)';
+            const receiverBlack = (r.blacklist && r.blacklist.trim()) ? r.blacklist.trim() : '(Không có lưu ý kiêng kỵ đặc biệt)';
+
+            const subject = `🎄 [BÍ MẬT - SECRET SANTA 2026 PHÒNG 204] Mật thư tiết lộ người bạn sẽ tặng quà Giáng Sinh!`;
+            const body = [
+                `Xin chào Ông Già Noel Bí Mật ${giverName} (${giverMssv}),`,
+                ``,
+                `🎅 Chúc mừng bạn! Kết quả bốc thăm ghép cặp sự kiện SECRET SANTA 2026 - ĐẠI GIA ĐÌNH PHÒNG 204 đã hoàn tất.`,
+                `Dưới đây là thông tin MẬT THƯ về người bạn sẽ chuẩn bị quà tặng trong mùa Giáng Sinh năm nay:`,
+                ``,
+                `====================================================`,
+                `🎁 NGƯỜI BẠN SẼ TẶNG QUÀ LÀ: ${receiverName} (MSSV: ${receiverMssv})`,
+                `====================================================`,
+                ``,
+                `💚 WISHLIST (Gợi ý món quà ${receiverName} mong muốn nhận được):`,
+                `👉 ${receiverWish}`,
+                ``,
+                `🚫 BLACKLIST (Những món quà cần tránh / dị ứng của ${receiverName}):`,
+                `👉 ${receiverBlack}`,
+                ``,
+                `----------------------------------------------------`,
+                `🤫 LƯU Ý BẢO MẬT TỪ BAN TỔ CHỨC PHÒNG 204:`,
+                `1. Hãy giữ BÍ MẬT TUYỆT ĐỐI danh tính người bạn tặng quà cho đến giây phút khui quà tại buổi Offline Phòng 204 nhé!`,
+                `2. Sau khi chuẩn bị/gói quà xong, bạn nhớ lên trang web sự kiện Secret Santa Phòng 204 để chụp ảnh "Check-in Đã Chuẩn Bị Quà" gửi riêng cho BTC xác nhận (+100 PTS & +1 lượt chơi Minigame).`,
+                ``,
+                `Chúc bạn một mùa Giáng Sinh 2026 thật ấm áp, rực rỡ và ngập tràn niềm vui!`,
+                `Trân trọng,`,
+                `🎄 Ban Tổ Chức Secret Santa 2026 - Phòng 204`
+            ].join('\n');
+
+            return {
+                to: String(g.email || '').trim(),
+                subject,
+                body,
+                giverName,
+                giverMssv,
+                receiverName,
+                receiverMssv
+            };
+        }
+
         function openMatchingModal() {
             if (adminAllRecords.length < 2) {
                 alert('Cần ít nhất 2 cá nhân trong danh sách để thực hiện ghép cặp Secret Santa!');
                 return;
             }
             document.getElementById('matchingModal').classList.remove('hidden');
-            if (currentSantaPairs.length === 0) generateSantaPairs();
+            if (currentSantaPairs.length === 0) {
+                generateSantaPairs();
+            } else {
+                renderMatchingPairsTable();
+            }
         }
 
         function closeMatchingModal() {
             document.getElementById('matchingModal').classList.add('hidden');
+        }
+
+        function renderMatchingPairsTable() {
+            const tbody = document.getElementById('matchingTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = currentSantaPairs.map((pair, idx) => {
+                const g = pair.giver;
+                const r = pair.receiver;
+                const hasEmail = Boolean(g.email && g.email.trim());
+                const sentBadge = pair._emailSent
+                    ? `<span class="inline-block bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] font-black px-2 py-0.5 rounded-full">✅ Đã mở/gửi</span>`
+                    : '';
+                return `
+                    <tr class="hover:bg-amber-50/40">
+                        <td class="p-2.5 sm:p-3 text-center font-bold text-gray-500">${idx + 1}</td>
+                        <td class="p-2.5 sm:p-3">
+                            <div class="font-bold text-gray-800">${escapeHtml(g.hoten || '---')}</div>
+                            <div class="text-xs text-red-700 font-semibold">MSSV: ${escapeHtml(g.mssv || 'N/A')}</div>
+                            <div class="text-[11px] ${hasEmail ? 'text-blue-700 font-semibold' : 'text-amber-700 italic'} mt-0.5">
+                                📧 ${escapeHtml(g.email || 'Chưa cập nhật email')}
+                            </div>
+                        </td>
+                        <td class="p-2.5 sm:p-3 text-center text-base">🎁➡️</td>
+                        <td class="p-2.5 sm:p-3">
+                            <div class="font-bold text-green-800">${escapeHtml(r.hoten || '---')}</div>
+                            <div class="text-xs text-gray-600 font-semibold">MSSV: ${escapeHtml(r.mssv || 'N/A')}</div>
+                        </td>
+                        <td class="p-2.5 sm:p-3 text-xs space-y-1">
+                            <div><strong class="text-green-700">🎁 Wishlist:</strong> ${escapeHtml(r.wishlist || '---')}</div>
+                            <div><strong class="text-red-600">🚫 Blacklist:</strong> ${escapeHtml(r.blacklist || '---')}</div>
+                        </td>
+                        <td class="p-2.5 sm:p-3 text-center whitespace-nowrap space-y-1">
+                            <div class="flex flex-col sm:flex-row items-center justify-center gap-1.5">
+                                <button type="button" onclick="sendSantaPairGmailWeb(${idx})" class="bg-red-600 hover:bg-red-700 text-white font-black text-[11px] px-2.5 py-1.5 rounded-lg shadow transition inline-flex items-center gap-1 cursor-pointer" title="Mở cửa sổ Gmail đã điền sẵn Email, Tên người nhận, Wishlist & Blacklist">
+                                    <span>📨</span> <span>Gửi Mail</span>
+                                </button>
+                                <button type="button" onclick="openSantaEmailPreviewModal(${idx})" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 font-bold text-[11px] px-2.5 py-1.5 rounded-lg transition inline-flex items-center gap-1 cursor-pointer" title="Xem trước / Chỉnh sửa / Gửi tự động bức thư đã chuẩn bị sẵn">
+                                    <span>👁️</span> <span>Xem thư</span>
+                                </button>
+                            </div>
+                            ${sentBadge}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         function generateSantaPairs() {
@@ -7510,34 +8680,182 @@
 
             currentSantaPairs = pool.map((giver, idx) => ({
                 giver,
-                receiver: pool[(idx + 1) % pool.length]
+                receiver: pool[(idx + 1) % pool.length],
+                _emailSent: false
             }));
 
-            const tbody = document.getElementById('matchingTableBody');
-            tbody.innerHTML = currentSantaPairs.map((pair, idx) => {
-                const g = pair.giver;
-                const r = pair.receiver;
-                return `
-                    <tr class="hover:bg-amber-50/40">
-                        <td class="p-2.5 sm:p-3 text-center font-bold text-gray-500">${idx + 1}</td>
-                        <td class="p-2.5 sm:p-3">
-                            <div class="font-bold text-gray-800">${escapeHtml(g.hoten || '---')}</div>
-                            <div class="text-xs text-red-700 font-semibold">MSSV: ${escapeHtml(g.mssv || 'N/A')}</div>
-                        </td>
-                        <td class="p-2.5 sm:p-3 text-center text-base">🎁➡️</td>
-                        <td class="p-2.5 sm:p-3">
-                            <div class="font-bold text-green-800">${escapeHtml(r.hoten || '---')}</div>
-                            <div class="text-xs text-gray-600 font-semibold">MSSV: ${escapeHtml(r.mssv || 'N/A')}</div>
-                        </td>
-                        <td class="p-2.5 sm:p-3 text-xs space-y-1">
-                            <div><strong class="text-green-700">Wishlist:</strong> ${escapeHtml(r.wishlist || '---')}</div>
-                            <div><strong class="text-red-600">Blacklist:</strong> ${escapeHtml(r.blacklist || '---')}</div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+            renderMatchingPairsTable();
+            showToast('🎲 Đã quay số ghép cặp Secret Santa & chuẩn bị sẵn Email mật thư cho từng người!', '🎲');
+        }
 
-            showToast('🎲 Đã quay số ghép cặp Secret Santa thành công!', '🎲');
+        function openSantaEmailPreviewModal(idx) {
+            const pair = currentSantaPairs[idx];
+            if (!pair) return;
+            _activeEmailPreviewIndex = idx;
+            const prepared = buildPreparedSantaEmail(pair);
+
+            const hdr = document.getElementById('santaEmailModalHeader');
+            const toInput = document.getElementById('santaEmailToInput');
+            const subInput = document.getElementById('santaEmailSubjectInput');
+            const bodyInput = document.getElementById('santaEmailBodyInput');
+
+            if (hdr) hdr.textContent = `🎅 ${prepared.giverName} ➔ 🎁 Tặng quà cho ${prepared.receiverName}`;
+            if (toInput) toInput.value = prepared.to;
+            if (subInput) subInput.value = prepared.subject;
+            if (bodyInput) bodyInput.value = prepared.body;
+
+            const modal = document.getElementById('santaEmailPreviewModal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeSantaEmailPreviewModal() {
+            const modal = document.getElementById('santaEmailPreviewModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function sendSantaPairGmailWeb(idx) {
+            const pair = currentSantaPairs[idx];
+            if (!pair) return;
+            const prepared = buildPreparedSantaEmail(pair);
+            if (!prepared.to) {
+                const entered = prompt(`Thành viên "${prepared.giverName}" chưa có Email. Nhập Email của ${prepared.giverName} để mở thư gửi ngay:`, '');
+                if (!entered || !entered.trim()) return;
+                pair.giver.email = entered.trim();
+                prepared.to = entered.trim();
+            }
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(prepared.to)}&su=${encodeURIComponent(prepared.subject)}&body=${encodeURIComponent(prepared.body)}`;
+            window.open(gmailUrl, '_blank', 'noopener');
+            pair._emailSent = true;
+            renderMatchingPairsTable();
+            showToast(`📨 Đã mở Gmail soạn sẵn mật thư gửi cho ${prepared.giverName}! Bạn chỉ cần bấm nút Gửi (Send).`, '📧');
+        }
+
+        function triggerGmailComposeFromModal() {
+            const toVal = (document.getElementById('santaEmailToInput')?.value || '').trim();
+            const subVal = (document.getElementById('santaEmailSubjectInput')?.value || '').trim();
+            const bodyVal = (document.getElementById('santaEmailBodyInput')?.value || '').trim();
+            if (!toVal) {
+                alert('Vui lòng nhập địa chỉ Email người nhận thư!');
+                return;
+            }
+            if (_activeEmailPreviewIndex >= 0 && currentSantaPairs[_activeEmailPreviewIndex]) {
+                currentSantaPairs[_activeEmailPreviewIndex].giver.email = toVal;
+                currentSantaPairs[_activeEmailPreviewIndex]._emailSent = true;
+                renderMatchingPairsTable();
+            }
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(toVal)}&su=${encodeURIComponent(subVal)}&body=${encodeURIComponent(bodyVal)}`;
+            window.open(gmailUrl, '_blank', 'noopener');
+            showToast('📨 Đã mở tab Gmail với đầy đủ nội dung mật thư!', '📧');
+        }
+
+        function triggerDefaultMailtoFromModal() {
+            const toVal = (document.getElementById('santaEmailToInput')?.value || '').trim();
+            const subVal = (document.getElementById('santaEmailSubjectInput')?.value || '').trim();
+            const bodyVal = (document.getElementById('santaEmailBodyInput')?.value || '').trim();
+            const mailtoUrl = `mailto:${encodeURIComponent(toVal)}?subject=${encodeURIComponent(subVal)}&body=${encodeURIComponent(bodyVal)}`;
+            window.location.href = mailtoUrl;
+        }
+
+        function copySantaEmailContentFromModal() {
+            const subVal = (document.getElementById('santaEmailSubjectInput')?.value || '').trim();
+            const bodyVal = (document.getElementById('santaEmailBodyInput')?.value || '').trim();
+            const fullText = `${subVal}\n\n${bodyVal}`;
+            navigator.clipboard.writeText(fullText).then(() => {
+                showToast('📋 Đã sao chép toàn bộ nội dung mật thư Secret Santa vào bộ nhớ tạm!', '✅');
+            }).catch(() => {
+                showToast('📋 Đã sao chép nội dung thư!', '✅');
+            });
+        }
+
+        async function triggerAppsScriptSendFromModal() {
+            const toVal = (document.getElementById('santaEmailToInput')?.value || '').trim();
+            const subVal = (document.getElementById('santaEmailSubjectInput')?.value || '').trim();
+            const bodyVal = (document.getElementById('santaEmailBodyInput')?.value || '').trim();
+            if (!toVal) {
+                alert('Vui lòng nhập địa chỉ Email của người tặng quà!');
+                return;
+            }
+            const btn = document.getElementById('btnSendSantaMailAppsScript');
+            if (btn) btn.disabled = true;
+
+            try {
+                const engine = detectDbEngine();
+                const apiUrl = getActiveApiUrl();
+                if (engine === 'GAS') {
+                    const res = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({
+                            action: 'SEND_EMAIL',
+                            to: toVal,
+                            subject: subVal,
+                            body: bodyVal
+                        })
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (res.ok && data && data.success) {
+                        if (_activeEmailPreviewIndex >= 0 && currentSantaPairs[_activeEmailPreviewIndex]) {
+                            currentSantaPairs[_activeEmailPreviewIndex].giver.email = toVal;
+                            currentSantaPairs[_activeEmailPreviewIndex]._emailSent = true;
+                            renderMatchingPairsTable();
+                        }
+                        showToast(`✅ Đã gửi tự động Email mật thư tới ${toVal} thành công!`, '📧');
+                        closeSantaEmailPreviewModal();
+                        return;
+                    }
+                }
+                // Fallback mượt mà sang mở Gmail Web nếu Apps Script chưa bật quyền MailApp
+                triggerGmailComposeFromModal();
+            } catch (err) {
+                triggerGmailComposeFromModal();
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        async function sendAllSantaEmailsViaAppsScript() {
+            if (currentSantaPairs.length === 0) {
+                alert('Hãy bấm Quay Số Ghép Cặp trước khi gửi mail!');
+                return;
+            }
+            const pairsWithEmail = currentSantaPairs.filter(p => p.giver && p.giver.email && p.giver.email.trim());
+            if (pairsWithEmail.length === 0) {
+                alert('Hiện chưa có thành viên nào trong danh sách có địa chỉ Email! Bạn có thể bấm nút "📨 Gửi Mail" ở từng dòng hoặc thêm Email cho thành viên trong bảng Admin nhé.');
+                return;
+            }
+            if (!confirm(`Bạn muốn gửi mật thư Secret Santa tới ${pairsWithEmail.length}/${currentSantaPairs.length} thành viên đã có Email chứ?`)) {
+                return;
+            }
+
+            const engine = detectDbEngine();
+            const apiUrl = getActiveApiUrl();
+            if (engine === 'GAS') {
+                showToast(`⏳ Đang gửi tự động ${pairsWithEmail.length} mật thư qua Google Apps Script...`, '🚀');
+                try {
+                    const emailsPayload = pairsWithEmail.map(p => buildPreparedSantaEmail(p));
+                    const res = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({
+                            action: 'SEND_BULK_EMAIL',
+                            emails: emailsPayload
+                        })
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (res.ok && data && data.success) {
+                        currentSantaPairs.forEach(p => {
+                            if (p.giver && p.giver.email) p._emailSent = true;
+                        });
+                        renderMatchingPairsTable();
+                        showToast(`🎉 Đã gửi tự động thành công ${data.sent || pairsWithEmail.length} Email mật thư Secret Santa!`, '📧');
+                        return;
+                    }
+                } catch (e) {}
+            }
+
+            // Nếu Apps Script chưa cập nhật quyền gửi mail tự động, mở khung xem/gửi từng người bằng Gmail Web
+            openSantaEmailPreviewModal(0);
+            showToast('💡 Đã mở sẵn mật thư đầu tiên! Bấm "📨 Mở Gmail & Gửi" để gửi ngay trong 1 click nhé.', '📧');
         }
 
         function exportAdminCSV() {
@@ -7545,14 +8863,18 @@
                 alert('Chưa có dữ liệu để xuất!');
                 return;
             }
-            const headers = ['STT', 'MSSV', 'Ho va Ten', 'Diem BXH', 'Trang Thai Checkin Qua', 'Ghi Chu Checkin Qua', 'Thoi gian', 'Wishlist', 'Blacklist', 'Ma Base64 Anh'];
+            const headers = ['STT', 'MSSV', 'Ho va Ten', 'Email', 'Diem BXH', 'Luot Choi Hom Nay', 'Trang Thai Checkin Qua', 'Ghi Chu Checkin Qua', 'Thoi gian', 'Wishlist', 'Blacklist', 'Ma Base64 Anh'];
             const rows = adminAllRecords.map((r, i) => {
                 const ck = giftCheckinMap.get(normalizeMssv(r.mssv));
+                const usedP = getTodayMinigamePlays(r);
+                const maxP = getMaxDailyMinigamePlays(r);
                 return [
                     i + 1,
                     r.mssv || '',
                     r.hoten || '',
+                    r.email || '',
                     getScoreFromRow(r),
+                    `Con ${Math.max(0, maxP - usedP)}/${maxP} (Da choi ${usedP})`,
                     ck ? (ck.status === 'APPROVED' ? 'BTC Da Xac Nhan' : 'Cho BTC Duyet') : 'Chua Checkin',
                     ck ? ck.note : '',
                     r.thoigian || '',
@@ -7573,20 +8895,27 @@
                 'STT',
                 'MSSV Nguoi Tang (Santa)',
                 'Ho Ten Nguoi Tang (Santa)',
+                'Email Nguoi Tang (Santa)',
                 'MSSV Nguoi Nhan (Giftee)',
                 'Ho Ten Nguoi Nhan (Giftee)',
                 'Wishlist Nguoi Nhan',
-                'Blacklist Nguoi Nhan'
+                'Blacklist Nguoi Nhan',
+                'Noi Dung Email Chuan Bi San'
             ];
-            const rows = currentSantaPairs.map((p, i) => [
-                i + 1,
-                p.giver.mssv || '',
-                p.giver.hoten || '',
-                p.receiver.mssv || '',
-                p.receiver.hoten || '',
-                p.receiver.wishlist || '',
-                p.receiver.blacklist || ''
-            ]);
+            const rows = currentSantaPairs.map((p, i) => {
+                const mail = buildPreparedSantaEmail(p);
+                return [
+                    i + 1,
+                    p.giver.mssv || '',
+                    p.giver.hoten || '',
+                    p.giver.email || '',
+                    p.receiver.mssv || '',
+                    p.receiver.hoten || '',
+                    p.receiver.wishlist || '',
+                    p.receiver.blacklist || '',
+                    mail.body
+                ];
+            });
             downloadCSVFile('Ket_Qua_Boc_Tham_Secret_Santa_2026.csv', headers, rows);
         }
 
